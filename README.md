@@ -1,6 +1,6 @@
 # shoes_shop
 
-A Flutter project for multivendor store for sneakers with web admin.
+A Flutter project building multivendor store for sneakers with web admin.
 
 ## Getting Started
 
@@ -14,3 +14,8 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+Color: 
+primary: #DC1D25
+accent: #0E3E6C
