@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:shoes_shop/resources/theme_manager.dart';
 import 'package:shoes_shop/views/splash/entry.dart';
 
+import 'constants/color.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
@@ -16,6 +18,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
+        systemNavigationBarColor: accentColor,
       ),
     );
     return MaterialApp(

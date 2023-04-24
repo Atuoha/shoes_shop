@@ -25,10 +25,10 @@ class _EntryScreenState extends State<EntryScreen> {
     //   preferences.setBool('isFirstRun', false);
     // }
 
-
     Timer(const Duration(seconds: 3), () {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SplashScreen()));
-    });
+       Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SplashScreen()));
+     });
+
 
     super.initState();
   }
@@ -40,11 +40,7 @@ class _EntryScreenState extends State<EntryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          children: [
-            Image.asset(AssetManager.logo),
-          ],
-        ),
+        child: Image.asset(AssetManager.logoTransparent),
       ),
     );
   }
