@@ -7,7 +7,8 @@ import '../../resources/font_manager.dart';
 import '../../resources/string_manager.dart';
 import '../../resources/styles_manager.dart';
 import '../../resources/values_manager.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import '../auth/account_type.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -106,7 +107,11 @@ class _SplashScreenState extends State<SplashScreen> {
                       duration: const Duration(seconds: 1),
                       curve: Curves.easeIn,
                     )
-                  : Navigator.of(context).pushNamed(''),
+                  : Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => AccountTypeScreen(),
+                      ),
+                    ),
               child: Text(
                 currentPageIndex != 2 ? 'Next' : 'Start Exploring',
               ),

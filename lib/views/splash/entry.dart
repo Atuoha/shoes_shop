@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoes_shop/views/splash/splash.dart';
 import '../../resources/assets_manager.dart';
+import '../../resources/route_manager.dart';
 
 class EntryScreen extends StatefulWidget {
   const EntryScreen({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class _EntryScreenState extends State<EntryScreen> {
     // }
 
     Timer(const Duration(seconds: 3), () {
-       Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SplashScreen()));
+       Navigator.of(context).pushNamed(RouteManager.splashScreen);
      });
 
 
