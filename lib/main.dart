@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shoes_shop/resources/route_manager.dart';
+import 'package:shoes_shop/controllers/route_manager.dart';
 import 'package:shoes_shop/resources/theme_manager.dart';
 import 'package:shoes_shop/views/splash/entry.dart';
 

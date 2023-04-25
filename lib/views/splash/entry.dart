@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoes_shop/views/splash/splash.dart';
 import '../../resources/assets_manager.dart';
-import '../../resources/route_manager.dart';
+import '../../controllers/route_manager.dart';
 
 class EntryScreen extends StatefulWidget {
   const EntryScreen({Key? key}) : super(key: key);

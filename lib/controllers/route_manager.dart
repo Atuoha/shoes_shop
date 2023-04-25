@@ -27,6 +27,4 @@ final routes = {
   RouteManager.accountType: (context) => const AccountTypeScreen(),
   RouteManager.customerMainScreen: (context)=> CustomerMainScreen(),
 
-
-
 };
