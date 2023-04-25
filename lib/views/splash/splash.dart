@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shoes_shop/resources/assets_manager.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../constants/color.dart';
+import '../../controllers/route_manager.dart';
 import '../../models/splash_item.dart';
 import '../../resources/font_manager.dart';
 import '../../resources/string_manager.dart';
@@ -107,11 +108,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       duration: const Duration(seconds: 1),
                       curve: Curves.easeIn,
                     )
-                  : Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => AccountTypeScreen(),
-                      ),
-                    ),
+                  : Navigator.of(context).pushNamed(RouteManager.accountType),
               child: Text(
                 currentPageIndex != 2 ? 'Next' : 'Start Exploring',
               ),

@@ -1,7 +1,5 @@
-
-
 import '../views/auth/account_type.dart';
-import '../views/customers/main_screen.dart';
+import '../views/customer/main_screen.dart';
 import '../views/splash/entry.dart';
 import '../views/splash/splash.dart';
 
@@ -25,6 +23,6 @@ final routes = {
   RouteManager.splashScreen: (context) => const SplashScreen(),
   RouteManager.entryScreen: (context) => const EntryScreen(),
   RouteManager.accountType: (context) => const AccountTypeScreen(),
-  RouteManager.customerMainScreen: (context)=> CustomerMainScreen(),
+  RouteManager.customerMainScreen: (context)=> const CustomerMainScreen(),
 
 };
