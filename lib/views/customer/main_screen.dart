@@ -7,6 +7,7 @@ import 'store/store.dart';
 import '../../constants/color.dart';
 import 'cart/cart.dart';
 import 'home_screen.dart';
+import 'package:badges/badges.dart';
 
 class CustomerMainScreen extends StatefulWidget {
   const CustomerMainScreen({super.key});
@@ -38,17 +39,45 @@ class _CustomerMainStateScreen extends State<CustomerMainScreen> {
       bottomNavigationBar: ConvexAppBar(
         backgroundColor: primaryColor,
         activeColor: Colors.white,
-        items: const [
-          TabItem(icon: Icon(Icons.home, color: accentColor)),
-          TabItem(icon: Icon(Icons.manage_search, color: accentColor)),
-          TabItem(icon: Icon(Icons.storefront, color: accentColor)),
-          TabItem(icon: Icon(Icons.search, color: accentColor)),
-          TabItem(icon: Icon(Icons.shopping_cart, color: accentColor)),
-          TabItem(icon: Icon(Icons.person, color: accentColor)),
+        style: TabStyle.reactCircle,
+        initialActiveIndex: _pageIndex,
+        items: [
+          buildTabItem(Icons.home, 0),
+          buildTabItem(Icons.manage_search, 1),
+          buildTabItem(Icons.storefront, 2),
+          buildTabItem(Icons.search, 3),
+
+          // cart
+          TabItem(
+            icon: Badge(
+              badgeColor: Colors.white,
+              badgeContent: const Text(
+                '1',
+                style: TextStyle(
+                  color: primaryColor,
+                ),
+              ),
+              showBadge: true,
+              child: Icon(Icons.shopping_cart,
+                  size: _pageIndex == 4 ? 40 : 25, color: accentColor),
+            ),
+          ),
+          buildTabItem(Icons.person, 5),
         ],
         onTap: setNewPage,
       ),
       body: _pages[_pageIndex],
+    );
+  }
+
+  // custom tab item
+  TabItem<dynamic> buildTabItem(IconData icon, int pageIndex) {
+    return TabItem(
+      icon: Icon(
+        icon,
+        color: accentColor,
+        size: _pageIndex == pageIndex ? 40 : 25,
+      ),
     );
   }
 }

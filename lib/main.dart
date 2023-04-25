@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: accentColor,
+        statusBarBrightness: Brightness.dark
       ),
     );
     return MaterialApp(

@@ -13,6 +13,7 @@ class AssetManager{
 
   static const String empty = "$imagePath/empty.png";
   static const String avatar = "$imagePath/default.png";
+  static const String profileImg = "$imagePath/avatar.jpg";
   static const String success2 = "$imagePath/success2.png";
 
 
