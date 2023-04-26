@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shoes_shop/resources/styles_manager.dart';
-
-import '../../resources/assets_manager.dart';
-import '../../resources/font_manager.dart';
+import '../../resources/values_manager.dart';
+import '../widgets/cart_icon.dart';
+import '../widgets/search_box.dart';
+import '../widgets/welcome_intro.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({Key? key}) : super(key: key);
@@ -12,25 +12,27 @@ class CustomerHomeScreen extends StatefulWidget {
 }
 
 class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
+  final TextEditingController searchText = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top,
-        right: 15,
+        right: 18,
         left: 18,
       ),
-      child: Row(
+      child: Column(
         children: [
-          Wrap(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
-              CircleAvatar(
-                backgroundImage: AssetImage(AssetManager.profileImg),
-              ),
+              WelcomeIntro(),
+              CartIcon(),
             ],
           ),
-          const SizedBox(width: 15),
-          Text('Hello Ujunwa 👋', style: getRegularStyle(color: Colors.black, fontSize:FontSize.s16),)
+          const SizedBox(height: AppSize.s10),
+          SearchBox(searchText: searchText),
         ],
       ),
     );

@@ -14,5 +14,6 @@ const cardsLite = Color(0XFFFFFFFF);
 const cardsDark = Color(0XFF242424);
 var greyShade =  Colors.grey.withOpacity(0.8);
 var greyShade2 = Colors.grey.shade300;
+const searchBoxBg =  Color(0XFFF3F3F3);
 
 var primaryOpacity = const Color(0xFFDC1D25).withOpacity(0.8);
