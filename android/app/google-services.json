@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "719326293072",
+    "project_id": "shoeshop-87640",
+    "storage_bucket": "shoeshop-87640.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719326293072:android:7387e87503f7d3d9603555",
+        "android_client_info": {
+          "package_name": "com.example.shoes_shop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "719326293072-94b9ruc8463jt5ask057vqm0rbddh2kh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shoes_shop",
+            "certificate_hash": "fac44a58ecf3847144cb49a604bbb9a4e69897c1"
+          }
+        },
+        {
+          "client_id": "719326293072-5rcl5dfmsonrv4rmlg0r4tvceednn2nq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-37E-0gDIwEMrdKjsbknMVdd-y7dIjuQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "719326293072-5rcl5dfmsonrv4rmlg0r4tvceednn2nq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "719326293072-sr1h5t5h367lgaid8tujgq68r7vk9um0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.shoesShop"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
