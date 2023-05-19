@@ -48,7 +48,7 @@ class AccountTypeScreen extends StatelessWidget {
                 const Icon(Icons.person_outline, color:accentColor),
                 Text(
                 'Select account type',
-                style: getBoldStyle(
+                style: getMediumStyle(
                   color: accentColor,
                   fontSize: FontSize.s18,
                 ),

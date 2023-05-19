@@ -28,6 +28,25 @@ class _SplashScreenState extends State<SplashScreen> {
   //   return  _pageController.page?.round() ?? 0;
   // }
 
+
+  void skipSlides() {
+    _pageController.animateToPage(
+      2,
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeIn,
+    );
+  }
+
+  void nextSlide() {
+    currentPageIndex != 2
+        ? _pageController.nextPage(
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeIn,
+    )
+        : Navigator.of(context).pushNamed(RouteManager.accountType);
+  }
+
+
   List<SplashItem> splashItems = [
     SplashItem(
       title: StringManager.splashTitle1,
@@ -49,6 +68,24 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        actions: [
+          currentPageIndex != splashItems.length - 1
+              ? TextButton(
+            onPressed: () => skipSlides(),
+            child: const Text(
+              'Skip',
+              style: TextStyle(
+                color: accentColor,
+              ),
+            ),
+          )
+              : const SizedBox.shrink()
+        ],
+      ),
       body: PageView.builder(
         controller: _pageController,
         onPageChanged: (index) {
@@ -103,14 +140,11 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: () => currentPageIndex != 2
-                  ? _pageController.nextPage(
-                      duration: const Duration(seconds: 1),
-                      curve: Curves.easeIn,
-                    )
-                  : Navigator.of(context).pushNamed(RouteManager.accountType),
+              onPressed: () => nextSlide(),
               child: Text(
-                currentPageIndex != 2 ? 'Next' : 'Start Exploring',
+                currentPageIndex != splashItems.length - 1
+                    ? 'Next'
+                    : 'Start Exploring',
               ),
             )
           ],
@@ -119,3 +153,6 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+
+
+
