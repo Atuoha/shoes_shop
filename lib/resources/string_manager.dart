@@ -1,10 +1,10 @@
 class StringManager {
   static const String appName = "ShoesShop";
-  static const String splashTitle1 = "Easy buy";
+  static const String splashTitle1 = "Swift purchase";
   static const String splashSubtitle1 =
       "A store house of shoes with easy purchase";
 
-  static const String splashTitle2 = "Never empty";
+  static const String splashTitle2 = "Always filled";
   static const String splashSubtitle2 =
       "You can always get it filled.";
 

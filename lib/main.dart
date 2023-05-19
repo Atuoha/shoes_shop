@@ -5,9 +5,14 @@ import 'package:shoes_shop/resources/theme_manager.dart';
 import 'package:shoes_shop/views/splash/entry.dart';
 
 import 'constants/color.dart';
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FirebaseApp app = await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
