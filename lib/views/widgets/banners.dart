@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import '../../resources/assets_manager.dart';
+import 'loading_widget.dart';
+
 class BannerComponent extends StatefulWidget {
   const BannerComponent({Key? key}) : super(key: key);
 
@@ -11,21 +14,27 @@ class BannerComponent extends StatefulWidget {
 }
 
 class _BannerComponentState extends State<BannerComponent> {
-  final List<String> _banners = [
-    'assets/images/banners/ba1.jpg',
-    'assets/images/banners/ba2.jpg',
-    'assets/images/banners/ba3.png',
-    'assets/images/banners/ba4.png',
-    'assets/images/banners/ba5.png',
-    'assets/images/banners/ba6.png',
-  ];
+  bool loading = true;
+  final List<String> _banners = [];
   final firebaseFirestore = FirebaseFirestore.instance;
 
-  void _fetchBanners() async {}
+  Future<void> _fetchBanners() async {
+    await firebaseFirestore
+        .collection('banners')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var data in querySnapshot.docs) {
+        setState(() {
+          _banners.add(data['img_url']);
+          loading = false;
+        });
+      }
+    });
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
+    _fetchBanners();
     super.initState();
   }
 
@@ -33,7 +42,17 @@ class _BannerComponentState extends State<BannerComponent> {
   Widget build(BuildContext context) {
     return CarouselSlider.builder(
       itemCount: _banners.length,
-      itemBuilder: (context, i, index) => Image.asset(_banners[i]),
+      itemBuilder: (context, i, index) => loading
+          ? const Center(child: LoadingWidget(size: 50))
+          : _banners.isNotEmpty
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(_banners[i]),
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(AssetManager.emptyImgCarousel),
+                ),
       options: CarouselOptions(
         height: 200,
         autoPlay: true,
