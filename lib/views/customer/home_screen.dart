@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../resources/values_manager.dart';
 import '../widgets/banners.dart';
 import '../widgets/cart_icon.dart';
+import '../widgets/categories_section.dart';
 import '../widgets/search_box.dart';
 import '../widgets/welcome_intro.dart';
 
@@ -40,7 +41,9 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
           ),
         ),
         const SizedBox(height: AppSize.s10),
-        BannerComponent()
+        const BannerComponent(),
+        const SizedBox(height: AppSize.s10),
+        const CategorySection()
       ],
     );
   }

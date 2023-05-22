@@ -28,7 +28,7 @@ class SearchBox extends StatelessWidget {
         fillColor: searchBoxBg,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSize.s100),
-          borderSide: BorderSide.none,
+          borderSide: const BorderSide(color: searchBorderBg),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSize.s100),
@@ -36,11 +36,11 @@ class SearchBox extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSize.s100),
-          borderSide: const BorderSide(color: accentColor),
+          borderSide: const BorderSide(color: searchBorderBg),
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSize.s100),
-          borderSide: const BorderSide(color: accentColor),
+          borderSide: const BorderSide(color: searchBorderBg),
         ),
       ),
     );
