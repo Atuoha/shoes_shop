@@ -54,7 +54,8 @@ class _BannerComponentState extends State<BannerComponent> {
                   child: Image.asset(AssetManager.emptyImg),
                 ),
       options: CarouselOptions(
-        height: 200,
+        height: 150,
+        viewportFraction: 0.5,
         autoPlay: true,
         enlargeCenterPage: true,
       ),
