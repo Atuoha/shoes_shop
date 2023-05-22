@@ -27,5 +27,5 @@ class AssetManager{
   static const String emailImage = "$imagePath/email.png";
   static const String warningImage = "$imagePath/warning.png";
 
-  static const String emptyImgCarousel = 'https://parenting.firstcry.com/wp-content/themes/FC-parenting/images/no-image-available.jpg';
+  static const String emptyImg = "$imagePath/empty-img.jpg";
 }

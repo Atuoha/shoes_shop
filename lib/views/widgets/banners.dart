@@ -14,7 +14,6 @@ class BannerComponent extends StatefulWidget {
 }
 
 class _BannerComponentState extends State<BannerComponent> {
-  bool loading = true;
   final List<String> _banners = [];
   final firebaseFirestore = FirebaseFirestore.instance;
 
@@ -26,7 +25,6 @@ class _BannerComponentState extends State<BannerComponent> {
       for (var data in querySnapshot.docs) {
         setState(() {
           _banners.add(data['img_url']);
-          loading = false;
         });
       }
     });
@@ -42,16 +40,18 @@ class _BannerComponentState extends State<BannerComponent> {
   Widget build(BuildContext context) {
     return CarouselSlider.builder(
       itemCount: _banners.length,
-      itemBuilder: (context, i, index) => loading
-          ? const Center(child: LoadingWidget(size: 50))
-          : _banners.isNotEmpty
+      itemBuilder: (context, i, index) =>  _banners.isNotEmpty
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.network(_banners[i]),
+                  child: FadeInImage(
+                    placeholder: const AssetImage(AssetManager.emptyImg),
+                    image: NetworkImage(_banners[i]),
+                    fit: BoxFit.cover,
+                  ),
                 )
               : ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.network(AssetManager.emptyImgCarousel),
+                  child: Image.asset(AssetManager.emptyImg),
                 ),
       options: CarouselOptions(
         height: 200,
