@@ -5,19 +5,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../constants/enums/account_type.dart';
+import '../models/auth_result.dart';
 
 class AuthController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore firebase = FirebaseFirestore.instance;
 
-  Future<void> signInUser(String email, String password) async {
+  Future<AuthResult?> signInUser(String email, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(
+      var credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      return AuthResult.success(credential.user);
     } on FirebaseAuthException catch (e) {
-      var response = 'error';
+      var response = 'error occurred!';
+
       if (e.message != null) {
         if (e.code == 'user-not-found') {
           response = "Email not recognised!";
@@ -26,18 +29,18 @@ class AuthController {
         } else if (e.code == 'wrong-password') {
           response = 'Email or Password Incorrect!';
         } else if (e.code == 'network-request-failed') {
-          response = 'Network error!';
+          response = 'Network error! Try connecting your internet';
         } else {
           response = e.code;
         }
       }
-      throw response;
+      return AuthResult.error(response);
     } catch (e) {
       throw Exception(e);
     }
   }
 
-  Future<void> signUpUser(
+  Future<AuthResult?> signUpUser(
     String email,
     String fullname,
     String phone,
@@ -45,7 +48,6 @@ class AuthController {
     AccountType accountType,
     File? profileImage,
   ) async {
-    var response = 'success';
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -64,6 +66,7 @@ class AuthController {
       await storageRef.putFile(file);
       var downloadUrl = await storageRef.getDownloadURL();
       if (accountType == AccountType.seller) {
+        var response = 'error occurred!';
         firebase.collection('sellers').doc(credential.user!.uid).set({
           'fullname': fullname,
           'email': email,
@@ -82,6 +85,7 @@ class AuthController {
           'address': '',
         });
       }
+      return AuthResult.success(credential.user);
     } on FirebaseAuthException catch (e) {
       var response = 'error';
       if (e.message != null) {
@@ -97,13 +101,13 @@ class AuthController {
           response = e.code;
         }
       }
-      throw response;
+      return AuthResult.error(response);
     } catch (e) {
       throw Exception(e);
     }
   }
 
-  Future<void> googleAuth(AccountType accountType) async {
+  Future<String?> googleAuth(AccountType accountType) async {
     var response = 'success';
 
     // Trigger the authentication flow
@@ -155,7 +159,6 @@ class AuthController {
       // sign in with credential
       FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
-      var response = 'error';
       if (e.message != null) {
         if (e.code == 'user-not-found') {
           response = "Email not recognised!";
@@ -169,10 +172,13 @@ class AuthController {
           response = e.code;
         }
       }
+      print(response);
       throw response;
     } catch (e) {
       throw Exception(e);
     }
+
+    return response;
   }
 
   Future<void> signOut() async {
