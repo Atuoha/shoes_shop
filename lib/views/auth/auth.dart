@@ -7,7 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../constants/color.dart';
+import '../../constants/enums/account_type.dart';
 import '../../constants/enums/fields.dart';
+import '../../controllers/auth_controller.dart';
 import '../../controllers/route_manager.dart';
 import '../../resources/assets_manager.dart';
 import '../widgets/loading_widget.dart';
@@ -39,6 +41,7 @@ class _AuthScreenState extends State<AuthScreen> {
   var isLoading = false;
   final _auth = FirebaseAuth.instance;
   final firebase = FirebaseFirestore.instance;
+  final AuthController _authController = AuthController();
 
   // toggle password obscure
   _togglePasswordObscure() {
@@ -156,15 +159,13 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       isLoading = true;
     });
-    Timer(const Duration(seconds: 5), () {
-      if (widget.isSellerReg) {
-        // seller account
-        // Navigator.of(context).pushNamed(SellerBottomNav.routeName);
-      } else {
-        // customer account
-        Navigator.of(context).pushNamed(RouteManager.customerMainScreen);
-      }
-    });
+    if (widget.isSellerReg) {
+      // seller account
+      // Navigator.of(context).pushNamed(SellerBottomNav.routeName);
+    } else {
+      // customer account
+      Navigator.of(context).pushNamed(RouteManager.customerMainScreen);
+    }
   }
 
   // handle sign in and  sign up
@@ -176,154 +177,67 @@ class _AuthScreenState extends State<AuthScreen> {
       return null;
     }
 
-    try {
-      if (isLogin) {
-        // TODO: implement sign in
-        await _auth.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        );
-        isLoadingFnc(); // spin and redirect
-      } else {
-        // TODO: implement sign up
-
-        if (profileImage == null) {
-          // profile image is empty
-          showSnackBar('Profile image can not be empty!');
-          return null;
-        }
-
-        var credential = await _auth.createUserWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        );
-
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('user-images')
-            .child('${credential.user!.uid}.jpg');
-
-        File? file;
-        file = File(profileImage!.path);
-
-        try {
-          await storageRef.putFile(file);
-          var downloadUrl = await storageRef.getDownloadURL();
-          if (widget.isSellerReg) {
-            firebase.collection('sellers').doc(credential.user!.uid).set({
-              'fullname': _fullnameController.text.trim(),
-              'email': _emailController.text.trim(),
-              'image': downloadUrl,
-              'auth-type': 'email',
-              'phone': '',
-              'address': '',
-            });
-          } else {
-            firebase.collection('customers').doc(credential.user!.uid).set({
-              'fullname': _fullnameController.text.trim(),
-              'email': _emailController.text.trim(),
-              'image': downloadUrl,
-              'auth-type': 'email',
-              'phone': _phoneController.text.trim(),
-              'address': '',
-            });
-          }
-
-          isLoadingFnc();
-        } catch (e) {
-          if (kDebugMode) {
-            showSnackBar('An error occurred with image uploading');
-          }
-          if (kDebugMode) {
-            print('AN ERROR OCCURRED! $e');
-          }
+    if (isLogin) {
+      // TODO: implement sign in
+      try {
+        await _authController
+            .signInUser(
+              _emailController.text.trim(),
+              _passwordController.text.trim(),
+            )
+            .whenComplete(() => isLoadingFnc());
+      } on FirebaseAuthException catch (e) {
+        showSnackBar(e.message!);
+        setState(() {
+          isLoading = false;
+        });
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
         }
       }
-    } on FirebaseAuthException catch (e) {
-      var error = 'An error occurred. Check credentials!';
-      if (e.message != null) {
-        if (e.code == 'user-not-found') {
-          error = "Email not recognised!";
-        } else if (e.code == 'account-exists-with-different-credential') {
-          error = "Email already in use!";
-        } else if (e.code == 'wrong-password') {
-          error = 'Email or Password Incorrect!';
-        } else if (e.code == 'network-request-failed') {
-          error = 'Network error!';
-        } else {
-          error = e.code;
-        }
+    } else {
+      // TODO: implement sign up
+      if (profileImage == null) {
+        // profile image is empty
+        showSnackBar('Profile image can not be empty!');
+        return null;
       }
 
-      showSnackBar(error); // showSnackBar will show error if any
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      if (kDebugMode) {
-        print('AN ERROR OCCURRED! $e');
+      try {
+        await _authController
+            .signUpUser(
+              _emailController.text.trim(),
+              _fullnameController.text.trim(),
+              _phoneController.text.trim(),
+              _passwordController.text.trim(),
+              widget.isSellerReg ? AccountType.seller : AccountType.customer,
+              profileImage,
+            )
+            .whenComplete(() => isLoadingFnc());
+      } on FirebaseAuthException catch (e) {
+        showSnackBar(e.message!);
+        setState(() {
+          isLoading = false;
+        });
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
       }
     }
   }
 
 // authenticate using Google
-  Future<UserCredential> _googleAuth() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
+  _googleAuth() async {
     try {
-      // send username, email, and phone number to firestore
-      var logCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-      if (widget.isSellerReg) {
-        await FirebaseFirestore.instance
-            .collection('sellers')
-            .doc(logCredential.user!.uid)
-            .set(
-          {
-            'fullname': googleUser!.displayName,
-            'email': googleUser.email,
-            'image': googleUser.photoUrl,
-            'auth-type': 'google',
-            'phone': '',
-            'address': '',
-          },
-        ).then((value) {
-          isLoadingFnc();
-        });
-      } else {
-        await FirebaseFirestore.instance
-            .collection('customers')
-            .doc(logCredential.user!.uid)
-            .set(
-          {
-            'fullname': googleUser!.displayName,
-            'email': googleUser.email,
-            'image': googleUser.photoUrl,
-            'auth-type': 'google',
-            'phone': '',
-            'address': '',
-          },
-        ).then((value) {
-          isLoadingFnc();
-        });
-      }
+      await _authController
+          .googleAuth(
+            widget.isSellerReg ? AccountType.seller : AccountType.customer,
+          )
+          .whenComplete(() => isLoadingFnc());
     } on FirebaseAuthException catch (e) {
-      var error = 'An error occurred. Check credentials!';
-      if (e.message != null) {
-        error = e.message!;
-      }
-      showSnackBar(error); // showSnackBar will show error if any
+      showSnackBar(e.message!);
       setState(() {
         isLoading = false;
       });
@@ -332,8 +246,6 @@ class _AuthScreenState extends State<AuthScreen> {
         print(e);
       }
     }
-    // sign in with credential
-    return FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   // navigate to forgot password screen
