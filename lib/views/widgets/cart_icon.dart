@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+// import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/color.dart';
@@ -10,16 +10,15 @@ class CartIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Badge(
-      badgeColor: Colors.white,
-      badgeContent: const Text(
+    return const Badge(
+      backgroundColor: Colors.white,
+      label: Text(
         '1',
         style: TextStyle(
           color: primaryColor,
         ),
       ),
-      showBadge: true,
-      child: const Icon(
+      child: Icon(
         Icons.shopping_cart,
         color: accentColor,
       ),

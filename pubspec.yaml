@@ -41,7 +41,7 @@ dependencies:
   shared_preferences: ^2.1.0
   dotted_border: ^2.0.0+3
   smooth_page_indicator: ^1.1.0
-  badges: ^2.0.3
+  badges: ^3.1.1
   google_sign_in: ^6.1.0
   firebase_core: ^2.10.0
   firebase_auth: ^4.4.2
@@ -51,6 +51,8 @@ dependencies:
   carousel_slider: ^4.2.1
   cool_alert: ^1.1.0
   loading_animation_widget: ^1.2.0+4
+  animations: ^2.0.7
+  image_picker: ^0.8.7+5
 
 dev_dependencies:
   flutter_test:

@@ -93,9 +93,9 @@ ThemeData getLightTheme() {
       hintStyle: getRegularStyle(color: Colors.grey),
       contentPadding: const EdgeInsets.all(AppPadding.p8),
       errorStyle: getRegularStyle(color: Colors.red),
-      suffixIconColor: primaryColor,
+      suffixIconColor: accentColor,
       suffixStyle: getRegularStyle(color: Colors.grey),
-      prefixIconColor: primaryColor,
+      prefixIconColor: accentColor,
       prefixStyle: getRegularStyle(color: Colors.grey),
     ),
 

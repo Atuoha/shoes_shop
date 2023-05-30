@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shoes_shop/resources/styles_manager.dart';
+import '../../resources/font_manager.dart';
 import '../../resources/values_manager.dart';
 import '../widgets/banners.dart';
 import '../widgets/cart_icon.dart';
@@ -19,6 +21,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: EdgeInsets.only(
@@ -43,6 +46,16 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         const SizedBox(height: AppSize.s10),
         const BannerComponent(),
         const SizedBox(height: AppSize.s10),
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Text(
+            'Categories',
+            style: getMediumStyle(
+              color: Colors.black,
+              fontSize: FontSize.s14,
+            ),
+          ),
+        ),
         const CategorySection()
       ],
     );

@@ -42,19 +42,16 @@ class AccountTypeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                const Icon(Icons.person_outline, color:accentColor),
-                Text(
+            Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [
+              const Icon(Icons.person_outline, color: accentColor),
+              Text(
                 'Select account type',
                 style: getMediumStyle(
                   color: accentColor,
                   fontSize: FontSize.s18,
                 ),
               ),
-        ]
-            ),
+            ]),
             const SizedBox(height: AppSize.s30),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -62,7 +59,7 @@ class AccountTypeScreen extends StatelessWidget {
                 // Customer Login
                 accountType(
                   accountTitle: 'Customer',
-                  routeName: RouteManager.customerMainScreen,
+                  routeName: RouteManager.authScreen,
                 ),
 
                 // Seller Login

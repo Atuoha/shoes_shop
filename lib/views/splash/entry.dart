@@ -41,7 +41,7 @@ class _EntryScreenState extends State<EntryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.asset(AssetManager.logoTransparent),
+        child: Image.asset(AssetManager.logoTransparent,width:150),
       ),
     );
   }

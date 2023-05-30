@@ -7,7 +7,6 @@ import 'store/store.dart';
 import '../../constants/color.dart';
 import 'cart/cart.dart';
 import 'home_screen.dart';
-import 'package:badges/badges.dart';
 
 class CustomerMainScreen extends StatefulWidget {
   const CustomerMainScreen({super.key});
@@ -50,14 +49,13 @@ class _CustomerMainStateScreen extends State<CustomerMainScreen> {
           // cart
           TabItem(
             icon: Badge(
-              badgeColor: Colors.white,
-              badgeContent: const Text(
+              backgroundColor: Colors.white,
+              label: const Text(
                 '1',
                 style: TextStyle(
                   color: primaryColor,
                 ),
               ),
-              showBadge: true,
               child: Icon(Icons.shopping_cart,
                   size: _pageIndex == 4 ? 40 : 25, color: accentColor),
             ),
