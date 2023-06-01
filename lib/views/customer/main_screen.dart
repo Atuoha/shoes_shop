@@ -56,8 +56,11 @@ class _CustomerMainStateScreen extends State<CustomerMainScreen> {
                   color: primaryColor,
                 ),
               ),
-              child: Icon(Icons.shopping_cart,
-                  size: _pageIndex == 4 ? 40 : 25, color: accentColor),
+              child: Icon(
+                Icons.shopping_cart,
+                size: _pageIndex == 4 ? 40 : 25,
+                color: accentColor,
+              ),
             ),
           ),
           buildTabItem(Icons.person, 5),

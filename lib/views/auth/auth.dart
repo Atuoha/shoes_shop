@@ -14,6 +14,7 @@ import '../../constants/enums/fields.dart';
 import '../../constants/enums/status.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/route_manager.dart';
+import '../../helpers/shared_prefs.dart';
 import '../../models/auth_result.dart';
 import '../../resources/assets_manager.dart';
 import '../widgets/loading_widget.dart';
@@ -52,6 +53,11 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       obscure = !obscure;
     });
+  }
+
+  // get context
+  get ctxt {
+    return context;
   }
 
   // snackbar for error message
@@ -165,16 +171,22 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   // loading fnc
-  isLoadingFnc() {
+  isLoadingFnc() async{
     setState(() {
       isLoading = true;
     });
     if (widget.isSellerReg) {
       // seller account
       // Navigator.of(context).pushNamed(SellerBottomNav.routeName);
+
+      // set account type to seller
+      await setAccountType(accountType: AccountType.seller);
     } else {
       // customer account
       Navigator.of(context).pushNamed(RouteManager.customerMainScreen);
+
+      // set account type to customer
+      await setAccountType(accountType: AccountType.customer);
     }
   }
 
@@ -185,10 +197,7 @@ class _AuthScreenState extends State<AuthScreen> {
     Navigator.pop(context);
   }
 
-  // get context
-  get ctxt {
-    return context;
-  }
+
 
   // handle sign in and  sign up
   _handleAuth() async {

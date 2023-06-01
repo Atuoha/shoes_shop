@@ -17,29 +17,7 @@ class _CategorySectionState extends State<CategorySection> {
   var currentIconSectionIndex = 0;
   bool isLoading = true;
 
-  final List<Category> categories = [
-    // Category(
-    //     id: '1', imgUrl: 'assets/images/categories/fila.png', title: 'Fila'),
-    // Category(
-    //   id: '2',
-    //   imgUrl: 'assets/images/categories/adidas.png',
-    //   title: 'Adidas',
-    // ),
-    // Category(
-    //   id: '3',
-    //   imgUrl: 'assets/images/categories/nike.png',
-    //   title: 'Nike',
-    // ),
-    // Category(
-    //     id: '4',
-    //     imgUrl: 'assets/images/categories/reebok.png',
-    //     title: 'Reebok'),
-    // Category(
-    //   id: '5',
-    //   imgUrl: 'assets/images/categories/puma.png',
-    //   title: 'Puma',
-    // ),
-  ];
+  final List<Category> categories = [];
 
   Future<void> _fetchCategories() async {
     await FirebaseFirestore.instance
@@ -85,12 +63,14 @@ class _CategorySectionState extends State<CategorySection> {
               itemCount: categories.length,
               itemBuilder: (context, index) {
                 var item = categories[index];
-                return SingleCategorySection(
-                  item: item,
-                  index: index,
-                  setCurrentIconSection: setCurrentIconSection,
-                  currentIconSectionIndex: currentIconSectionIndex,
-                );
+                return categories.isNotEmpty
+                    ? SingleCategorySection(
+                        item: item,
+                        index: index,
+                        setCurrentIconSection: setCurrentIconSection,
+                        currentIconSectionIndex: currentIconSectionIndex,
+                      )
+                    : const Center(child: Text('Categories is empty'));
               },
             )
           : const Center(child: LoadingWidget(size: 20)),

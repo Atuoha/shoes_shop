@@ -17,13 +17,19 @@ Future<void> main() async {
   );
 
   bool isAppPreviouslyRun = await checkIfAppPreviouslyRun();
-  runApp(MyApp(isAppPreviouslyRun: isAppPreviouslyRun));
+  bool isCustomer = await checkAccountType();
+  runApp(MyApp(isAppPreviouslyRun: isAppPreviouslyRun, isCustomer: isCustomer));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, this.isAppPreviouslyRun = false});
+  const MyApp({
+    super.key,
+    this.isAppPreviouslyRun = false,
+    this.isCustomer = true,
+  });
 
   final bool isAppPreviouslyRun;
+  final bool isCustomer;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +44,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: getLightTheme(),
       title: 'Shoe\'s Store',
-      home: EntryScreen(isAppPreviouslyRun: isAppPreviouslyRun),
+      home: EntryScreen(
+        isAppPreviouslyRun: isAppPreviouslyRun,
+        isCustomer: isCustomer,
+      ),
       routes: routes,
     );
   }
