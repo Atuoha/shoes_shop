@@ -1,5 +1,6 @@
 import '../views/auth/account_type.dart';
 import '../views/auth/auth.dart';
+import '../views/auth/forgot_password.dart';
 import '../views/customer/main_screen.dart';
 import '../views/splash/entry.dart';
 import '../views/splash/splash.dart';
@@ -21,4 +22,5 @@ final routes = {
   RouteManager.accountType: (context) => const AccountTypeScreen(),
   RouteManager.authScreen: (context) => const AuthScreen(),
   RouteManager.customerMainScreen: (context) => const CustomerMainScreen(),
+  RouteManager.forgotPasswordScreen: (context) => const ForgotPassword(),
 };

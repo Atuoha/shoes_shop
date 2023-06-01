@@ -36,7 +36,7 @@ class SingleCategorySection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppSize.s10),
               ),
               child: Center(
-                child: Image.asset(
+                child: Image.network(
                   item.imgUrl,
                   width: 50,
                   color: currentIconSectionIndex == index

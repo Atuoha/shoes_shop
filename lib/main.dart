@@ -12,13 +12,16 @@ import 'helpers/shared_prefs.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FirebaseApp app = await Firebase.initializeApp(
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   bool isAppPreviouslyRun = await checkIfAppPreviouslyRun();
   bool isCustomer = await checkAccountType();
-  runApp(MyApp(isAppPreviouslyRun: isAppPreviouslyRun, isCustomer: isCustomer));
+  runApp(MyApp(
+    isAppPreviouslyRun: isAppPreviouslyRun,
+    isCustomer: isCustomer,
+  ));
 }
 
 class MyApp extends StatelessWidget {

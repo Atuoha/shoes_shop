@@ -124,7 +124,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
           case Field.phone:
             if (value!.isEmpty || value.length < 10) {
-              return 'Phone is not valid';
+              return 'Phone number is not valid';
             }
             break;
 
