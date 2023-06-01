@@ -140,6 +140,12 @@ class _AuthScreenState extends State<AuthScreen> {
             }
             break;
 
+          case Field.phone:
+            if (value!.isEmpty || value.length < 10) {
+              return 'Phone is not valid';
+            }
+            break;
+
           case Field.password:
             if (value!.isEmpty || value.length < 8) {
               return 'Password needs to be valid';
@@ -185,20 +191,19 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   // handle sign in and  sign up
-  Future<void> _handleAuth() async {
+  _handleAuth() async {
     var valid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     _formKey.currentState!.save();
     if (!valid) {
-      return;
+      return null;
     }
-
-    setState(() {
-      isLoading = true;
-    });
 
     if (isLogin) {
       // TODO: implement sign in
+      setState(() {
+        isLoading = true;
+      });
 
       AuthResult? result = await _authController.signInUser(
         _emailController.text.trim(),
@@ -219,8 +224,12 @@ class _AuthScreenState extends State<AuthScreen> {
       if (profileImage == null) {
         // profile image is empty
         showSnackBar('Profile image can not be empty!');
-        return;
+        return null;
       }
+
+      setState(() {
+        isLoading = true;
+      });
 
       AuthResult? result = await _authController.signUpUser(
         _emailController.text.trim(),
@@ -250,15 +259,17 @@ class _AuthScreenState extends State<AuthScreen> {
       isLoading = true;
     });
 
-    var response = await _authController.googleAuth(
+    AuthResult? result = await _authController.googleAuth(
       widget.isSellerReg ? AccountType.seller : AccountType.customer,
     );
 
-    if (response != 'success') {
-      showSnackBar(response!);
-      setState(() {
-        isLoading = false;
-      });
+    if (result!.user == null) {
+      kCoolAlert(
+        message: result.errorMessage!,
+        context: ctxt,
+        alert: CoolAlertType.error,
+        action: completeAction,
+      );
     } else {
       isLoadingFnc();
     }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../constants/enums/account_type.dart';
 import '../models/auth_result.dart';
@@ -66,7 +67,6 @@ class AuthController {
       await storageRef.putFile(file);
       var downloadUrl = await storageRef.getDownloadURL();
       if (accountType == AccountType.seller) {
-        var response = 'error occurred!';
         firebase.collection('sellers').doc(credential.user!.uid).set({
           'fullname': fullname,
           'email': email,
@@ -107,7 +107,7 @@ class AuthController {
     }
   }
 
-  Future<String?> googleAuth(AccountType accountType) async {
+  Future<AuthResult?> googleAuth(AccountType accountType) async {
     var response = 'success';
 
     // Trigger the authentication flow
@@ -157,7 +157,8 @@ class AuthController {
         );
       }
       // sign in with credential
-      FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      return AuthResult.success(userCredential.user);
     } on FirebaseAuthException catch (e) {
       if (e.message != null) {
         if (e.code == 'user-not-found') {
@@ -172,19 +173,23 @@ class AuthController {
           response = e.code;
         }
       }
-      print(response);
-      throw response;
+      return AuthResult.error(response);
     } catch (e) {
       throw Exception(e);
     }
 
-    return response;
+
   }
 
   Future<void> signOut() async {
     try {
       _auth.signOut();
     } on FirebaseAuthException catch (e) {
-    } catch (e) {}
+      rethrow;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 }
