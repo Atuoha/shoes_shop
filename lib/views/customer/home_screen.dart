@@ -19,11 +19,7 @@ class CustomerHomeScreen extends StatefulWidget {
 class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   final TextEditingController searchText = TextEditingController();
 
-  @override
-  void initState() {
-    FirebaseAuth.instance.signOut();
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
