@@ -6,7 +6,6 @@ import '../views/splash/splash.dart';
 
 class RouteManager {
   static const String splashScreen = "/splash";
-  static const String entryScreen = "/entry_screen";
   static const String accountType = "/accountType";
 
   static const String authScreen = "/authScreen";
@@ -19,7 +18,6 @@ class RouteManager {
 
 final routes = {
   RouteManager.splashScreen: (context) => const SplashScreen(),
-  RouteManager.entryScreen: (context) => const EntryScreen(),
   RouteManager.accountType: (context) => const AccountTypeScreen(),
   RouteManager.authScreen: (context) => const AuthScreen(),
   RouteManager.customerMainScreen: (context) => const CustomerMainScreen(),

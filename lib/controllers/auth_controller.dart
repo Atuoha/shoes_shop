@@ -73,6 +73,7 @@ class AuthController {
           'image': downloadUrl,
           'auth-type': 'email',
           'phone': phone,
+          'account': 'seller',
           'address': '',
         });
       } else {
@@ -82,6 +83,7 @@ class AuthController {
           'image': downloadUrl,
           'auth-type': 'email',
           'phone': phone,
+          'account': 'customer',
           'address': '',
         });
       }
@@ -137,6 +139,7 @@ class AuthController {
             'email': googleUser.email,
             'image': googleUser.photoUrl,
             'auth-type': 'google',
+            'account': 'seller',
             'phone': '',
             'address': '',
           },
@@ -151,6 +154,7 @@ class AuthController {
             'email': googleUser.email,
             'image': googleUser.photoUrl,
             'auth-type': 'google',
+            'account': 'customer',
             'phone': '',
             'address': '',
           },

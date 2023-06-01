@@ -3,6 +3,7 @@ import 'package:shoes_shop/resources/assets_manager.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../constants/color.dart';
 import '../../controllers/route_manager.dart';
+import '../../helpers/shared_prefs.dart';
 import '../../models/splash_item.dart';
 import '../../resources/font_manager.dart';
 import '../../resources/string_manager.dart';
@@ -28,7 +29,6 @@ class _SplashScreenState extends State<SplashScreen> {
   //   return  _pageController.page?.round() ?? 0;
   // }
 
-
   void skipSlides() {
     _pageController.animateToPage(
       2,
@@ -37,15 +37,26 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
+  // n
   void nextSlide() {
     currentPageIndex != 2
         ? _pageController.nextPage(
-      duration: const Duration(seconds: 1),
-      curve: Curves.easeIn,
-    )
-        : Navigator.of(context).pushNamed(RouteManager.accountType);
+            duration: const Duration(seconds: 1),
+            curve: Curves.easeIn,
+          )
+        : finishSplash();
   }
 
+  // get context
+  get ctxt {
+    return context;
+  }
+
+  // finish splash
+  void finishSplash() async {
+    await setAppPreviouslyRun();
+    Navigator.of(ctxt).pushNamed(RouteManager.accountType);
+  }
 
   List<SplashItem> splashItems = [
     SplashItem(
@@ -75,14 +86,14 @@ class _SplashScreenState extends State<SplashScreen> {
         actions: [
           currentPageIndex != splashItems.length - 1
               ? TextButton(
-            onPressed: () => skipSlides(),
-            child: const Text(
-              'Skip',
-              style: TextStyle(
-                color: accentColor,
-              ),
-            ),
-          )
+                  onPressed: () => skipSlides(),
+                  child: const Text(
+                    'Skip',
+                    style: TextStyle(
+                      color: accentColor,
+                    ),
+                  ),
+                )
               : const SizedBox.shrink()
         ],
       ),
@@ -153,6 +164,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-
-
-
