@@ -1,12 +1,8 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shoes_shop/views/widgets/kcool_alert.dart';
 import '../../constants/color.dart';
 import '../../constants/enums/account_type.dart';
@@ -14,11 +10,12 @@ import '../../constants/enums/fields.dart';
 import '../../constants/enums/status.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/route_manager.dart';
+import '../../helpers/auth_error_formatter.dart';
 import '../../helpers/shared_prefs.dart';
 import '../../models/auth_result.dart';
 import '../../resources/assets_manager.dart';
 import '../widgets/loading_widget.dart';
-import 'forgot_password.dart';
+import '../widgets/msg_snackbar.dart';
 import '../../helpers/image_picker.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -44,7 +41,6 @@ class _AuthScreenState extends State<AuthScreen> {
   var isLogin = true;
   File? profileImage;
   var isLoading = false;
-  final _auth = FirebaseAuth.instance;
   final firebase = FirebaseFirestore.instance;
   final AuthController _authController = AuthController();
 
@@ -58,26 +54,6 @@ class _AuthScreenState extends State<AuthScreen> {
   // get context
   get ctxt {
     return context;
-  }
-
-  // snackbar for error message
-  showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: primaryColor,
-        action: SnackBarAction(
-          onPressed: () => Navigator.of(context).pop(),
-          label: 'Dismiss',
-          textColor: Colors.white,
-        ),
-      ),
-    );
   }
 
   // custom textfield for all form fields
@@ -171,7 +147,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   // loading fnc
-  isLoadingFnc() async{
+  isLoadingFnc() async {
     setState(() {
       isLoading = true;
     });
@@ -197,14 +173,17 @@ class _AuthScreenState extends State<AuthScreen> {
     Navigator.pop(context);
   }
 
-
-
   // handle sign in and  sign up
   _handleAuth() async {
     var valid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     _formKey.currentState!.save();
     if (!valid) {
+      displaySnackBar(
+        message: 'Form needs to be accurately filled',
+        status: Status.error,
+        context: context,
+      );
       return null;
     }
 
@@ -232,7 +211,11 @@ class _AuthScreenState extends State<AuthScreen> {
       // TODO: implement sign up
       if (profileImage == null) {
         // profile image is empty
-        showSnackBar('Profile image can not be empty!');
+        displaySnackBar(
+          message: 'Profile image can not be empty!',
+          status: Status.error,
+          context: context,
+        );
         return null;
       }
 
@@ -268,19 +251,28 @@ class _AuthScreenState extends State<AuthScreen> {
       isLoading = true;
     });
 
-    AuthResult? result = await _authController.googleAuth(
-      widget.isSellerReg ? AccountType.seller : AccountType.customer,
-    );
+    try {
+      AuthResult? result = await _authController.googleAuth(
+        widget.isSellerReg ? AccountType.seller : AccountType.customer,
+      );
 
-    if (result!.user == null) {
+      if (result!.user != null) {
+        isLoadingFnc();
+      } else {
+        kCoolAlert(
+          message: result.errorMessage!,
+          context: ctxt,
+          alert: CoolAlertType.error,
+          action: completeAction,
+        );
+      }
+    } catch (e) {
       kCoolAlert(
-        message: result.errorMessage!,
+        message: 'An error occurred!',
         context: ctxt,
         alert: CoolAlertType.error,
         action: completeAction,
       );
-    } else {
-      isLoadingFnc();
     }
   }
 
@@ -394,7 +386,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               textDirection: TextDirection.rtl,
                               child: ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
-                                  primary: primaryColor,
+                                  backgroundColor: primaryColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),

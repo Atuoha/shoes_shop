@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../constants/enums/account_type.dart';
+import '../helpers/auth_error_formatter.dart';
 import '../models/auth_result.dart';
 
 class AuthController {
@@ -22,19 +23,8 @@ class AuthController {
     } on FirebaseAuthException catch (e) {
       var response = 'error occurred!';
 
-      if (e.message != null) {
-        if (e.code == 'user-not-found') {
-          response = "Email not recognised!";
-        } else if (e.code == 'account-exists-with-different-credential') {
-          response = "Email already in use!";
-        } else if (e.code == 'wrong-password') {
-          response = 'Email or Password Incorrect!';
-        } else if (e.code == 'network-request-failed') {
-          response = 'Network error! Try connecting your internet';
-        } else {
-          response = e.code;
-        }
-      }
+      var error = authErrorFormatter(e);
+      response = error;
       return AuthResult.error(response);
     } catch (e) {
       throw Exception(e);
@@ -74,6 +64,7 @@ class AuthController {
           'auth-type': 'email',
           'phone': phone,
           'address': '',
+          'sellerId': credential.user!.uid,
         });
       } else {
         firebase.collection('customers').doc(credential.user!.uid).set({
@@ -83,24 +74,14 @@ class AuthController {
           'auth-type': 'email',
           'phone': phone,
           'address': '',
+          'customerId': credential.user!.uid,
         });
       }
       return AuthResult.success(credential.user);
     } on FirebaseAuthException catch (e) {
       var response = 'error';
-      if (e.message != null) {
-        if (e.code == 'user-not-found') {
-          response = "Email not recognised!";
-        } else if (e.code == 'account-exists-with-different-credential') {
-          response = "Email already in use!";
-        } else if (e.code == 'wrong-password') {
-          response = 'Email or Password Incorrect!';
-        } else if (e.code == 'network-request-failed') {
-          response = 'Network error!';
-        } else {
-          response = e.code;
-        }
-      }
+      var error = authErrorFormatter(e);
+      response = error;
       return AuthResult.error(response);
     } catch (e) {
       throw Exception(e);
@@ -108,8 +89,6 @@ class AuthController {
   }
 
   Future<AuthResult?> googleAuth(AccountType accountType) async {
-    var response = 'success';
-
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -139,6 +118,7 @@ class AuthController {
             'auth-type': 'google',
             'phone': '',
             'address': '',
+            'sellerId': logCredential.user!.uid,
           },
         );
       } else {
@@ -153,32 +133,23 @@ class AuthController {
             'auth-type': 'google',
             'phone': '',
             'address': '',
+            'customerId': logCredential.user!.uid,
           },
         );
       }
       // sign in with credential
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
       return AuthResult.success(userCredential.user);
     } on FirebaseAuthException catch (e) {
-      if (e.message != null) {
-        if (e.code == 'user-not-found') {
-          response = "Email not recognised!";
-        } else if (e.code == 'account-exists-with-different-credential') {
-          response = "Email already in use!";
-        } else if (e.code == 'wrong-password') {
-          response = 'Email or Password Incorrect!';
-        } else if (e.code == 'network-request-failed') {
-          response = 'Network error!';
-        } else {
-          response = e.code;
-        }
-      }
+      var response = 'error';
+
+      var error = authErrorFormatter(e);
+      response = error;
       return AuthResult.error(response);
     } catch (e) {
       throw Exception(e);
     }
-
-
   }
 
   Future<void> signOut() async {

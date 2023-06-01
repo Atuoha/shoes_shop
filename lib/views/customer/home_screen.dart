@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop/resources/styles_manager.dart';
 import '../../resources/font_manager.dart';
@@ -19,6 +20,12 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   final TextEditingController searchText = TextEditingController();
 
   @override
+  void initState() {
+    FirebaseAuth.instance.signOut();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,9 +38,9 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
           ),
           child: Column(
             children: [
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   WelcomeIntro(),
                   CartIcon(),
                 ],
