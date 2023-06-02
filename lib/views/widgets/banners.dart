@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -40,19 +41,21 @@ class _BannerComponentState extends State<BannerComponent> {
   Widget build(BuildContext context) {
     return CarouselSlider.builder(
       itemCount: _banners.length,
-      itemBuilder: (context, i, index) =>  _banners.isNotEmpty
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: FadeInImage(
-                    placeholder: const AssetImage(AssetManager.emptyImg),
-                    image: NetworkImage(_banners[i]),
-                    fit: BoxFit.cover,
-                  ),
-                )
-              : ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(AssetManager.emptyImg),
-                ),
+      itemBuilder: (context, i, index) => _banners.isNotEmpty
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: CachedNetworkImage(
+                imageUrl: _banners[i],
+                placeholder: (context, url) =>
+                    Image.asset(AssetManager.emptyImg),
+                errorWidget: (context, url, error) =>
+                    Image.asset(AssetManager.emptyImg),
+              ),
+            )
+          : ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(AssetManager.emptyImg),
+            ),
       options: CarouselOptions(
         height: 150,
         viewportFraction: 0.5,

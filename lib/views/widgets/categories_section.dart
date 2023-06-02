@@ -15,7 +15,7 @@ class CategorySection extends StatefulWidget {
 class _CategorySectionState extends State<CategorySection> {
   var currentCarouselIndex = 0;
   var currentIconSectionIndex = 0;
-  bool isLoading = true;
+  // bool isLoading = true;
 
   final List<Category> categories = [];
 
@@ -33,10 +33,10 @@ class _CategorySectionState extends State<CategorySection> {
           ),
         );
       }
-
-      setState(() {
-        isLoading = false;
-      });
+      //
+      // setState(() {
+      //   isLoading = false;
+      // });
     });
   }
 
@@ -57,8 +57,7 @@ class _CategorySectionState extends State<CategorySection> {
     Size size = MediaQuery.of(context).size;
     return SizedBox(
       height: size.height / 8,
-      child: !isLoading
-          ? ListView.builder(
+      child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: categories.length,
               itemBuilder: (context, index) {
@@ -73,7 +72,7 @@ class _CategorySectionState extends State<CategorySection> {
                     : const Center(child: Text('Categories is empty'));
               },
             )
-          : const Center(child: LoadingWidget(size: 20)),
+          // : const Center(child: LoadingWidget(size: 20)),
     );
   }
 }

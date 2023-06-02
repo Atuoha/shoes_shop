@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/color.dart';
 import '../../models/category.dart';
+import '../../resources/assets_manager.dart';
 import '../../resources/values_manager.dart';
 
 class SingleCategorySection extends StatelessWidget {
@@ -36,8 +38,12 @@ class SingleCategorySection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppSize.s10),
               ),
               child: Center(
-                child: Image.network(
-                  item.imgUrl,
+                child: CachedNetworkImage(
+                  imageUrl: item.imgUrl,
+                  placeholder: (context, url) =>
+                      Image.asset(AssetManager.addImage,fit:BoxFit.cover),
+                  errorWidget: (context, url, error) =>
+                      Image.asset(AssetManager.addImage,fit:BoxFit.cover),
                   width: 50,
                   color: currentIconSectionIndex == index
                       ? Colors.white
