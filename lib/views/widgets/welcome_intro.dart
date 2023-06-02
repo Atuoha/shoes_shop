@@ -38,6 +38,7 @@ class _WelcomeIntroState extends State<WelcomeIntro> {
     fetchUserDetails();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return !isLoading?  Wrap(

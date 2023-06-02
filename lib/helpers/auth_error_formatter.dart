@@ -18,3 +18,20 @@ String authErrorFormatter(FirebaseAuthException e) {
 
   return response;
 }
+
+String extractErrorMessage(String exceptionMessage) {
+  // Extract the first value before the comma inside the brackets
+  RegExp regex = RegExp(r'\((.*?)\)');
+  RegExpMatch? match = regex.firstMatch(exceptionMessage);
+  String errorMessage = 'Unknown error';
+
+  if (match != null) {
+    String? bracketContent = match.group(1);
+    List<String> parts = bracketContent!.split(',');
+    if (parts.isNotEmpty) {
+      errorMessage = parts.first.trim();
+    }
+  }
+
+  return errorMessage;
+}

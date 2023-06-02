@@ -53,6 +53,7 @@ dependencies:
   loading_animation_widget: ^1.2.0+4
   animations: ^2.0.7
   image_picker: ^0.8.7+5
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:

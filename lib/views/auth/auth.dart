@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop/views/widgets/kcool_alert.dart';
 import '../../constants/color.dart';
@@ -166,6 +165,7 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
+  // called after an action is completed
   void completeAction() {
     setState(() {
       isLoading = false;
@@ -268,7 +268,7 @@ class _AuthScreenState extends State<AuthScreen> {
       }
     } catch (e) {
       kCoolAlert(
-        message: 'An error occurred!',
+        message: extractErrorMessage(e.toString()),
         context: ctxt,
         alert: CoolAlertType.error,
         action: completeAction,
@@ -281,6 +281,7 @@ class _AuthScreenState extends State<AuthScreen> {
     Navigator.of(context).pushNamed(RouteManager.forgotPasswordScreen);
   }
 
+  // switch authentication mode
   _switchLog() {
     setState(() {
       isLogin = !isLogin;
