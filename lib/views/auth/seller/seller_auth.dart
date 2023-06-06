@@ -193,7 +193,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
     var valid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     _formKey.currentState!.save();
-    if (!valid || _cityController.text.isEmpty) {
+    if (!valid) {
       displaySnackBar(
         message: 'Form needs to be accurately filled',
         status: Status.error,
@@ -201,6 +201,8 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
       );
       return null;
     }
+
+
 
     if (isLogin) {
       // TODO: implement sign in
@@ -228,6 +230,17 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
         // profile image is empty
         displaySnackBar(
           message: 'Profile image can not be empty!',
+          status: Status.error,
+          context: context,
+        );
+        return null;
+      }
+
+
+      if(_cityController.text.isEmpty){
+        // city is empty
+        displaySnackBar(
+          message: 'You need to select your complete location!',
           status: Status.error,
           context: context,
         );
