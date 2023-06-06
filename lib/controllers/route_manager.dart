@@ -5,6 +5,7 @@ import '../views/auth/account_type.dart';
 import '../views/auth/customer/customer_auth.dart';
 import '../views/auth/customer/forgot_password.dart';
 import '../views/customer/main_screen.dart';
+import '../views/seller/entry_screen.dart';
 import '../views/splash/entry.dart';
 import '../views/splash/splash.dart';
 
@@ -29,6 +30,7 @@ final routes = {
   RouteManager.accountType: (context) => const AccountTypeScreen(),
   RouteManager.customerAuthScreen: (context) => const CustomerAuthScreen(),
   RouteManager.sellerAuthScreen: (context) => const SellerAuthScreen(),
+  RouteManager.sellerEntryScreen: (context) => const SellerEntryScreen(),
   RouteManager.customerMainScreen: (context) => const CustomerMainScreen(),
   RouteManager.customerForgotPass: (context) => const CustomerForgotPassword(),
   RouteManager.sellerForgotPass: (context) => const SellerForgotPassword(),

@@ -30,12 +30,17 @@ class SellerAuthScreen extends StatefulWidget {
 class _SellerAuthScreenState extends State<SellerAuthScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _fullnameController = TextEditingController();
+  final _businessNameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _phoneController = TextEditingController();
 
   final _taxNumberController = TextEditingController();
   final _companyNumberController = TextEditingController();
+
+  final _countryController = TextEditingController();
+  final _stateController = TextEditingController();
+  final _cityController = TextEditingController();
+
 
   var obscure = true; // password obscure value
   var isLogin = true;
@@ -44,9 +49,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
   final firebase = FirebaseFirestore.instance;
   final AuthController _authController = AuthController();
 
-  String countryValue = '';
-  String stateValue = '';
-  String cityValue = '';
+
   bool isCompanyRegistered = false;
 
   // toggle password obscure
@@ -190,7 +193,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
     var valid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     _formKey.currentState!.save();
-    if (!valid || cityValue.isEmpty) {
+    if (!valid || _cityController.text.isEmpty) {
       displaySnackBar(
         message: 'Form needs to be accurately filled',
         status: Status.error,
@@ -237,14 +240,14 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
 
       AuthResult? result = await _authController.signUpUser(
         email: _emailController.text.trim(),
-        fullname: _fullnameController.text.trim(),
+        fullname: _businessNameController.text.trim(),
         phone: _phoneController.text.trim(),
         password: _passwordController.text.trim(),
         accountType: AccountType.seller,
         profileImage: profileImage,
-        country: countryValue,
-        state: stateValue,
-        city: cityValue,
+        country: _countryController.text,
+        state: _stateController.text,
+        city: _cityController.text,
         taxNumber: _taxNumberController.text.trim(),
         companyRegNo: _companyNumberController.text.trim(),
       );
@@ -369,7 +372,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
                               const SizedBox(height: 10),
                               !isLogin
                                   ? kTextField(
-                                      _fullnameController,
+                                      _businessNameController,
                                       'Doe Business',
                                       'Business name',
                                       Field.fullname,
@@ -401,17 +404,17 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
                                   child: SelectState(
                                     onCountryChanged: (value) {
                                       setState(() {
-                                        countryValue = value;
+                                        _countryController.text = value;
                                       });
                                     },
                                     onStateChanged: (value) {
                                       setState(() {
-                                        stateValue = value;
+                                        _stateController.text = value;
                                       });
                                     },
                                     onCityChanged: (value) {
                                       setState(() {
-                                        cityValue = value;
+                                        _cityController.text = value;
                                       });
                                     },
                                   ),
