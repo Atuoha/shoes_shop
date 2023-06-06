@@ -29,11 +29,14 @@ class _EntryScreenState extends State<EntryScreen> {
               Navigator.of(context).pushNamedAndRemoveUntil(
                   RouteManager.customerMainScreen, (route) => false);
             });
+            print('Customer............................................');
+            print(widget.isCustomer);
           }else{
             Timer(const Duration(seconds: 3), () {
               Navigator.of(context).pushNamedAndRemoveUntil(
-                  RouteManager.sellerMainScreen, (route) => false);
+                  RouteManager.sellerEntryScreen, (route) => false);
             });
+            print('Seller...............................................');
           }
 
         } else {

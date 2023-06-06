@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop/views/widgets/loading_widget.dart';
 
+import '../../controllers/auth_controller.dart';
 import '../../resources/assets_manager.dart';
 import '../../resources/font_manager.dart';
 import '../../resources/styles_manager.dart';
@@ -29,6 +30,7 @@ class _WelcomeIntroState extends State<WelcomeIntro> {
     setState(() {
       isLoading = false;
     });
+
   }
 
 
