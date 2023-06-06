@@ -20,6 +20,8 @@ class RouteManager {
   static const String sellerAuthScreen = "/sellerAuthScreen";
   static const String sellerForgotPass = "/sellerForgotPass";
   static const String sellerMainScreen = '/sellerMainScreen';
+  static const String sellerEntryScreen = '/sellerEntryScreen';
+
 }
 
 final routes = {

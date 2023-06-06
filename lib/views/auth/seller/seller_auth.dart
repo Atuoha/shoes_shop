@@ -19,7 +19,6 @@ import '../../../helpers/image_picker.dart';
 import 'package:country_state_city_picker/country_state_city_picker.dart';
 
 class SellerAuthScreen extends StatefulWidget {
-
   const SellerAuthScreen({
     Key? key,
   }) : super(key: key);
@@ -36,7 +35,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
   final _phoneController = TextEditingController();
 
   final _taxNumberController = TextEditingController();
-  final _ninNumberController = TextEditingController();
+  final _companyNumberController = TextEditingController();
 
   var obscure = true; // password obscure value
   var isLogin = true;
@@ -48,7 +47,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
   String countryValue = '';
   String stateValue = '';
   String cityValue = '';
-  bool isTaxRegistered = false;
+  bool isCompanyRegistered = false;
 
   // toggle password obscure
   _togglePasswordObscure() {
@@ -77,7 +76,9 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
           ? TextInputType.emailAddress
           : field == Field.phone
               ? TextInputType.phone
-              : TextInputType.text,
+              : field == Field.companyRegNo || field == Field.taxNumber
+                  ? TextInputType.number
+                  : TextInputType.text,
       textInputAction:
           field == Field.password ? TextInputAction.done : TextInputAction.next,
       autofocus: field == Field.email ? true : false,
@@ -140,9 +141,9 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
             }
             break;
 
-          case Field.ninNumber:
+          case Field.companyRegNo:
             if (value!.isEmpty || value.length < 8) {
-              return 'NIN number needs to be valid';
+              return 'Company registration number needs to be valid';
             }
             break;
 
@@ -170,7 +171,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
       isLoading = true;
     });
     // seller account
-    // Navigator.of(context).pushNamed(SellerBottomNav.routeName);
+    Navigator.of(context).pushNamed(RouteManager.sellerEntryScreen);
 
     // set account type to seller
     await setAccountType(accountType: AccountType.seller);
@@ -245,7 +246,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
         state: stateValue,
         city: cityValue,
         taxNumber: _taxNumberController.text.trim(),
-        ninNumber: _ninNumberController.text.trim(),
+        companyRegNo: _companyNumberController.text.trim(),
       );
 
       if (result!.user == null) {
@@ -360,7 +361,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
                             children: [
                               kTextField(
                                 _emailController,
-                                'doe@gmail.com',
+                                'doe business@gmail.com',
                                 'Email Address',
                                 Field.email,
                                 false,
@@ -369,7 +370,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
                               !isLogin
                                   ? kTextField(
                                       _fullnameController,
-                                      'John Doe',
+                                      'Doe Business',
                                       'Business name',
                                       Field.fullname,
                                       false,
@@ -416,14 +417,14 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
                                   ),
                                 ),
                                 CheckboxListTile(
-                                  value: isTaxRegistered,
+                                  value: isCompanyRegistered,
                                   onChanged: (value) {
                                     setState(() {
-                                      isTaxRegistered = value!;
+                                      isCompanyRegistered = value!;
                                     });
                                   },
                                   title: const Text(
-                                      'Have you registered for tax?'),
+                                      'Have you registered your company?'),
                                   checkboxShape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -431,20 +432,20 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
                               ],
 
                               // tax details
-                              if (!isLogin && isTaxRegistered) ...[
+                              if (!isLogin && isCompanyRegistered) ...[
                                 kTextField(
-                                  _taxNumberController,
+                                  _companyNumberController,
                                   '90988777880',
-                                  'Tax Number',
-                                  Field.taxNumber,
+                                  'Company Reg Number',
+                                  Field.companyRegNo,
                                   false,
                                 ),
                                 const SizedBox(height: 10),
                                 kTextField(
-                                  _ninNumberController,
+                                  _taxNumberController,
                                   '90988777880',
-                                  'NIN Number',
-                                  Field.ninNumber,
+                                  'TIN Number',
+                                  Field.taxNumber,
                                   false,
                                 ),
                               ],

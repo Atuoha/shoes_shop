@@ -42,7 +42,7 @@ class AuthController {
     String state = '',
     String city = '',
     String taxNumber = '',
-    String ninNumber = '',
+    String companyRegNo = '',
   }) async {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
@@ -75,7 +75,7 @@ class AuthController {
           'state': state,
           'city': city,
           'tax_number': taxNumber,
-          'nin_number': ninNumber,
+          'company_number': companyRegNo,
           'sellerId': credential.user!.uid,
         });
       } else {
