@@ -38,6 +38,9 @@ class AuthController {
     String password,
     AccountType accountType,
     File? profileImage,
+    String country,
+    String state,
+    String city,
   ) async {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
@@ -58,12 +61,15 @@ class AuthController {
       var downloadUrl = await storageRef.getDownloadURL();
       if (accountType == AccountType.seller) {
         firebase.collection('sellers').doc(credential.user!.uid).set({
-          'fullname': fullname,
+          'business_name': fullname,
           'email': email,
           'image': downloadUrl,
           'auth-type': 'email',
           'phone': phone,
           'address': '',
+          'country': country,
+          'state':state,
+          'city':city,
           'sellerId': credential.user!.uid,
         });
       } else {
@@ -112,7 +118,7 @@ class AuthController {
             .doc(logCredential.user!.uid)
             .set(
           {
-            'fullname': googleUser!.displayName,
+            'business_name': googleUser!.displayName,
             'email': googleUser.email,
             'image': googleUser.photoUrl,
             'auth-type': 'google',

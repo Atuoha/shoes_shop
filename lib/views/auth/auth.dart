@@ -16,6 +16,7 @@ import '../../resources/assets_manager.dart';
 import '../widgets/loading_widget.dart';
 import '../widgets/msg_snackbar.dart';
 import '../../helpers/image_picker.dart';
+import 'package:country_state_city_picker/country_state_city_picker.dart';
 
 class AuthScreen extends StatefulWidget {
   static const routeName = '/customer-auth';
@@ -42,6 +43,10 @@ class _AuthScreenState extends State<AuthScreen> {
   var isLoading = false;
   final firebase = FirebaseFirestore.instance;
   final AuthController _authController = AuthController();
+
+  String countryValue = '';
+  String stateValue = '';
+  String cityValue = '';
 
   // toggle password obscure
   _togglePasswordObscure() {
@@ -230,6 +235,9 @@ class _AuthScreenState extends State<AuthScreen> {
         _passwordController.text.trim(),
         widget.isSellerReg ? AccountType.seller : AccountType.customer,
         profileImage,
+        countryValue,
+        stateValue,
+        cityValue,
       );
 
       if (result!.user == null) {
@@ -359,7 +367,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 ? kTextField(
                                     _fullnameController,
                                     'John Doe',
-                                    'Fullname',
+                                   !widget.isSellerReg ?'Fullname': 'Business name',
                                     Field.fullname,
                                     false,
                                   )
@@ -382,7 +390,29 @@ class _AuthScreenState extends State<AuthScreen> {
                               Field.password,
                               obscure,
                             ),
-                            const SizedBox(height: 30),
+                            SizedBox(height: isLogin ? 0 : 10),
+                            !isLogin && widget.isSellerReg ? Padding(
+                              padding: const EdgeInsets.only(left:8.0),
+                              child: SelectState(
+                                onCountryChanged: (value) {
+                                  setState(() {
+                                    countryValue = value;
+                                  });
+                                },
+                                onStateChanged:(value) {
+                                  setState(() {
+                                    stateValue = value;
+                                  });
+                                },
+                                onCityChanged:(value) {
+                                  setState(() {
+                                    cityValue = value;
+                                  });
+                                },
+
+                              ),
+                            ): const SizedBox.shrink(),
+                            SizedBox(height: isLogin ? 30: 10),
                             Directionality(
                               textDirection: TextDirection.rtl,
                               child: ElevatedButton.icon(

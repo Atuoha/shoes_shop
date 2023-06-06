@@ -45,6 +45,7 @@ class _BannerComponentState extends State<BannerComponent> {
           ? ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
+                fit: BoxFit.cover,
                 imageUrl: _banners[i],
                 placeholder: (context, url) =>
                     Image.asset(AssetManager.emptyImg),

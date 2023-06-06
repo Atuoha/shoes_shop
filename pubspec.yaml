@@ -54,6 +54,8 @@ dependencies:
   animations: ^2.0.7
   image_picker: ^0.8.7+5
   cached_network_image: ^3.2.3
+  shimmer: ^3.0.0
+  country_state_city_picker: ^1.2.8
 
 dev_dependencies:
   flutter_test:
