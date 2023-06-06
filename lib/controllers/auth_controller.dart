@@ -31,17 +31,19 @@ class AuthController {
     }
   }
 
-  Future<AuthResult?> signUpUser(
-    String email,
-    String fullname,
-    String phone,
-    String password,
-    AccountType accountType,
-    File? profileImage,
-    String country,
-    String state,
-    String city,
-  ) async {
+  Future<AuthResult?> signUpUser({
+    required String email,
+    required String fullname,
+    required String phone,
+    required String password,
+    required AccountType accountType,
+    required File? profileImage,
+    String country = '',
+    String state = '',
+    String city = '',
+    String taxNumber = '',
+    String ninNumber = '',
+  }) async {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -51,7 +53,9 @@ class AuthController {
       // upload img
       final storageRef = FirebaseStorage.instance
           .ref()
-          .child('user-images')
+          .child(
+            accountType == AccountType.seller ? 'seller-images' : 'user-images',
+          )
           .child('${credential.user!.uid}.jpg');
 
       File? file;
@@ -68,8 +72,10 @@ class AuthController {
           'phone': phone,
           'address': '',
           'country': country,
-          'state':state,
-          'city':city,
+          'state': state,
+          'city': city,
+          'tax_number': taxNumber,
+          'nin_number': ninNumber,
           'sellerId': credential.user!.uid,
         });
       } else {

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:shoes_shop/controllers/route_manager.dart';
 import 'package:shoes_shop/resources/assets_manager.dart';
 
-import '../../constants/color.dart';
+import '../../../constants/color.dart';
 
-class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({Key? key}) : super(key: key);
+class SellerForgotPassword extends StatefulWidget {
+  const SellerForgotPassword({Key? key}) : super(key: key);
 
   @override
-  State<ForgotPassword> createState() => _ForgotPasswordState();
+  State<SellerForgotPassword> createState() => _SellerForgotPasswordState();
 }
 
-class _ForgotPasswordState extends State<ForgotPassword> {
+class _SellerForgotPasswordState extends State<SellerForgotPassword> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
 
@@ -26,7 +26,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   // navigate to sign in screen
   _navigateToSignIn() {
-    Navigator.of(context).pushNamed(RouteManager.authScreen);
+    Navigator.of(context).pushNamed(RouteManager.customerAuthScreen);
   }
 
   @override

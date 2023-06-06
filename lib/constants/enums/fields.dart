@@ -4,4 +4,6 @@ enum Field {
   email,
   password,
   phone,
+  taxNumber,
+  ninNumber,
 }
