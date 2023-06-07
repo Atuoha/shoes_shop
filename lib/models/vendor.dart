@@ -33,20 +33,20 @@ class Vendor {
 
   Vendor.fromJson(Map<String, dynamic> data)
       : this(
-          storeId: data['storeId'] as String,
-          storeName: data['storeName'] as String,
-          email: data['email'] as String,
-          phone: data['phone'] as String,
-          taxNumber: data['taxNumber']! as String,
-          storeNumber: data['storeNumber']! as String,
-          country: data['country'] as String,
-          state: data['state'] as String,
-          city: data['city'] as String,
-          address: data['address'] as String,
-          authType: data['authType'] as String,
-          storeImgUrl: data['storeImgUrl'] as String,
-          isApproved: data['isApproved'] as bool,
-          isStoreRegistered: data['isStoreRegistered'] as bool,
+          storeId: data['storeId'],
+          storeName: data['storeName'],
+          email: data['email'],
+          phone: data['phone'],
+          taxNumber: data['taxNumber'],
+          storeNumber: data['storeNumber'],
+          country: data['country'],
+          state: data['state'],
+          city: data['city'],
+          address: data['address'],
+          authType: data['authType'],
+          storeImgUrl: data['storeImgUrl'],
+          isApproved: data['isApproved'],
+          isStoreRegistered: data['isStoreRegistered'],
         );
 
   Map<String, dynamic> toJson() => {

@@ -1,12 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop/controllers/auth_controller.dart';
 
 import '../../constants/color.dart';
 import '../../controllers/route_manager.dart';
+import '../../models/vendor.dart';
 import '../../resources/assets_manager.dart';
 import '../../resources/styles_manager.dart';
 import '../widgets/are_you_sure_dialog.dart';
 import 'package:confetti/confetti.dart';
+
+import '../widgets/loading_widget.dart';
 
 class VendorEntryScreen extends StatefulWidget {
   const VendorEntryScreen({Key? key}) : super(key: key);
@@ -17,8 +22,8 @@ class VendorEntryScreen extends StatefulWidget {
 
 class _VendorEntryScreenState extends State<VendorEntryScreen> {
   final ConfettiController confettiController = ConfettiController();
-
   AuthController authController = AuthController();
+  final userId = FirebaseAuth.instance.currentUser!.uid;
 
   // return context
   get ctx => context;
@@ -26,7 +31,8 @@ class _VendorEntryScreenState extends State<VendorEntryScreen> {
   // logout
   logout() async {
     await authController.signOut();
-    Navigator.of(ctx).pushNamed(RouteManager.accountType);
+    Navigator.of(ctx)
+        .pushNamedAndRemoveUntil(RouteManager.accountType, (route) => false);
   }
 
   // logout dialog
@@ -53,41 +59,67 @@ class _VendorEntryScreenState extends State<VendorEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Stream<DocumentSnapshot> query = FirebaseFirestore.instance
+        .collection('vendors')
+        .doc(userId)
+        .snapshots();
+
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: confettiController,
-              colors: const [
-                primaryColor,
-                accentColor,
-              ],
-              numberOfParticles: 150,
-              blastDirectionality: BlastDirectionality.explosive,
-              gravity: 1,
-              // blastDirection: pi,
-            ),
-          ),
-          Image.asset(AssetManager.successCheck),
-          const SizedBox(height: 10),
-          const Text('Hello there,'),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Congratulations on creating your store with us! Allow us some time so we can kindly confirm to finalize the setup and ensure the accuracy of your store details.\n\nBest regards!',
-              style: getRegularStyle(color: Colors.black),
-            ),
-          ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () => logoutDialog(),
-            child: const Text('Sign out'),
-          )
-        ],
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: query,
+        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Center(child: Text('Error occurred!'));
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const LoadingWidget(size: 50);
+          }
+
+          Vendor vendor =
+              Vendor.fromJson(snapshot.data!.data() as Map<String, dynamic>);
+
+          if (vendor.isApproved) {
+            // account is approved
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                RouteManager.vendorMainScreen, (route) => false);
+          }
+
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: ConfettiWidget(
+                  confettiController: confettiController,
+                  colors: const [
+                    primaryColor,
+                    accentColor,
+                  ],
+                  numberOfParticles: 150,
+                  blastDirectionality: BlastDirectionality.explosive,
+                  gravity: 1,
+                ),
+              ),
+              Image.asset(AssetManager.successCheck),
+              const SizedBox(height: 10),
+              Text('Hello ${vendor.storeName},'),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Congratulations on creating your store with us! Allow us some time so we can kindly confirm to finalize the setup and ensure the accuracy of your store details.\n\nBest regards!',
+                  style: getRegularStyle(color: Colors.black),
+                ),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => logoutDialog(),
+                child: const Text('Sign out'),
+              )
+            ],
+          );
+        },
       ),
     );
   }

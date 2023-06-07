@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop/views/widgets/kcool_alert.dart';
 import '../../../constants/color.dart';
@@ -12,6 +13,7 @@ import '../../../controllers/route_manager.dart';
 import '../../../helpers/auth_error_formatter.dart';
 import '../../../helpers/shared_prefs.dart';
 import '../../../models/auth_result.dart';
+import '../../../models/vendor.dart';
 import '../../../resources/assets_manager.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/msg_snackbar.dart';
@@ -166,13 +168,39 @@ class _VendorAuthScreenState extends State<VendorAuthScreen> {
     });
   }
 
+  // context
+  get cxt => context;
+
+  // routing to the main screen or the entry screen based on whether approved or not
+  routingVendor() async {
+    var userId = FirebaseAuth.instance.currentUser!.uid;
+    var data = await FirebaseFirestore.instance
+        .collection('vendors')
+        .doc(userId)
+        .get();
+
+    Vendor vendor = Vendor.fromJson(data as Map<String, dynamic>); // retrieving vendor
+    print(vendor);
+    if (data['isApproved']) {
+      // account approved
+      Navigator.of(cxt).pushNamedAndRemoveUntil(
+          RouteManager.vendorMainScreen, (route) => false);
+    } else {
+      // account not approved
+      Navigator.of(cxt).pushNamedAndRemoveUntil(
+        RouteManager.vendorEntryScreen,
+        (route) => false,
+      );
+    }
+  }
+
   // loading fnc
   isLoadingFnc() async {
     setState(() {
       isLoading = true;
     });
-    // vendor account
-    Navigator.of(context).pushNamed(RouteManager.vendorEntryScreen);
+    // routing vendor
+    routingVendor();
 
     // set account type to vendor
     await setAccountType(accountType: AccountType.vendor);
