@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
@@ -179,17 +180,21 @@ class _VendorAuthScreenState extends State<VendorAuthScreen> {
         .doc(userId)
         .get();
 
-    Vendor vendor = Vendor.fromJson(data as Map<String, dynamic>); // retrieving vendor
-    print(vendor);
     if (data['isApproved']) {
       // account approved
-      Navigator.of(cxt).pushNamedAndRemoveUntil(
-          RouteManager.vendorMainScreen, (route) => false);
+      Timer(
+        const Duration(seconds: 2),
+        () => Navigator.of(cxt).pushNamedAndRemoveUntil(
+            RouteManager.vendorMainScreen, (route) => false),
+      );
     } else {
       // account not approved
-      Navigator.of(cxt).pushNamedAndRemoveUntil(
-        RouteManager.vendorEntryScreen,
-        (route) => false,
+      Timer(
+        const Duration(seconds: 2),
+        () => Navigator.of(cxt).pushNamedAndRemoveUntil(
+          RouteManager.vendorEntryScreen,
+          (route) => false,
+        ),
       );
     }
   }
@@ -251,9 +256,9 @@ class _VendorAuthScreenState extends State<VendorAuthScreen> {
     } else {
       // TODO: implement sign up
       if (profileImage == null) {
-        // profile image is empty
+        // store image is empty
         displaySnackBar(
-          message: 'Profile image can not be empty!',
+          message: 'Store image can not be empty!',
           status: Status.error,
           context: context,
         );

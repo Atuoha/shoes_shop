@@ -8,6 +8,7 @@ import '../views/customer/main_screen.dart';
 import '../views/vendor/entry_screen.dart';
 import '../views/splash/entry.dart';
 import '../views/splash/splash.dart';
+import '../views/vendor/main_screen.dart';
 
 class RouteManager {
   static const String splashScreen = "/splash";
@@ -30,6 +31,7 @@ final routes = {
   RouteManager.accountType: (context) => const AccountTypeScreen(),
   RouteManager.customerAuthScreen: (context) => const CustomerAuthScreen(),
   RouteManager.vendorAuthScreen: (context) => const VendorAuthScreen(),
+  RouteManager.vendorMainScreen: (context) => const VendorMainScreen(),
   RouteManager.vendorEntryScreen: (context) => const VendorEntryScreen(),
   RouteManager.customerMainScreen: (context) => const CustomerMainScreen(),
   RouteManager.customerForgotPass: (context) => const CustomerForgotPassword(),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,7 @@ class _VendorEntryScreenState extends State<VendorEntryScreen> {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingWidget(size: 50);
+            return const Center(child:  LoadingWidget(size: 50));
           }
 
           Vendor vendor =
@@ -104,6 +105,19 @@ class _VendorEntryScreenState extends State<VendorEntryScreen> {
               ),
               Image.asset(AssetManager.successCheck),
               const SizedBox(height: 10),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: vendor.storeImgUrl,
+                  placeholder: (context, url) =>
+                      Image.asset(AssetManager.emptyImg),
+                  errorWidget: (context, url, error) =>
+                      Image.asset(AssetManager.emptyImg),
+                  width: 50,
+                ),
+              ),
+              const SizedBox(height:10),
               Text('Hello ${vendor.storeName},'),
               Padding(
                 padding: const EdgeInsets.all(8.0),
