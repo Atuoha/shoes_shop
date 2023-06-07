@@ -14,6 +14,8 @@ Future<void> setAppPreviouslyRun() async {
   await prefs.setBool('isAppPreviouslyRun', true);
 }
 
+
+
 // set account type
 Future<void> setAccountType({required AccountType accountType}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -22,6 +24,8 @@ Future<void> setAccountType({required AccountType accountType}) async {
     accountType == AccountType.customer ? true : false,
   );
 }
+
+
 
 // check account type
 Future<bool> checkAccountType() async {

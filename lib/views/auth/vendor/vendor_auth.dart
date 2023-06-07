@@ -18,29 +18,28 @@ import '../../widgets/msg_snackbar.dart';
 import '../../../helpers/image_picker.dart';
 import 'package:country_state_city_picker/country_state_city_picker.dart';
 
-class SellerAuthScreen extends StatefulWidget {
-  const SellerAuthScreen({
+class VendorAuthScreen extends StatefulWidget {
+  const VendorAuthScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<SellerAuthScreen> createState() => _SellerAuthScreenState();
+  State<VendorAuthScreen> createState() => _VendorAuthScreenState();
 }
 
-class _SellerAuthScreenState extends State<SellerAuthScreen> {
+class _VendorAuthScreenState extends State<VendorAuthScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _businessNameController = TextEditingController();
+  final _storeNameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _phoneController = TextEditingController();
 
   final _taxNumberController = TextEditingController();
-  final _companyNumberController = TextEditingController();
+  final _storeNumberController = TextEditingController();
 
   final _countryController = TextEditingController();
   final _stateController = TextEditingController();
   final _cityController = TextEditingController();
-
 
   var obscure = true; // password obscure value
   var isLogin = true;
@@ -49,8 +48,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
   final firebase = FirebaseFirestore.instance;
   final AuthController _authController = AuthController();
 
-
-  bool isCompanyRegistered = false;
+  bool isStoreRegistered = false;
 
   // toggle password obscure
   _togglePasswordObscure() {
@@ -79,7 +77,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
           ? TextInputType.emailAddress
           : field == Field.phone
               ? TextInputType.phone
-              : field == Field.companyRegNo || field == Field.taxNumber
+              : field == Field.storeRegNo || field == Field.taxNumber
                   ? TextInputType.number
                   : TextInputType.text,
       textInputAction:
@@ -144,7 +142,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
             }
             break;
 
-          case Field.companyRegNo:
+          case Field.storeRegNo:
             if (value!.isEmpty || value.length < 8) {
               return 'Company registration number needs to be valid';
             }
@@ -173,11 +171,11 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
     setState(() {
       isLoading = true;
     });
-    // seller account
-    Navigator.of(context).pushNamed(RouteManager.sellerEntryScreen);
+    // vendor account
+    Navigator.of(context).pushNamed(RouteManager.vendorEntryScreen);
 
-    // set account type to seller
-    await setAccountType(accountType: AccountType.seller);
+    // set account type to vendor
+    await setAccountType(accountType: AccountType.vendor);
   }
 
   // called after an action is completed
@@ -201,8 +199,6 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
       );
       return null;
     }
-
-
 
     if (isLogin) {
       // TODO: implement sign in
@@ -236,8 +232,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
         return null;
       }
 
-
-      if(_cityController.text.isEmpty){
+      if (_cityController.text.isEmpty) {
         // city is empty
         displaySnackBar(
           message: 'You need to select your complete location!',
@@ -253,16 +248,17 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
 
       AuthResult? result = await _authController.signUpUser(
         email: _emailController.text.trim(),
-        fullname: _businessNameController.text.trim(),
+        fullname: _storeNameController.text.trim(),
         phone: _phoneController.text.trim(),
         password: _passwordController.text.trim(),
-        accountType: AccountType.seller,
+        accountType: AccountType.vendor,
         profileImage: profileImage,
         country: _countryController.text,
         state: _stateController.text,
         city: _cityController.text,
         taxNumber: _taxNumberController.text.trim(),
-        companyRegNo: _companyNumberController.text.trim(),
+        storeRegNo: _storeNumberController.text.trim(),
+        isStoreRegistered: isStoreRegistered,
       );
 
       if (result!.user == null) {
@@ -286,7 +282,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
 
     try {
       AuthResult? result = await _authController.googleAuth(
-        AccountType.seller,
+        AccountType.vendor,
       );
 
       if (result!.user != null) {
@@ -311,7 +307,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
 
   // navigate to forgot password screen
   _forgotPassword() {
-    Navigator.of(context).pushNamed(RouteManager.sellerForgotPass);
+    Navigator.of(context).pushNamed(RouteManager.vendorForgotPass);
   }
 
   // switch authentication mode
@@ -355,7 +351,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
                   const SizedBox(height: 20),
                   Center(
                     child: Text(
-                      isLogin ? 'Seller Signin ' : 'Seller Signup',
+                      isLogin ? 'Vendor Signin ' : 'Vendor Signup',
                       style: const TextStyle(
                         color: accentColor,
                         fontSize: 18,
@@ -377,7 +373,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
                             children: [
                               kTextField(
                                 _emailController,
-                                'doe business@gmail.com',
+                                'doe_store@gmail.com',
                                 'Email Address',
                                 Field.email,
                                 false,
@@ -385,9 +381,9 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
                               const SizedBox(height: 10),
                               !isLogin
                                   ? kTextField(
-                                      _businessNameController,
-                                      'Doe Business',
-                                      'Business name',
+                                      _storeNameController,
+                                      'Doe Store',
+                                      'Store name',
                                       Field.fullname,
                                       false,
                                     )
@@ -433,14 +429,14 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
                                   ),
                                 ),
                                 CheckboxListTile(
-                                  value: isCompanyRegistered,
+                                  value: isStoreRegistered,
                                   onChanged: (value) {
                                     setState(() {
-                                      isCompanyRegistered = value!;
+                                      isStoreRegistered = value!;
                                     });
                                   },
                                   title: const Text(
-                                      'Have you registered your company?'),
+                                      'Have you registered your store?'),
                                   checkboxShape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -448,12 +444,12 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
                               ],
 
                               // tax details
-                              if (!isLogin && isCompanyRegistered) ...[
+                              if (!isLogin && isStoreRegistered) ...[
                                 kTextField(
-                                  _companyNumberController,
+                                  _storeNumberController,
                                   '90988777880',
-                                  'Company Reg Number',
-                                  Field.companyRegNo,
+                                  'Store Reg Number',
+                                  Field.storeRegNo,
                                   false,
                                 ),
                                 const SizedBox(height: 10),
@@ -542,7 +538,7 @@ class _SellerAuthScreenState extends State<SellerAuthScreen> {
                                     child: Text(
                                       isLogin
                                           ? 'New here? Create Account'
-                                          : 'Already a seller? Sign in',
+                                          : 'Already a vendor? Sign in',
                                       style: const TextStyle(
                                         color: accentColor,
                                         fontWeight: FontWeight.w600,

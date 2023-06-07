@@ -8,14 +8,14 @@ import '../../resources/styles_manager.dart';
 import '../widgets/are_you_sure_dialog.dart';
 import 'package:confetti/confetti.dart';
 
-class SellerEntryScreen extends StatefulWidget {
-  const SellerEntryScreen({Key? key}) : super(key: key);
+class VendorEntryScreen extends StatefulWidget {
+  const VendorEntryScreen({Key? key}) : super(key: key);
 
   @override
-  State<SellerEntryScreen> createState() => _SellerEntryScreenState();
+  State<VendorEntryScreen> createState() => _VendorEntryScreenState();
 }
 
-class _SellerEntryScreenState extends State<SellerEntryScreen> {
+class _VendorEntryScreenState extends State<VendorEntryScreen> {
   final ConfettiController confettiController = ConfettiController();
 
   AuthController authController = AuthController();

@@ -58,8 +58,8 @@ class AccountTypeScreen extends StatelessWidget {
                   routeName: RouteManager.customerAuthScreen,
                 ),
                 authWidget(
-                  title: 'Seller',
-                  routeName: RouteManager.sellerAuthScreen,
+                  title: 'Vendor',
+                  routeName: RouteManager.vendorAuthScreen,
                 ),
               ],
             ),

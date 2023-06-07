@@ -4,14 +4,14 @@ import 'package:shoes_shop/resources/assets_manager.dart';
 
 import '../../../constants/color.dart';
 
-class SellerForgotPassword extends StatefulWidget {
-  const SellerForgotPassword({Key? key}) : super(key: key);
+class VendorForgotPassword extends StatefulWidget {
+  const VendorForgotPassword({Key? key}) : super(key: key);
 
   @override
-  State<SellerForgotPassword> createState() => _SellerForgotPasswordState();
+  State<VendorForgotPassword> createState() => _VendorForgotPasswordState();
 }
 
-class _SellerForgotPasswordState extends State<SellerForgotPassword> {
+class _VendorForgotPasswordState extends State<VendorForgotPassword> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
 

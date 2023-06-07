@@ -25,18 +25,17 @@ class _EntryScreenState extends State<EntryScreen> {
         if (user != null) {
           // user is logged in
           if(widget.isCustomer){
+            // customer
             Timer(const Duration(seconds: 3), () {
               Navigator.of(context).pushNamedAndRemoveUntil(
                   RouteManager.customerMainScreen, (route) => false);
             });
-            print('Customer............................................');
-            print(widget.isCustomer);
           }else{
+            // vendor
             Timer(const Duration(seconds: 3), () {
               Navigator.of(context).pushNamedAndRemoveUntil(
-                  RouteManager.sellerEntryScreen, (route) => false);
+                  RouteManager.vendorEntryScreen, (route) => false);
             });
-            print('Seller...............................................');
           }
 
         } else {

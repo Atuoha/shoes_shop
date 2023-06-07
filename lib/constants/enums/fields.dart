@@ -5,5 +5,5 @@ enum Field {
   password,
   phone,
   taxNumber,
-  companyRegNo,
+  storeRegNo,
 }

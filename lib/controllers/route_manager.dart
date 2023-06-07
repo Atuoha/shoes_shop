@@ -1,11 +1,11 @@
-import 'package:shoes_shop/views/auth/seller/forgot_password.dart';
-import 'package:shoes_shop/views/auth/seller/seller_auth.dart';
+import 'package:shoes_shop/views/auth/vendor/forgot_password.dart';
+import 'package:shoes_shop/views/auth/vendor/vendor_auth.dart';
 
 import '../views/auth/account_type.dart';
 import '../views/auth/customer/customer_auth.dart';
 import '../views/auth/customer/forgot_password.dart';
 import '../views/customer/main_screen.dart';
-import '../views/seller/entry_screen.dart';
+import '../views/vendor/entry_screen.dart';
 import '../views/splash/entry.dart';
 import '../views/splash/splash.dart';
 
@@ -18,10 +18,10 @@ class RouteManager {
   static const String signupAcknowledgeScreen = "/signupAcknowledge";
   static const String customerMainScreen = '/customerHomeScreen';
 
-  static const String sellerAuthScreen = "/sellerAuthScreen";
-  static const String sellerForgotPass = "/sellerForgotPass";
-  static const String sellerMainScreen = '/sellerMainScreen';
-  static const String sellerEntryScreen = '/sellerEntryScreen';
+  static const String vendorAuthScreen = "/vendorAuthScreen";
+  static const String vendorForgotPass = "/vendorForgotPass";
+  static const String vendorMainScreen = '/vendorMainScreen';
+  static const String vendorEntryScreen = '/vendorEntryScreen';
 
 }
 
@@ -29,9 +29,9 @@ final routes = {
   RouteManager.splashScreen: (context) => const SplashScreen(),
   RouteManager.accountType: (context) => const AccountTypeScreen(),
   RouteManager.customerAuthScreen: (context) => const CustomerAuthScreen(),
-  RouteManager.sellerAuthScreen: (context) => const SellerAuthScreen(),
-  RouteManager.sellerEntryScreen: (context) => const SellerEntryScreen(),
+  RouteManager.vendorAuthScreen: (context) => const VendorAuthScreen(),
+  RouteManager.vendorEntryScreen: (context) => const VendorEntryScreen(),
   RouteManager.customerMainScreen: (context) => const CustomerMainScreen(),
   RouteManager.customerForgotPass: (context) => const CustomerForgotPassword(),
-  RouteManager.sellerForgotPass: (context) => const SellerForgotPassword(),
+  RouteManager.vendorForgotPass: (context) => const VendorForgotPassword(),
 };

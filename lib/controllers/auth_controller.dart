@@ -42,7 +42,8 @@ class AuthController {
     String state = '',
     String city = '',
     String taxNumber = '',
-    String companyRegNo = '',
+    String storeRegNo = '',
+    bool isStoreRegistered = false,
   }) async {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
@@ -54,7 +55,7 @@ class AuthController {
       final storageRef = FirebaseStorage.instance
           .ref()
           .child(
-            accountType == AccountType.seller ? 'seller-images' : 'user-images',
+            accountType == AccountType.vendor ? 'vendor-images' : 'user-images',
           )
           .child('${credential.user!.uid}.jpg');
 
@@ -63,27 +64,29 @@ class AuthController {
 
       await storageRef.putFile(file);
       var downloadUrl = await storageRef.getDownloadURL();
-      if (accountType == AccountType.seller) {
-        firebase.collection('sellers').doc(credential.user!.uid).set({
-          'business_name': fullname,
+      if (accountType == AccountType.vendor) {
+        firebase.collection('vendors').doc(credential.user!.uid).set({
+          'storeName': fullname,
           'email': email,
-          'image': downloadUrl,
-          'auth-type': 'email',
+          'storeImgUrl': downloadUrl,
+          'authType': 'email',
           'phone': phone,
           'address': '',
           'country': country,
           'state': state,
           'city': city,
-          'tax_number': taxNumber,
-          'company_number': companyRegNo,
-          'sellerId': credential.user!.uid,
+          'taxNumber': taxNumber,
+          'storeNumber': storeRegNo,
+          'isApproved':false,
+          'isStoreRegistered':isStoreRegistered,
+          'storeId': credential.user!.uid,
         });
       } else {
         firebase.collection('customers').doc(credential.user!.uid).set({
           'fullname': fullname,
           'email': email,
           'image': downloadUrl,
-          'auth-type': 'email',
+          'authType': 'email',
           'phone': phone,
           'address': '',
           'customerId': credential.user!.uid,
@@ -118,19 +121,26 @@ class AuthController {
       // send username, email, and phone number to firestore
       var logCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
-      if (accountType == AccountType.seller) {
+      if (accountType == AccountType.vendor) {
         await FirebaseFirestore.instance
-            .collection('sellers')
+            .collection('vendors')
             .doc(logCredential.user!.uid)
             .set(
           {
-            'business_name': googleUser!.displayName,
+            'storeName': googleUser!.displayName,
             'email': googleUser.email,
-            'image': googleUser.photoUrl,
-            'auth-type': 'google',
+            'storeImgUrl': googleUser.photoUrl,
+            'authType': 'google',
             'phone': '',
             'address': '',
-            'sellerId': logCredential.user!.uid,
+            'country': '',
+            'state': '',
+            'city': '',
+            'taxNumber': '',
+            'storeNumber': '',
+            'isApproved':false,
+            'isStoreRegistered':false,
+            'storeId': logCredential.user!.uid,
           },
         );
       } else {
@@ -142,7 +152,7 @@ class AuthController {
             'fullname': googleUser!.displayName,
             'email': googleUser.email,
             'image': googleUser.photoUrl,
-            'auth-type': 'google',
+            'authType': 'google',
             'phone': '',
             'address': '',
             'customerId': logCredential.user!.uid,
