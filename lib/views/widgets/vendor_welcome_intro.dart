@@ -6,24 +6,24 @@ import '../../resources/font_manager.dart';
 import '../../resources/styles_manager.dart';
 
 
-class WelcomeIntro extends StatefulWidget {
-  const WelcomeIntro({
+class VendorWelcomeIntro extends StatefulWidget {
+  const VendorWelcomeIntro({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<WelcomeIntro> createState() => _WelcomeIntroState();
+  State<VendorWelcomeIntro> createState() => _VendorWelcomeIntroState();
 }
 
-class _WelcomeIntroState extends State<WelcomeIntro> {
-  DocumentSnapshot? profile;
+class _VendorWelcomeIntroState extends State<VendorWelcomeIntro> {
+  DocumentSnapshot? store;
   bool isLoading = true;
 
   final userId = FirebaseAuth.instance.currentUser!.uid;
   final firebaseFirestore =  FirebaseFirestore.instance;
 
   fetchUserDetails()async{
-    profile = await firebaseFirestore.collection('customers').doc(userId).get();
+    store = await firebaseFirestore.collection('vendors').doc(userId).get();
     setState(() {
       isLoading = false;
     });
@@ -43,12 +43,12 @@ class _WelcomeIntroState extends State<WelcomeIntro> {
     return !isLoading?  Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-         CircleAvatar(
-          backgroundImage: NetworkImage(profile!['image']),
+        CircleAvatar(
+          backgroundImage: NetworkImage(store!['storeImgUrl']),
         ),
         const SizedBox(width: 15),
         Text(
-          'Hello ${profile!['fullname']} 👋',
+          'Hello ${store!['storeName']} 👋',
           style: getRegularStyle(
             color: Colors.black,
             fontSize: FontSize.s16,
