@@ -1,19 +1,15 @@
 # shoes_shop
 
-A Flutter project building multivendor store for sneakers with web admin.
+Building multivendor store for sneakers with web admin.
 
-## Getting Started
+The store app has two sections
+1. User
+2. Vendor
 
-This project is a starting point for a Flutter application.
+It is controlled by a shop web admin currently being built with Flutter also which is at 
+- [ShopWebAdmin](https://github.com/Atuoha/shoes_shop_web_admin)
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Both are built using Modern UI/UX and MVC architecture
 
 
 Color: 

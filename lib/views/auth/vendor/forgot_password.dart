@@ -26,7 +26,7 @@ class _VendorForgotPasswordState extends State<VendorForgotPassword> {
 
   // navigate to sign in screen
   _navigateToSignIn() {
-    Navigator.of(context).pushNamed(RouteManager.customerAuthScreen);
+    Navigator.of(context).pushNamed(RouteManager.vendorAuthScreen);
   }
 
   @override
@@ -66,7 +66,7 @@ class _VendorForgotPasswordState extends State<VendorForgotPassword> {
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.done,
                     decoration: InputDecoration(
-                      hintText: 'doe@gmail.com',
+                      hintText: 'doe_store@gmail.com',
                       labelText: 'Email Address',
                       labelStyle: const TextStyle(color: accentColor),
                       focusedBorder: OutlineInputBorder(

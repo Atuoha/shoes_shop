@@ -144,7 +144,7 @@ class _VendorAuthScreenState extends State<VendorAuthScreen> {
 
           case Field.storeRegNo:
             if (value!.isEmpty || value.length < 8) {
-              return 'Company registration number needs to be valid';
+              return 'Store registration number needs to be valid';
             }
             break;
 
