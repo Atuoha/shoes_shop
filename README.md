@@ -6,6 +6,11 @@ The store app has two sections
 1. User
 2. Vendor
 
+![ShopApp](https://media.licdn.com/dms/image/D4D22AQF_iuFX5xxqBw/feedshare-shrink_2048_1536/0/1686072315271?e=1689206400&v=beta&t=PbTOUkhlwQH691VdDo2duEng59wPumJZvMNaKQP0AqM)
+
+![ShopApp](https://media.licdn.com/dms/image/D4D22AQHly8GL90GUZg/feedshare-shrink_2048_1536/0/1686072310889?e=1689206400&v=beta&t=8FVA638HZDbEOXVZj7K2dV9XLIDodXcTJGhQIeI2WWI)
+
+
 It is controlled by a shop web admin currently being built with Flutter also which is at 
 - [ShopWebAdmin](https://github.com/Atuoha/shoes_shop_web_admin)
 
