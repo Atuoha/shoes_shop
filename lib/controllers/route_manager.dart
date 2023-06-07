@@ -23,17 +23,16 @@ class RouteManager {
   static const String vendorForgotPass = "/vendorForgotPass";
   static const String vendorMainScreen = '/vendorMainScreen';
   static const String vendorEntryScreen = '/vendorEntryScreen';
-
 }
 
 final routes = {
   RouteManager.splashScreen: (context) => const SplashScreen(),
   RouteManager.accountType: (context) => const AccountTypeScreen(),
   RouteManager.customerAuthScreen: (context) => const CustomerAuthScreen(),
+  RouteManager.customerMainScreen: (context) => const CustomerMainScreen(),
+  RouteManager.customerForgotPass: (context) => const CustomerForgotPassword(),
   RouteManager.vendorAuthScreen: (context) => const VendorAuthScreen(),
   RouteManager.vendorMainScreen: (context) => const VendorMainScreen(),
   RouteManager.vendorEntryScreen: (context) => const VendorEntryScreen(),
-  RouteManager.customerMainScreen: (context) => const CustomerMainScreen(),
-  RouteManager.customerForgotPass: (context) => const CustomerForgotPassword(),
   RouteManager.vendorForgotPass: (context) => const VendorForgotPassword(),
 };

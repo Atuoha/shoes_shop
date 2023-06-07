@@ -13,6 +13,7 @@ import '../widgets/are_you_sure_dialog.dart';
 import 'package:confetti/confetti.dart';
 
 import '../widgets/loading_widget.dart';
+import 'main_screen.dart';
 
 class VendorEntryScreen extends StatefulWidget {
   const VendorEntryScreen({Key? key}) : super(key: key);
@@ -74,7 +75,7 @@ class _VendorEntryScreenState extends State<VendorEntryScreen> {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child:  LoadingWidget(size: 50));
+            return const Center(child: LoadingWidget(size: 50));
           }
 
           Vendor vendor =
@@ -82,8 +83,7 @@ class _VendorEntryScreenState extends State<VendorEntryScreen> {
 
           if (vendor.isApproved) {
             // account is approved
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                RouteManager.vendorMainScreen, (route) => false);
+            return const VendorMainScreen();
           }
 
           return Column(
@@ -117,7 +117,7 @@ class _VendorEntryScreenState extends State<VendorEntryScreen> {
                   width: 50,
                 ),
               ),
-              const SizedBox(height:10),
+              const SizedBox(height: 10),
               Text('Hello ${vendor.storeName},'),
               Padding(
                 padding: const EdgeInsets.all(8.0),
