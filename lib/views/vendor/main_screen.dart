@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:shoes_shop/views/customer/profile/profile.dart';
 import 'package:shoes_shop/views/vendor/dashboard.dart';
+import 'package:shoes_shop/views/vendor/products/view_all.dart';
 import '../../constants/color.dart';
+import 'orders/orders.dart';
 
 class VendorMainScreen extends StatefulWidget {
   const VendorMainScreen({super.key});
@@ -15,6 +18,9 @@ class _CustomerMainStateScreen extends State<VendorMainScreen> {
 
   final List<Widget> _pages = const [
     VendorDashboard(),
+    OrdersScreen(),
+    ProductScreen(),
+    ProfileScreen()
   ];
 
   void setNewPage(int index) {
@@ -33,28 +39,9 @@ class _CustomerMainStateScreen extends State<VendorMainScreen> {
         initialActiveIndex: _pageIndex,
         items: [
           buildTabItem(Icons.home, 0),
-          buildTabItem(Icons.manage_search, 1),
+          buildTabItem(Icons.shopping_bag, 1),
           buildTabItem(Icons.storefront, 2),
-          buildTabItem(Icons.search, 3),
-
-          // cart
-          TabItem(
-            icon: Badge(
-              backgroundColor: Colors.white,
-              label: const Text(
-                '1',
-                style: TextStyle(
-                  color: primaryColor,
-                ),
-              ),
-              child: Icon(
-                Icons.shopping_cart,
-                size: _pageIndex == 4 ? 40 : 25,
-                color: accentColor,
-              ),
-            ),
-          ),
-          buildTabItem(Icons.person, 5),
+          buildTabItem(Icons.person, 3),
         ],
         onTap: setNewPage,
       ),
