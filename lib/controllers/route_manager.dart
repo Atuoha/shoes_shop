@@ -32,7 +32,7 @@ final routes = {
   RouteManager.customerMainScreen: (context) => const CustomerMainScreen(),
   RouteManager.customerForgotPass: (context) => const CustomerForgotPassword(),
   RouteManager.vendorAuthScreen: (context) => const VendorAuthScreen(),
-  RouteManager.vendorMainScreen: (context) => const VendorMainScreen(),
+  RouteManager.vendorMainScreen: (context) => const VendorMainScreen(index: 0),
   RouteManager.vendorEntryScreen: (context) => const VendorEntryScreen(),
   RouteManager.vendorForgotPass: (context) => const VendorForgotPassword(),
 };

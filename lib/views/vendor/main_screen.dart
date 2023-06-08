@@ -7,7 +7,9 @@ import '../../constants/color.dart';
 import 'orders/orders.dart';
 
 class VendorMainScreen extends StatefulWidget {
-  const VendorMainScreen({super.key});
+  const VendorMainScreen({super.key, required this.index});
+  final int index;
+
 
   @override
   State<VendorMainScreen> createState() => _CustomerMainStateScreen();
@@ -27,6 +29,15 @@ class _CustomerMainStateScreen extends State<VendorMainScreen> {
     setState(() {
       _pageIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    if (widget.index != 0) {
+      setNewPage(widget.index);
+    }
+
+    super.initState();
   }
 
   @override

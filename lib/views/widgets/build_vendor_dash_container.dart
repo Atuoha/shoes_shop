@@ -70,7 +70,7 @@ class BuildDashboardContainer extends StatelessWidget {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => VendorMainScreen(),  // Todo: add index
+                  builder: (context) => VendorMainScreen(index:index),  // Todo: add index
                 ),
               ),
               child: Text(
