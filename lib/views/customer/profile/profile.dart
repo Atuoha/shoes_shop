@@ -43,12 +43,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Image.asset(
               AssetManager.avatar,
               width: 35,
-              color: primaryColor,
             ),
             const Text(
               'Logout Account',
               style: TextStyle(
-                color: primaryColor,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -56,9 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         content: const Text(
           'Are you sure you want to log out?',
-          style: TextStyle(
-            color: primaryColor,
-          ),
+
         ),
         actions: [
           ElevatedButton(
