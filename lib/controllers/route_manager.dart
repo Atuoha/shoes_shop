@@ -6,9 +6,9 @@ import '../views/auth/customer/customer_auth.dart';
 import '../views/auth/customer/forgot_password.dart';
 import '../views/customer/main_screen.dart';
 import '../views/vendor/entry_screen.dart';
-import '../views/splash/entry.dart';
 import '../views/splash/splash.dart';
 import '../views/vendor/main_screen.dart';
+import '../views/vendor/products/create.dart';
 
 class RouteManager {
   static const String splashScreen = "/splash";
@@ -23,6 +23,8 @@ class RouteManager {
   static const String vendorForgotPass = "/vendorForgotPass";
   static const String vendorMainScreen = '/vendorMainScreen';
   static const String vendorEntryScreen = '/vendorEntryScreen';
+  static const String vendorCreatePost = '/vendorCreatePost';
+
 }
 
 final routes = {
@@ -35,4 +37,5 @@ final routes = {
   RouteManager.vendorMainScreen: (context) => const VendorMainScreen(index: 0),
   RouteManager.vendorEntryScreen: (context) => const VendorEntryScreen(),
   RouteManager.vendorForgotPass: (context) => const VendorForgotPassword(),
+  RouteManager.vendorCreatePost: (context) => const VendorCreatePost(),
 };
