@@ -23,8 +23,8 @@ class _GeneralTabState extends State<GeneralTab> {
   DateTime selectedDate = DateTime.now();
   bool isDateSelected = false;
 
-  var currentCategory = 'Select Category';
-  List<String> categories = ['Select Category'];
+  var currentCategory = '';
+  List<String> categories = [];
 
   bool isFetchingCategories = true;
 
@@ -74,8 +74,6 @@ class _GeneralTabState extends State<GeneralTab> {
     if (!valid) {
       return;
     }
-
-
   }
 
   @override
@@ -140,9 +138,9 @@ class _GeneralTabState extends State<GeneralTab> {
               const SizedBox(height: 20),
               !isFetchingCategories
                   ? DropdownButtonFormField(
-                      value: currentCategory,
+                      hint: const Text('Select Category'),
                       validator: (value) {
-                        if (value == 'Select Category') {
+                        if (value!.isEmpty) {
                           return 'Please select category';
                         }
                         return null;
@@ -165,8 +163,8 @@ class _GeneralTabState extends State<GeneralTab> {
               TextFormField(
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.done,
-                minLines: 5,
                 maxLines: 7,
+                maxLength: 500,
                 controller: productDescription,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -188,7 +186,7 @@ class _GeneralTabState extends State<GeneralTab> {
                   TextButton(
                     onPressed: () => pickDate(),
                     child: Text(
-                      'Schedule for later',
+                      'Schedule date',
                       style: getRegularStyle(color: accentColor),
                     ),
                   ),

@@ -6,4 +6,5 @@ enum Field {
   phone,
   taxNumber,
   storeRegNo,
+  address,
 }
