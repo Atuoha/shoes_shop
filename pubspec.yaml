@@ -58,6 +58,7 @@ dependencies:
   country_state_city_picker: ^1.2.8
   confetti: ^0.7.0
   syncfusion_flutter_charts: ^21.2.6
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

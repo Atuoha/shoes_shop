@@ -41,6 +41,14 @@ ThemeData getLightTheme() {
       ),
     ),
 
+    datePickerTheme: DatePickerThemeData(
+      headerBackgroundColor: primaryColor,
+      todayBackgroundColor: MaterialStateProperty.all(primaryColor),
+      todayBorder: BorderSide.none,
+      shadowColor: primaryColor,
+
+    ),
+
     // button theme
     buttonTheme: const ButtonThemeData(
       buttonColor: primaryColor,
