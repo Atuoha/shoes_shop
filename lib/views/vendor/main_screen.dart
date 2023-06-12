@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:shoes_shop/views/customer/profile/profile.dart';
+import 'package:shoes_shop/views/vendor/profile/profile.dart';
 import 'package:shoes_shop/views/vendor/dashboard.dart';
 import 'package:shoes_shop/views/vendor/products/view_all.dart';
 import '../../constants/color.dart';

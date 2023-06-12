@@ -23,7 +23,7 @@ class BuildDashboardContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(3.0),
+      padding: const EdgeInsets.all(3),
       child: Container(
         decoration: BoxDecoration(
           color: color,
@@ -73,9 +73,11 @@ class BuildDashboardContainer extends StatelessWidget {
                   builder: (context) => VendorMainScreen(index:index),  // Todo: add index
                 ),
               ),
-              child: Text(
-                'view more',
-                style: getRegularStyle(color: accentColor),
+              child: FittedBox(
+                child: Text(
+                  'view more',
+                  style: getRegularStyle(color: accentColor),
+                ),
               ),
             )
           ],

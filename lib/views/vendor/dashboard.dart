@@ -42,34 +42,38 @@ class VendorDashboard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: AppSize.s10),
-            GridView.count(
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              crossAxisCount: 3,
-              children: [
-                // Todo: Implement each container using StreamBuilder
-                BuildDashboardContainer(
-                  title: 'Orders',
-                  value: '$orders',
-                  color: dashBlue,
-                  icon: Icons.shopping_cart_checkout,
-                  index: 1,
-                ),
-                BuildDashboardContainer(
-                  title: 'Cash Outs',
-                  value: '\$$cashOuts',
-                  color: dashGrey,
-                  icon: Icons.monetization_on,
-                  index: 3,
-                ),
-                BuildDashboardContainer(
-                  title: 'Products',
-                  value: '$products',
-                  color: dashRed,
-                  icon: Icons.shopping_bag,
-                  index: 2,
-                ),
-              ],
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 6.5,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                // crossAxisCount: 3,
+                scrollDirection: Axis.horizontal,
+                children: [
+                  // Todo: Implement each container using StreamBuilder
+                  BuildDashboardContainer(
+                    title: 'Orders',
+                    value: '$orders',
+                    color: dashBlue,
+                    icon: Icons.shopping_cart_checkout,
+                    index: 1,
+                  ),
+                  BuildDashboardContainer(
+                    title: 'Cash Outs',
+                    value: '\$$cashOuts',
+                    color: dashGrey,
+                    icon: Icons.monetization_on,
+                    index: 3,
+                  ),
+                  BuildDashboardContainer(
+                    title: 'Products',
+                    value: '$products',
+                    color: dashRed,
+                    icon: Icons.shopping_bag,
+                    index: 2,
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             Text(
