@@ -45,6 +45,7 @@ class ProductData extends ChangeNotifier {
 
   Map<String, dynamic> productData = {};
 
+  // update product general data
   updateProductGeneralData({
     String? productName,
     double? price,
@@ -62,7 +63,30 @@ class ProductData extends ChangeNotifier {
     productData['scheduleDate'] = scheduleDate;
   }
 
+  // update product shipping info
+  updateProductShippingInfo({bool? isCharging, double? billingAmount}) {
+    productData['isCharging'] = isCharging;
+    productData['billingAmount'] = billingAmount;
+  }
+
+  // update product attributes info
+  updateProductAttributesInfo(
+      {String? brandName, List<String>? sizesAvailable}) {
+    productData['brandName'] = brandName;
+    productData['sizesAvailable'] = sizesAvailable;
+  }
+
+  // update product images
   updateProductImg({List<XFile?>? productImages}) {
     productData['productImages'] = productImages;
   }
+
+  // clear product images
+  clearProductImg() {
+    productData['productImages'] = null;
+  }
+
+  // checking if product images is null
+  bool isProductImagesNull() =>
+      productData['productImages'] == null ? true : false;
 }

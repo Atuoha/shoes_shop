@@ -4,12 +4,17 @@ import 'package:provider/provider.dart';
 import 'package:shoes_shop/views/widgets/loading_widget.dart';
 import '../../../../constants/color.dart';
 import 'package:intl/intl.dart' as intl;
-
 import '../../../../providers/product.dart';
 import '../../../../resources/styles_manager.dart';
+import '../../../widgets/message_alert.dart';
 
+// ignore: must_be_immutable
 class GeneralTab extends StatefulWidget {
-  const GeneralTab({Key? key}) : super(key: key);
+  GeneralTab({
+    Key? key,
+    this.showAlert = false,
+  }) : super(key: key);
+  bool showAlert;
 
   @override
   State<GeneralTab> createState() => _GeneralTabState();
@@ -65,13 +70,30 @@ class _GeneralTabState extends State<GeneralTab> {
     });
   }
 
+  // showInstruction
+  showInstruction() {
+    messageDialog(
+      title: 'Instructions',
+      content:
+          'After filling every detail you want on each product detail tab, click the check button so that it can be saved for you.',
+      context: context,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     fetchCategories();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.showAlert) {
+        Future.delayed(const Duration(seconds: 2), showInstruction());
+        setState(() {
+          widget.showAlert = false;
+        });
+      }
+    });
   }
-
-
 
   @override
   Widget build(BuildContext context) {

@@ -13,7 +13,6 @@ import '../../../widgets/msg_snackbar.dart';
 
 import 'package:path/path.dart' as path;
 
-
 class ImageUploadTab extends StatefulWidget {
   const ImageUploadTab({Key? key}) : super(key: key);
 
@@ -25,6 +24,7 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
   List<XFile>? productImages;
   final ImagePicker _picker = ImagePicker();
   final firebaseStorage = FirebaseStorage.instance;
+  var currentImage = 0;
 
   // get context
   get cxt => context;
@@ -33,7 +33,6 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductData>(context);
     List<XFile>? productImages = productProvider.productData['productImages'];
-    var currentImage = 0;
 
     // for selecting photo
     Future selectPhoto() async {
@@ -68,7 +67,8 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
     Future<void> submitProduct() async {
       List<String> downImgUrls = [];
       for (var img in productImages!) {
-        var storageRef = firebaseStorage.ref('product-images/${path.basename(img.path)}');
+        var storageRef =
+            firebaseStorage.ref('product-images/${path.basename(img.path)}');
         await storageRef.putFile(File(img.path)).whenComplete(() async {
           await storageRef.getDownloadURL().then(
                 (value) => downImgUrls.add(value),
@@ -78,7 +78,8 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
     }
 
     return Scaffold(
-      floatingActionButton: productProvider.isDoneSubmittingDetails()
+      floatingActionButton: productProvider.isDoneSubmittingDetails() &&
+              !productProvider.isProductImagesNull()
           ? Directionality(
               textDirection: TextDirection.rtl,
               child: FloatingActionButton.extended(
@@ -106,8 +107,11 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
                     backgroundColor: Colors.white,
                     child: Center(
                       child: productImages == null
-                          ? Image.asset(
-                              AssetManager.placeholderImg,
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: Image.asset(
+                                AssetManager.placeholderImg,
+                              ),
                             )
                           // this will load imgUrl from firebase
                           : ClipRRect(
@@ -139,7 +143,7 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
                           left: 10,
                           child: GestureDetector(
                             onTap: () => setState(() {
-                              productImages = null;
+                              productProvider.clearProductImg();
                             }),
                             child: const CircleAvatar(
                               backgroundColor: accentColor,
@@ -157,7 +161,7 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
             productImages == null
                 ? const SizedBox.shrink()
                 : SizedBox(
-                    height: 60,
+                    height: 100,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: productImages!.length,

@@ -62,11 +62,11 @@ class _VendorCreatePostState extends State<VendorCreatePost>
       ),
       body: TabBarView(
         controller: _tabBarController,
-        children: const [
-          GeneralTab(),
-          ShippingTab(),
-          AttributesTab(),
-          ImageUploadTab(),
+        children:  [
+          GeneralTab(showAlert: true,),
+          const ShippingTab(),
+          const AttributesTab(),
+          const ImageUploadTab(),
         ],
       ),
 
