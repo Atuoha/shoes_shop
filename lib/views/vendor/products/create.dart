@@ -69,6 +69,8 @@ class _VendorCreatePostState extends State<VendorCreatePost>
           ImageUploadTab(),
         ],
       ),
+
+
     );
   }
 }

@@ -59,6 +59,8 @@ dependencies:
   confetti: ^0.7.0
   syncfusion_flutter_charts: ^21.2.6
   intl: ^0.18.1
+  uuid: ^3.0.7
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:

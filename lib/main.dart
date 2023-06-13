@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shoes_shop/controllers/route_manager.dart';
+import 'package:shoes_shop/providers/product.dart';
 import 'package:shoes_shop/resources/theme_manager.dart';
 import 'package:shoes_shop/views/splash/entry.dart';
-
 import 'constants/color.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'helpers/shared_prefs.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,15 +43,22 @@ class MyApp extends StatelessWidget {
         statusBarBrightness: Brightness.dark,
       ),
     );
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: getLightTheme(),
-      title: 'Shoe\'s Store',
-      home: EntryScreen(
-        isAppPreviouslyRun: isAppPreviouslyRun,
-        isCustomer: isCustomer,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => ProductData(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: getLightTheme(),
+        title: 'Shoe\'s Store',
+        home: EntryScreen(
+          isAppPreviouslyRun: isAppPreviouslyRun,
+          isCustomer: isCustomer,
+        ),
+        routes: routes,
       ),
-      routes: routes,
     );
   }
 }
