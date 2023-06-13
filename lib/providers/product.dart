@@ -77,13 +77,15 @@ class ProductData extends ChangeNotifier {
   }
 
   // update product images
-  updateProductImg({List<XFile?>? productImages}) {
+  updateProductImg({List<XFile?>? productImages, List<String>? downLoadImgUrls}) {
     productData['productImages'] = productImages;
+    productData['downLoadImgUrls'] = downLoadImgUrls;
   }
 
   // clear product images
   clearProductImg() {
     productData['productImages'] = null;
+    productData['downLoadImgUrls'] = '';
   }
 
   // checking if product images is null

@@ -55,7 +55,7 @@ class _AttributesTabState extends State<AttributesTab> {
         sizesAvailable: sizes,
       );
 
-      productProvider.updateProductAttributesInfo();
+      productProvider.updateProductAttributeState();
     }
 
     return Scaffold(

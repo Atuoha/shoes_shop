@@ -36,7 +36,6 @@ class _GeneralTabState extends State<GeneralTab> {
   bool isFetchingCategories = true;
   bool isLoading = false;
 
-  DateTime? scheduleDate;
   bool dateSelected = false;
 
   // pick date
@@ -107,23 +106,23 @@ class _GeneralTabState extends State<GeneralTab> {
         return;
       }
 
-      setState(() {
-        isLoading = true;
-      });
+      // setState(() {
+      //   isLoading = true;
+      // });
       productProvider.updateProductGeneralData(
         productName: productName.text.trim(),
         price: double.parse(productPrice.text.trim()),
         quantity: int.parse(productQuantity.text.trim()),
         category: currentCategory,
         description: productDescription.text.trim(),
-        scheduleDate: scheduleDate,
+        scheduleDate: selectedDate,
       );
 
       productProvider.updateProductGeneralInfoState();
     }
 
     return Scaffold(
-      floatingActionButton: !productProvider.isProductAttributesSubmittedStatus
+      floatingActionButton: !productProvider.isProductGeneralInfoSubmittedStatus
           ? FloatingActionButton(
               onPressed: () => submitData(),
               child: const Icon(

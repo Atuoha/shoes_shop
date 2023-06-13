@@ -60,21 +60,29 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
       setState(() {
         productImages = pickedImages;
       });
-      productProvider.updateProductImg(productImages: pickedImages);
-    }
 
-    // submit product
-    Future<void> submitProduct() async {
-      List<String> downImgUrls = [];
+      // upload images to firebase
+      List<String> downLoadImgUrls = [];
       for (var img in productImages!) {
         var storageRef =
             firebaseStorage.ref('product-images/${path.basename(img.path)}');
         await storageRef.putFile(File(img.path)).whenComplete(() async {
           await storageRef.getDownloadURL().then(
-                (value) => downImgUrls.add(value),
+                (value) => downLoadImgUrls.add(value),
               );
         });
       }
+
+      // persist using provider
+      productProvider.updateProductImg(
+        productImages: pickedImages,
+        downLoadImgUrls: downLoadImgUrls,
+      );
+    }
+
+    // submit product
+    Future<void> submitProduct() async {
+      print(productProvider.productData);
     }
 
     return Scaffold(
@@ -84,7 +92,7 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
               textDirection: TextDirection.rtl,
               child: FloatingActionButton.extended(
                 backgroundColor: accentColor,
-                onPressed: () => null,
+                onPressed: () => submitProduct(),
                 icon: const Icon(Icons.check_circle),
                 label: const Text(
                   'Upload Product',

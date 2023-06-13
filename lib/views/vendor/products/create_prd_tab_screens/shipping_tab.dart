@@ -35,7 +35,7 @@ class _ShippingTabState extends State<ShippingTab> {
         );
       }
 
-      productProvider.updateProductShippingInfo();
+      productProvider.updateProductShippingInfoState();
     }
 
     return Scaffold(
