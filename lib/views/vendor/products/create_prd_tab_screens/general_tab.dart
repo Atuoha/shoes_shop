@@ -20,7 +20,11 @@ class GeneralTab extends StatefulWidget {
   State<GeneralTab> createState() => _GeneralTabState();
 }
 
-class _GeneralTabState extends State<GeneralTab> {
+class _GeneralTabState extends State<GeneralTab>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   final formKey = GlobalKey<FormState>();
   final productName = TextEditingController();
   final productPrice = TextEditingController();
@@ -96,6 +100,7 @@ class _GeneralTabState extends State<GeneralTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final productProvider = Provider.of<ProductData>(context);
 
     // submit data
@@ -122,14 +127,12 @@ class _GeneralTabState extends State<GeneralTab> {
     }
 
     return Scaffold(
-      floatingActionButton: !productProvider.isProductGeneralInfoSubmittedStatus
-          ? FloatingActionButton(
-              onPressed: () => submitData(),
-              child: const Icon(
-                Icons.check_circle,
-              ),
-            )
-          : const SizedBox.shrink(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => submitData(),
+        child: const Icon(
+          Icons.check_circle,
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 18.0,

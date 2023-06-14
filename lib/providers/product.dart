@@ -77,7 +77,8 @@ class ProductData extends ChangeNotifier {
   }
 
   // update product images
-  updateProductImg({List<XFile?>? productImages, List<String>? downLoadImgUrls}) {
+  updateProductImg(
+      {List<XFile?>? productImages, List<String>? downLoadImgUrls}) {
     productData['productImages'] = productImages;
     productData['downLoadImgUrls'] = downLoadImgUrls;
   }

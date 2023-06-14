@@ -12,12 +12,17 @@ class ShippingTab extends StatefulWidget {
   State<ShippingTab> createState() => _ShippingTabState();
 }
 
-class _ShippingTabState extends State<ShippingTab> {
+class _ShippingTabState extends State<ShippingTab>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   bool chargingForShipping = false;
   final TextEditingController billingAmount = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final productProvider = Provider.of<ProductData>(context);
 
     // submit data
@@ -41,15 +46,12 @@ class _ShippingTabState extends State<ShippingTab> {
     }
 
     return Scaffold(
-      floatingActionButton:
-          !productProvider.isProductShippingInfoSubmittedStatus
-              ? FloatingActionButton(
-                  onPressed: () => submitData(),
-                  child: const Icon(
-                    Icons.check_circle,
-                  ),
-                )
-              : const SizedBox.shrink(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => submitData(),
+        child: const Icon(
+          Icons.check_circle,
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 18.0,
@@ -97,22 +99,22 @@ class _ShippingTabState extends State<ShippingTab> {
       ),
       bottomSheet: productProvider.isProductShippingInfoSubmittedStatus
           ? Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Text(
-              'Saved shipping details successfully',
-              style: getRegularStyle(color: accentColor),
-            ),
-            const SizedBox(width: 5),
-            const Icon(
-              Icons.check_circle_outline,
-              color: accentColor,
-            ),
-          ],
-        ),
-      )
+              padding: const EdgeInsets.all(8.0),
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text(
+                    'Saved shipping details successfully',
+                    style: getRegularStyle(color: accentColor),
+                  ),
+                  const SizedBox(width: 5),
+                  const Icon(
+                    Icons.check_circle_outline,
+                    color: accentColor,
+                  ),
+                ],
+              ),
+            )
           : const SizedBox.shrink(),
     );
   }

@@ -13,7 +13,11 @@ class AttributesTab extends StatefulWidget {
   State<AttributesTab> createState() => _AttributesTabState();
 }
 
-class _AttributesTabState extends State<AttributesTab> {
+class _AttributesTabState extends State<AttributesTab>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   final TextEditingController brandName = TextEditingController();
   final TextEditingController sizeAvailable = TextEditingController();
 
@@ -44,6 +48,7 @@ class _AttributesTabState extends State<AttributesTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final productProvider = Provider.of<ProductData>(context);
     Size size = MediaQuery.of(context).size;
 
@@ -67,14 +72,12 @@ class _AttributesTabState extends State<AttributesTab> {
     }
 
     return Scaffold(
-      floatingActionButton: !productProvider.isProductAttributesSubmittedStatus
-          ? FloatingActionButton(
-              onPressed: () => submitData(),
-              child: const Icon(
-                Icons.check_circle,
-              ),
-            )
-          : const SizedBox.shrink(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => submitData(),
+        child: const Icon(
+          Icons.check_circle,
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 18.0,
@@ -153,11 +156,8 @@ class _AttributesTabState extends State<AttributesTab> {
                           child: const CircleAvatar(
                             radius: 10,
                             backgroundColor: accentColor,
-                            child: Icon(
-                              Icons.delete_forever,
-                              color: Colors.white,
-                              size:12
-                            ),
+                            child: Icon(Icons.delete_forever,
+                                color: Colors.white, size: 12),
                           ),
                         ),
                       )
