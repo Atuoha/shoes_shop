@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -31,8 +29,11 @@ class ImageUploadTab extends StatefulWidget {
   State<ImageUploadTab> createState() => _ImageUploadTabState();
 }
 
-class _ImageUploadTabState extends State<ImageUploadTab> {
-  List<XFile>? productImages;
+class _ImageUploadTabState extends State<ImageUploadTab>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   final ImagePicker _picker = ImagePicker();
   final firebaseStorage = FirebaseStorage.instance;
   final uuid = const Uuid();
@@ -42,6 +43,7 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
   bool uploadingImageStatus = false;
   bool doneUploadingImage = false;
   var currentImage = 0;
+  List<XFile>? productImages = [];
 
   // get context
   get cxt => context;
@@ -71,8 +73,9 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     final productProvider = Provider.of<ProductData>(context);
-    List<XFile>? productImages = productProvider.productData['productImages'];
 
     // for selecting photo
     Future selectPhoto() async {
@@ -100,10 +103,17 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
       setState(() {
         productImages = pickedImages;
       });
+    }
 
-      // persist using provider
-      productProvider.updateProductImg(
-        productImages: productImages,
+
+    // show snackbar msg
+    void showMsg() {
+      displaySnackBar(
+        status: Status.success,
+        message: uploadingImageStatus
+            ? 'Image is still trying to upload'
+            : 'Image has fully uploading. Upload Product',
+        context: context,
       );
     }
 
@@ -127,6 +137,9 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
             });
           });
         } catch (e) {
+          setState(() {
+            uploadingImageStatus = false;
+          });
           displaySnackBar(
             status: Status.error,
             message: 'Error uploading product images ',
@@ -173,6 +186,10 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
           action: completeAction,
         );
       } else {
+        productProvider.updateProductGeneralInfoState();
+        productProvider.updateProductAttributeState();
+        productProvider.updateProductShippingInfoState();
+        productProvider.resetProductData();
         isLoadingFnc();
       }
     }
@@ -296,15 +313,20 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
                               backgroundColor: accentColor),
                           onPressed: () =>
                               uploadingImageStatus || doneUploadingImage
-                                  ? null
+                                  ? showMsg()
                                   : uploadImages(),
-                          child: Text(
-                            uploadingImageStatus
-                                ? 'Uploading'
-                                : doneUploadingImage
-                                    ? 'Done uploading'
-                                    : 'Upload Images',
-                          ),
+                          child: uploadingImageStatus
+                              ? const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(
+                                  doneUploadingImage
+                                      ? 'Done uploading images'
+                                      : 'Upload Images',
+                                ),
                         )
                       : const SizedBox.shrink()
                 ],

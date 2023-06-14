@@ -7,6 +7,7 @@ import '../models/success.dart';
 class ProductController {
   final firebase = FirebaseFirestore.instance;
 
+
   Future<RequestResult> createProduct({required Product product}) async {
     try {
       firebase.collection('products').doc(product.prodId).set({

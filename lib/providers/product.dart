@@ -45,6 +45,11 @@ class ProductData extends ChangeNotifier {
 
   Map<String, dynamic> productData = {};
 
+  void resetProductData() {
+    productData = {};
+    notifyListeners();
+  }
+
   // update product general data
   updateProductGeneralData({
     String? productName,
@@ -77,19 +82,16 @@ class ProductData extends ChangeNotifier {
   }
 
   // update product images
-  updateProductImg(
-      {List<XFile?>? productImages, List<String>? downLoadImgUrls}) {
-    productData['productImages'] = productImages;
+  updateProductImg({List<String>? downLoadImgUrls}) {
     productData['downLoadImgUrls'] = downLoadImgUrls;
   }
 
   // clear product images
   clearProductImg() {
-    productData['productImages'] = null;
     productData['downLoadImgUrls'] = '';
   }
 
   // checking if product images is null
   bool isProductImagesNull() =>
-      productData['productImages'] == null ? true : false;
+      productData['downLoadImgUrls'] == null ? true : false;
 }

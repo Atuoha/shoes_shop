@@ -42,7 +42,7 @@ class _ShippingTabState extends State<ShippingTab>
       }
 
       productProvider.updateProductShippingInfoState();
-      billingAmount.clear();
+      // billingAmount.clear();
     }
 
     return Scaffold(
