@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop/constants/color.dart';
@@ -21,8 +23,8 @@ class _AccountTypeScreenState extends State<AccountTypeScreen> {
 
   @override
   void initState() {
-    requestPermission();
     super.initState();
+    requestPermission();
   }
 
   // get context
@@ -30,10 +32,17 @@ class _AccountTypeScreenState extends State<AccountTypeScreen> {
 
   // open app for storage
   Future<void> openSettingForStoragePermission() async {
-    popOut();
+    await openAppSettings(); // opens phone setting
+    await Future.delayed(const Duration(seconds: 1));
+    _statusStream = Permission.storage.status.asStream();
+    _statusStream!.listen((status) {
+      popOut(); // pop out dialog
 
-    await openAppSettings().then((value) async {
-      await requestPermission();
+      if (status.isDenied || status.isPermanentlyDenied) {
+        Timer(const Duration(seconds: 1), () {
+          requestPermission();
+        });
+      }
     });
   }
 
@@ -42,21 +51,22 @@ class _AccountTypeScreenState extends State<AccountTypeScreen> {
     Navigator.of(context).pop();
   }
 
-  Future<void> requestPermission() async {
-    _statusStream = Permission.storage.status.asStream();
-    _statusStream!.listen((status) {
-      if (status.isDenied || status.isPermanentlyDenied) {
-        kCoolAlert(
-          message: 'Opps! You denied us access to read from phone storage',
-          context: cxt,
-          alert: CoolAlertType.error,
-          action: openSettingForStoragePermission,
-          confirmBtnText: 'Grant Permission',
-          barrierDismissible: false,
-        );
-      }
-    });
+  requestPermission() async {
+    PermissionStatus status = await Permission.storage.status;
+    if (status.isDenied || status.isPermanentlyDenied) {
+      kCoolAlert(
+        message:
+            'Opps! You denied us access to read from phone storage. This app requires permission in order to read files',
+        context: cxt,
+        alert: CoolAlertType.error,
+        action: openSettingForStoragePermission,
+        confirmBtnText: 'Allow',
+        barrierDismissible: false,
+      );
+    }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
