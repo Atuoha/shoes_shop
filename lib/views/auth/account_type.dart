@@ -1,15 +1,62 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop/constants/color.dart';
-import 'package:shoes_shop/views/auth/customer/customer_auth.dart';
-
+import 'package:permission_handler/permission_handler.dart';
+import 'package:shoes_shop/views/widgets/kcool_alert.dart';
 import '../../resources/assets_manager.dart';
 import '../../resources/font_manager.dart';
 import '../../controllers/route_manager.dart';
 import '../../resources/styles_manager.dart';
 import '../../resources/values_manager.dart';
 
-class AccountTypeScreen extends StatelessWidget {
+class AccountTypeScreen extends StatefulWidget {
   const AccountTypeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AccountTypeScreen> createState() => _AccountTypeScreenState();
+}
+
+class _AccountTypeScreenState extends State<AccountTypeScreen> {
+  Stream<PermissionStatus>? _statusStream;
+
+  @override
+  void initState() {
+    requestPermission();
+    super.initState();
+  }
+
+  // get context
+  get cxt => context;
+
+  // open app for storage
+  Future<void> openSettingForStoragePermission() async {
+    popOut();
+
+    await openAppSettings().then((value) async {
+      await requestPermission();
+    });
+  }
+
+  // popOut
+  popOut() {
+    Navigator.of(context).pop();
+  }
+
+  Future<void> requestPermission() async {
+    _statusStream = Permission.storage.status.asStream();
+    _statusStream!.listen((status) {
+      if (status.isDenied || status.isPermanentlyDenied) {
+        kCoolAlert(
+          message: 'Opps! You denied us access to read from phone storage',
+          context: cxt,
+          alert: CoolAlertType.error,
+          action: openSettingForStoragePermission,
+          confirmBtnText: 'Grant Permission',
+          barrierDismissible: false,
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,34 +83,39 @@ class AccountTypeScreen extends StatelessWidget {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(18.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [
-              const Icon(Icons.person_outline, color: accentColor),
-              Text(
-                'Select account type',
-                style: getMediumStyle(
-                  color: accentColor,
-                  fontSize: FontSize.s18,
-                ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  const Icon(Icons.person_outline, color: accentColor),
+                  Text(
+                    'Select account type',
+                    style: getMediumStyle(
+                      color: accentColor,
+                      fontSize: FontSize.s18,
+                    ),
+                  ),
+                ],
               ),
-            ]),
-            const SizedBox(height: AppSize.s30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                authWidget(
-                  title: 'Customer',
-                  routeName: RouteManager.customerAuthScreen,
-                ),
-                authWidget(
-                  title: 'Vendor',
-                  routeName: RouteManager.vendorAuthScreen,
-                ),
-              ],
-            ),
-          ],
+              const SizedBox(height: AppSize.s30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  authWidget(
+                    title: 'Customer',
+                    routeName: RouteManager.customerAuthScreen,
+                  ),
+                  authWidget(
+                    title: 'Vendor',
+                    routeName: RouteManager.vendorAuthScreen,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

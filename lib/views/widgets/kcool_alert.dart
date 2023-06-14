@@ -2,12 +2,13 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import '../../constants/color.dart';
 
-
 Future kCoolAlert({
   required String message,
   required BuildContext context,
   required CoolAlertType alert,
   Function? action,
+  barrierDismissible = true,
+  confirmBtnText = 'Ok',
 }) {
   return CoolAlert.show(
       backgroundColor: primaryColor,
@@ -15,6 +16,7 @@ Future kCoolAlert({
       context: context,
       type: alert,
       text: message,
-      onConfirmBtnTap: ()=>action!()
-  );
+      onConfirmBtnTap: () => action!(),
+      barrierDismissible: barrierDismissible,
+      confirmBtnText: confirmBtnText);
 }

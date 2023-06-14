@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../resources/assets_manager.dart';
 import '../../controllers/route_manager.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 class EntryScreen extends StatefulWidget {
   const EntryScreen({
@@ -57,6 +59,7 @@ class _EntryScreenState extends State<EntryScreen> {
   @override
   void initState() {
     super.initState();
+    Permission.storage.request();
     isFirstRun();
   }
 

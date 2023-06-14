@@ -261,18 +261,22 @@ class _GeneralTabState extends State<GeneralTab> {
         ),
       ),
       bottomSheet: productProvider.isProductGeneralInfoSubmittedStatus
-          ? Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                const Icon(
-                  Icons.check_circle_outline,
-                  color: accentColor,
-                ),
-                Text(
-                  'Saved general details successfully',
-                  style: getRegularStyle(color: accentColor),
-                ),
-              ],
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text(
+                    'Saved general details successfully',
+                    style: getRegularStyle(color: accentColor),
+                  ),
+                  const SizedBox(width: 5),
+                  const Icon(
+                    Icons.check_circle_outline,
+                    color: accentColor,
+                  ),
+                ],
+              ),
             )
           : const SizedBox.shrink(),
     );

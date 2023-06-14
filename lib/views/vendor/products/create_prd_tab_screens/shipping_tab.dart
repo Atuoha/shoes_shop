@@ -37,6 +37,7 @@ class _ShippingTabState extends State<ShippingTab> {
       }
 
       productProvider.updateProductShippingInfoState();
+      billingAmount.clear();
     }
 
     return Scaffold(
@@ -95,18 +96,22 @@ class _ShippingTabState extends State<ShippingTab> {
         ),
       ),
       bottomSheet: productProvider.isProductShippingInfoSubmittedStatus
-          ? Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          const Icon(
-            Icons.check_circle_outline,
-            color: accentColor,
-          ),
-          Text(
-            'Saved shipping details successfully',
-            style: getRegularStyle(color: accentColor),
-          ),
-        ],
+          ? Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text(
+              'Saved shipping details successfully',
+              style: getRegularStyle(color: accentColor),
+            ),
+            const SizedBox(width: 5),
+            const Icon(
+              Icons.check_circle_outline,
+              color: accentColor,
+            ),
+          ],
+        ),
       )
           : const SizedBox.shrink(),
     );
