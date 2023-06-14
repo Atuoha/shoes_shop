@@ -48,6 +48,7 @@ class _AttributesTabState extends State<AttributesTab> {
           message: 'You have not fully filled the details',
           context: context,
         );
+        return;
       }
 
       productProvider.updateProductAttributesInfo(
@@ -141,6 +142,21 @@ class _AttributesTabState extends State<AttributesTab> {
           ],
         ),
       ),
+      bottomSheet: productProvider.isProductAttributesSubmittedStatus
+          ? Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          const Icon(
+            Icons.check_circle_outline,
+            color: accentColor,
+          ),
+          Text(
+            'Saved attributes details successfully',
+            style: getRegularStyle(color: accentColor),
+          ),
+        ],
+      )
+          : const SizedBox.shrink(),
     );
   }
 }

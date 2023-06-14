@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../constants/color.dart';
 import '../../../../providers/product.dart';
+import '../../../../resources/styles_manager.dart';
 
 class ShippingTab extends StatefulWidget {
   const ShippingTab({Key? key}) : super(key: key);
@@ -93,6 +94,21 @@ class _ShippingTabState extends State<ShippingTab> {
           ],
         ),
       ),
+      bottomSheet: productProvider.isProductShippingInfoSubmittedStatus
+          ? Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          const Icon(
+            Icons.check_circle_outline,
+            color: accentColor,
+          ),
+          Text(
+            'Saved shipping details successfully',
+            style: getRegularStyle(color: accentColor),
+          ),
+        ],
+      )
+          : const SizedBox.shrink(),
     );
   }
 }

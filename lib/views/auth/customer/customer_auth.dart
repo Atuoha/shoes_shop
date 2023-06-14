@@ -149,10 +149,15 @@ class _CustomerAuthScreenState extends State<CustomerAuthScreen> {
     });
 
     // customer account
-    Navigator.of(context).pushNamedAndRemoveUntil(RouteManager.customerMainScreen, (route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      RouteManager.customerMainScreen,
+      (route) => false,
+    );
 
     // set account type to customer
-    await setAccountType(accountType: AccountType.customer);
+    await setAccountType(
+      accountType: AccountType.customer,
+    );
   }
 
   // called after an action is completed
