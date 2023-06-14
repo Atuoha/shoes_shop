@@ -5,7 +5,6 @@ import '../../resources/assets_manager.dart';
 import '../../controllers/route_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-
 class EntryScreen extends StatefulWidget {
   const EntryScreen({
     Key? key,
@@ -26,21 +25,21 @@ class _EntryScreenState extends State<EntryScreen> {
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user != null) {
           // user is logged in
-          if(widget.isCustomer){
-            // customer
+          if (widget.isCustomer) {
+            // user is a customer
             Timer(const Duration(seconds: 3), () {
               Navigator.of(context).pushNamedAndRemoveUntil(
                   RouteManager.customerMainScreen, (route) => false);
             });
-          }else{
-            // vendor
+          } else {
+            // user is a vendor
             Timer(const Duration(seconds: 3), () {
               Navigator.of(context).pushNamedAndRemoveUntil(
                   RouteManager.vendorEntryScreen, (route) => false);
             });
           }
-
         } else {
+          // user is not logged in
           Timer(const Duration(seconds: 3), () {
             Navigator.of(context).pushNamedAndRemoveUntil(
                 RouteManager.accountType, (route) => false);

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -105,7 +106,6 @@ class _ImageUploadTabState extends State<ImageUploadTab>
       });
     }
 
-
     // show snackbar msg
     void showMsg() {
       displaySnackBar(
@@ -117,6 +117,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
       );
     }
 
+    // uploadImages to both firebase and persisting using provider
     void uploadImages() async {
       setState(() {
         uploadingImageStatus = true;
@@ -124,8 +125,8 @@ class _ImageUploadTabState extends State<ImageUploadTab>
 
       // upload images to firebase
       List<String> downLoadImgUrls = [];
-      for (var img in productImages!) {
-        try {
+      try {
+        for (var img in productImages!) {
           var storageRef =
               firebaseStorage.ref('product-images/${path.basename(img.path)}');
           await storageRef.putFile(File(img.path)).whenComplete(() async {
@@ -136,19 +137,19 @@ class _ImageUploadTabState extends State<ImageUploadTab>
               });
             });
           });
-        } catch (e) {
-          setState(() {
-            uploadingImageStatus = false;
-          });
-          displaySnackBar(
-            status: Status.error,
-            message: 'Error uploading product images ',
-            context: cxt,
-          );
         }
+      } catch (e) {
+        setState(() {
+          uploadingImageStatus = false;
+        });
+        displaySnackBar(
+          status: Status.error,
+          message: 'Error uploading product images',
+          context: cxt,
+        );
       }
 
-      // persist using provider
+      // persist downloadImgUrls using provider
       productProvider.updateProductImg(
         downLoadImgUrls: downLoadImgUrls,
       );
@@ -156,7 +157,9 @@ class _ImageUploadTabState extends State<ImageUploadTab>
 
     // submit product
     Future<void> submitProduct() async {
-      print(productProvider.productData);
+      if (kDebugMode) {
+        print(productProvider.productData);
+      }
       var id = uuid.v4();
 
       RequestResult? result = await _productController.createProduct(
@@ -224,7 +227,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                           radius: 80,
                           backgroundColor: Colors.white,
                           child: Center(
-                            child: productImages == null
+                            child: productImages!.isEmpty
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(30),
                                     child: Image.asset(
@@ -254,7 +257,9 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                             ),
                           ),
                         ),
-                        productImages == null
+
+                        // deleting of images
+                        productImages!.isEmpty
                             ? const SizedBox.shrink()
                             : Positioned(
                                 bottom: 10,
@@ -276,7 +281,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                     ),
                   ),
                   const SizedBox(height: 10),
-                  productImages == null
+                  productImages!.isEmpty
                       ? const SizedBox.shrink()
                       : SizedBox(
                           height: 100,
@@ -307,7 +312,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                           ),
                         ),
                   const SizedBox(height: 10),
-                  productImages != null || doneUploadingImage
+                  productImages!.isNotEmpty || doneUploadingImage
                       ? ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor: accentColor),

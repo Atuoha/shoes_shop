@@ -58,6 +58,7 @@ class _GeneralTabState extends State<GeneralTab>
     }
   }
 
+  // fetch categories from firebase
   void fetchCategories() async {
     await FirebaseFirestore.instance
         .collection('categories')
@@ -111,9 +112,6 @@ class _GeneralTabState extends State<GeneralTab>
         return;
       }
 
-      // setState(() {
-      //   isLoading = true;
-      // });
       productProvider.updateProductGeneralData(
         productName: productName.text.trim(),
         price: double.parse(productPrice.text.trim()),

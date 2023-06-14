@@ -10,7 +10,7 @@ void displaySnackBar({
 }) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      backgroundColor: status == Status.success ? primaryColor : Colors.red,
+      backgroundColor: status == Status.success ? accentColor : Colors.red,
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -24,7 +24,7 @@ void displaySnackBar({
             status == Status.success
                 ? Icons.mood
                 : Icons.sentiment_dissatisfied,
-            color:Colors.white,
+            color: Colors.white,
           )
         ],
       ),
