@@ -38,6 +38,7 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
   final vendorId = FirebaseAuth.instance.currentUser!.uid;
   final ProductController _productController = ProductController();
   bool isLoading = false;
+  bool uploadingImageStatus = false;
   var currentImage = 0;
 
   // get context
@@ -98,6 +99,17 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
         productImages = pickedImages;
       });
 
+      // persist using provider
+      productProvider.updateProductImg(
+        productImages: productImages,
+      );
+    }
+
+    void uploadImages() async {
+      setState(() {
+        uploadingImageStatus = true;
+      });
+
       // upload images to firebase
       List<String> downLoadImgUrls = [];
       for (var img in productImages!) {
@@ -105,9 +117,12 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
           var storageRef =
               firebaseStorage.ref('product-images/${path.basename(img.path)}');
           await storageRef.putFile(File(img.path)).whenComplete(() async {
-            await storageRef.getDownloadURL().then(
-                  (value) => downLoadImgUrls.add(value),
-                );
+            await storageRef.getDownloadURL().then((value) {
+              downLoadImgUrls.add(value);
+              setState(() {
+                uploadingImageStatus = false;
+              });
+            });
           });
         } catch (e) {
           displaySnackBar(
@@ -120,7 +135,6 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
 
       // persist using provider
       productProvider.updateProductImg(
-        productImages: pickedImages,
         downLoadImgUrls: downLoadImgUrls,
       );
     }
@@ -176,11 +190,11 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
               ),
             )
           : const SizedBox.shrink(),
-      body: !isLoading
+      body: !isLoading || !uploadingImageStatus
           ? Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 18.0,
-                vertical: 20,
+              padding: const EdgeInsets.only(
+                top: 20,
+                left: 18,
               ),
               child: Column(
                 children: [
@@ -273,6 +287,15 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
                             ),
                           ),
                         ),
+                  const SizedBox(height: 10),
+                  productImages != null
+                      ? ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: accentColor),
+                          onPressed: () => uploadImages(),
+                          child: const Text('Upload Images'),
+                        )
+                      : const SizedBox.shrink()
                 ],
               ),
             )
