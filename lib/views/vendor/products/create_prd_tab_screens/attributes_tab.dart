@@ -27,6 +27,13 @@ class _AttributesTabState extends State<AttributesTab> {
     sizeAvailable.clear();
   }
 
+  // remove size
+  void removeSize(int index) {
+    setState(() {
+      sizes.removeAt(index);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -129,12 +136,32 @@ class _AttributesTabState extends State<AttributesTab> {
                 itemCount: sizes.length,
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.all(5.0),
-                  child: CircleAvatar(
-                    backgroundColor: gridBg,
-                    child: Text(
-                      sizes[index],
-                      style: getRegularStyle(color: Colors.black),
-                    ),
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: gridBg,
+                        child: Text(
+                          sizes[index],
+                          style: getRegularStyle(color: Colors.black),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 10,
+                        left: 10,
+                        child: GestureDetector(
+                          onTap: () => removeSize(index),
+                          child: const CircleAvatar(
+                            radius: 10,
+                            backgroundColor: accentColor,
+                            child: Icon(
+                              Icons.delete_forever,
+                              color: Colors.white,
+                              size:12
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -144,22 +171,22 @@ class _AttributesTabState extends State<AttributesTab> {
       ),
       bottomSheet: productProvider.isProductAttributesSubmittedStatus
           ? Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Text(
-              'Saved attributes details successfully',
-              style: getRegularStyle(color: accentColor),
-            ),
-            const SizedBox(width: 5),
-            const Icon(
-              Icons.check_circle_outline,
-              color: accentColor,
-            ),
-          ],
-        ),
-      )
+              padding: const EdgeInsets.all(8.0),
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text(
+                    'Saved attributes details successfully',
+                    style: getRegularStyle(color: accentColor),
+                  ),
+                  const SizedBox(width: 5),
+                  const Icon(
+                    Icons.check_circle_outline,
+                    color: accentColor,
+                  ),
+                ],
+              ),
+            )
           : const SizedBox.shrink(),
     );
   }

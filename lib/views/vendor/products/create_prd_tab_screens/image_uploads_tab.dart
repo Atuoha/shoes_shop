@@ -14,6 +14,7 @@ import '../../../../controllers/product_controller.dart';
 import '../../../../models/product.dart';
 import '../../../../models/request_result.dart';
 import '../../../../providers/product.dart';
+import '../../../../resources/styles_manager.dart';
 import '../../../widgets/kcool_alert.dart';
 import '../../../widgets/loading_widget.dart';
 import '../../../widgets/msg_snackbar.dart';
@@ -39,6 +40,7 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
   final ProductController _productController = ProductController();
   bool isLoading = false;
   bool uploadingImageStatus = false;
+  bool doneUploadingImage = false;
   var currentImage = 0;
 
   // get context
@@ -288,12 +290,21 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
                           ),
                         ),
                   const SizedBox(height: 10),
-                  productImages != null
+                  productImages != null || doneUploadingImage
                       ? ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor: accentColor),
-                          onPressed: () => uploadImages(),
-                          child: const Text('Upload Images'),
+                          onPressed: () =>
+                              uploadingImageStatus || doneUploadingImage
+                                  ? null
+                                  : uploadImages(),
+                          child: Text(
+                            uploadingImageStatus
+                                ? 'Uploading'
+                                : doneUploadingImage
+                                    ? 'Done uploading'
+                                    : 'Upload Images',
+                          ),
                         )
                       : const SizedBox.shrink()
                 ],
@@ -302,6 +313,25 @@ class _ImageUploadTabState extends State<ImageUploadTab> {
           : const Center(
               child: LoadingWidget(size: 50),
             ),
+      bottomSheet: doneUploadingImage
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text(
+                    'Upload images successfully',
+                    style: getRegularStyle(color: accentColor),
+                  ),
+                  const SizedBox(width: 5),
+                  const Icon(
+                    Icons.check_circle_outline,
+                    color: accentColor,
+                  ),
+                ],
+              ),
+            )
+          : const SizedBox.shrink(),
     );
   }
 }
