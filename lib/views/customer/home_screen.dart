@@ -30,7 +30,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   Widget build(BuildContext context) {
     final CategoryData categoryProvider = Provider.of<CategoryData>(context);
     Stream<QuerySnapshot> productStream =
-        FirebaseFirestore.instance.collection('products').snapshots();
+        FirebaseFirestore.instance.collection('products').orderBy('uploadDate',descending: true).snapshots();
 
     Size size = MediaQuery.of(context).size;
 
@@ -71,7 +71,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
           ),
         ),
         CategorySection(categoryProvider: categoryProvider),
-        const SizedBox(height: 15),
+        // const SizedBox(height: 15),
 
         // Product StreamBuilder
         StreamBuilder<QuerySnapshot>(
@@ -106,7 +106,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
             }
 
             return SizedBox(
-              height: size.height / 3,
+              height: size.height / 2.8,
               child: MasonryGridView.count(
                 crossAxisCount: 2,
                 mainAxisSpacing: 10,
