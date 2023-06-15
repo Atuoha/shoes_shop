@@ -11,6 +11,7 @@ import 'package:shoes_shop/constants/color.dart';
 import 'package:shoes_shop/resources/assets_manager.dart';
 import '../../../../constants/enums/status.dart';
 import '../../../../controllers/product_controller.dart';
+import '../../../../controllers/route_manager.dart';
 import '../../../../models/product.dart';
 import '../../../../models/request_result.dart';
 import '../../../../providers/product.dart';
@@ -46,6 +47,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
   bool doneUploadingImage = false;
   var currentImage = 0;
   List<XFile>? productImages = [];
+  bool stayOnPage = false;
 
   // get context
   get cxt => context;
@@ -74,13 +76,22 @@ class _ImageUploadTabState extends State<ImageUploadTab>
     Navigator.of(context).pop();
   }
 
-
   // called after a success upload action is completed
   void completeSuccessAction() {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const VendorMainScreen(index: 2)),
-      (route) => false,
-    );
+    setState(() {
+      isLoading = false;
+    });
+
+    if (stayOnPage) {
+      Navigator.of(context).pushReplacementNamed(RouteManager.vendorCreatePost);
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const VendorMainScreen(index: 2),
+        ),
+        (route) => false,
+      );
+    }
   }
 
   @override
@@ -98,9 +109,9 @@ class _ImageUploadTabState extends State<ImageUploadTab>
         maxHeight: 600,
       );
 
-      if (pickedImages == null) {
-        return null;
-      }
+      // if (pickedImages ) {
+      //   return null;
+      // }
 
       if (pickedImages.length < 2) {
         displaySnackBar(
@@ -123,7 +134,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
         status: Status.success,
         message: uploadingImageStatus
             ? 'Image is still trying to upload'
-            : 'Image has fully uploading. Upload Product',
+            : 'Image has fully uploaded. Upload Product Now!',
         context: context,
       );
     }
@@ -258,23 +269,29 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                                   ),
                           ),
                         ),
-                        Positioned(
-                          bottom: 10,
-                          right: 10,
-                          child: GestureDetector(
-                            onTap: () => selectPhoto(),
-                            child: const CircleAvatar(
-                              backgroundColor: accentColor,
-                              child: Icon(
-                                Icons.photo,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
 
-                        // deleting of images
-                        productImages!.isEmpty
+                        // image selection trigger
+                        doneUploadingImage || uploadingImageStatus
+                            ? const SizedBox.shrink()
+                            : Positioned(
+                                bottom: 10,
+                                right: 10,
+                                child: GestureDetector(
+                                  onTap: () => selectPhoto(),
+                                  child: const CircleAvatar(
+                                    backgroundColor: accentColor,
+                                    child: Icon(
+                                      Icons.photo,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                        // deleting of images trigger
+                        productImages!.isEmpty ||
+                                doneUploadingImage ||
+                                uploadingImageStatus
                             ? const SizedBox.shrink()
                             : Positioned(
                                 bottom: 10,
@@ -327,7 +344,28 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                           ),
                         ),
                   const SizedBox(height: 10),
-                  productImages!.isNotEmpty || doneUploadingImage
+                  productImages!.isNotEmpty
+                      ? CheckboxListTile(
+                          checkColor: Colors.white,
+                          activeColor: accentColor,
+                          side: const BorderSide(
+                            color: accentColor,
+                            width: 1,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          title: const Text(
+                            'Do you want to stay on this page after submitting form?',
+                          ),
+                          value: stayOnPage,
+                          onChanged: (value) => setState(() {
+                            stayOnPage = value!;
+                          }),
+                        )
+                      : const SizedBox.shrink(),
+                  const SizedBox(height: 10),
+                  productImages!.isNotEmpty
                       ? ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor: accentColor),
