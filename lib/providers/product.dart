@@ -31,7 +31,6 @@ class ProductData extends ChangeNotifier {
         _isProductShippingInfoSubmitted &&
         productData['downLoadImgUrls'] != null) {
       status = true;
-      notifyListeners();
     }
     return status;
   }

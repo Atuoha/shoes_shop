@@ -79,7 +79,7 @@ class _GeneralTabState extends State<GeneralTab>
     messageDialog(
       title: 'Instructions',
       content:
-          'After filling every detail you want on each product detail tab, click the check button so that it can be saved for you.',
+          'After filling every detail you want on each product detail tab, click the save button so that it can be saved for you.',
       context: context,
     );
   }
@@ -128,7 +128,7 @@ class _GeneralTabState extends State<GeneralTab>
       floatingActionButton: FloatingActionButton(
         onPressed: () => submitData(),
         child: const Icon(
-          Icons.check_circle,
+          Icons.save,
         ),
       ),
       body: Padding(

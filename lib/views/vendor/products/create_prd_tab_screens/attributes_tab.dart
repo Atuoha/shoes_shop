@@ -75,7 +75,7 @@ class _AttributesTabState extends State<AttributesTab>
       floatingActionButton: FloatingActionButton(
         onPressed: () => submitData(),
         child: const Icon(
-          Icons.check_circle,
+          Icons.save,
         ),
       ),
       body: Padding(

@@ -154,8 +154,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
       List<String> downLoadImgUrls = [];
       try {
         for (var img in productImages!) {
-          var storageRef =
-              firebaseStorage.ref('product-images/${path.basename(img.path)}');
+          var storageRef = firebaseStorage.ref('product-images/${uuid.v4()}');
           await storageRef.putFile(File(img.path)).whenComplete(() async {
             await storageRef.getDownloadURL().then((value) {
               downLoadImgUrls.add(value);
@@ -364,7 +363,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                                 )
                               : Text(
                                   doneUploadingImage
-                                      ? 'Syncing images...'
+                                      ? 'Image uploaded and saved'
                                       : 'Upload Images',
                                 ),
                         )

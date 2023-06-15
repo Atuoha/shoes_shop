@@ -49,7 +49,7 @@ class _ShippingTabState extends State<ShippingTab>
       floatingActionButton: FloatingActionButton(
         onPressed: () => submitData(),
         child: const Icon(
-          Icons.check_circle,
+          Icons.save,
         ),
       ),
       body: Padding(
