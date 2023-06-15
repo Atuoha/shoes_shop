@@ -19,7 +19,6 @@ import '../../../../resources/styles_manager.dart';
 import '../../../widgets/kcool_alert.dart';
 import '../../../widgets/loading_widget.dart';
 import '../../../widgets/msg_snackbar.dart';
-import 'package:path/path.dart' as path;
 
 import 'package:uuid/uuid.dart';
 
@@ -45,6 +44,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
   bool isLoading = false;
   bool uploadingImageStatus = false;
   bool doneUploadingImage = false;
+  bool fetchingImages = false;
   var currentImage = 0;
   List<XFile>? productImages = [];
   bool stayOnPage = false;
@@ -107,6 +107,9 @@ class _ImageUploadTabState extends State<ImageUploadTab>
 
     // for selecting photo
     Future selectPhoto() async {
+      setState(() {
+        fetchingImages = true;
+      });
       List<XFile>? pickedImages;
 
       pickedImages = await _picker.pickMultiImage(
@@ -130,6 +133,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
       // assign the picked image to the profileImage
       setState(() {
         productImages = pickedImages;
+        fetchingImages = false;
       });
     }
 
@@ -315,6 +319,20 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                     ),
                   ),
                   const SizedBox(height: 10),
+
+                  // show a loading spinner while trying to fetch images from gallery
+                  fetchingImages
+                      ? const Column(
+                          children: [
+                            LoadingWidget(size: 30),
+                            SizedBox(height: 10),
+                            Text('Loading images'),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+
+                  const SizedBox(height: 10),
+
                   productImages!.isEmpty
                       ? const SizedBox.shrink()
                       : SizedBox(
@@ -345,7 +363,9 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                             ),
                           ),
                         ),
+
                   const SizedBox(height: 10),
+
                   productImages!.isNotEmpty
                       ? ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -368,7 +388,9 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                                 ),
                         )
                       : const SizedBox.shrink(),
+
                   const SizedBox(height: 10),
+
                   doneUploadingImage
                       ? CheckboxListTile(
                           checkColor: Colors.white,
@@ -392,6 +414,8 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                 ],
               ),
             )
+
+          // loading is true
           : const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
