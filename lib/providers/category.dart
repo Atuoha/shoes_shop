@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class CategoryData extends ChangeNotifier {
   String _currentCategory = '';
@@ -6,7 +6,9 @@ class CategoryData extends ChangeNotifier {
   void updateCategory(String category) {
     _currentCategory = category;
     notifyListeners();
-    print('THE CURRENT CATEGORY: $_currentCategory');
+    if (kDebugMode) {
+      print('THE CURRENT CATEGORY: $_currentCategory');
+    }
   }
 
   get currentCategory => _currentCategory;

@@ -18,69 +18,77 @@ class CategorySection extends StatefulWidget {
 }
 
 class _CategorySectionState extends State<CategorySection> {
-  var currentCarouselIndex = 0;
-  var currentIconSectionIndex = 0;
+  var currentCategoryIndex = 0;
+  String? currentCategoryTitle;
   bool isLoading = true;
 
-  final List<Category> categories = [];
-
-  Future<void> _fetchCategories() async {
-    await FirebaseFirestore.instance
-        .collection('categories')
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        categories.add(
-          Category(
-            id: doc.id,
-            title: doc['category'],
-            imgUrl: doc['img_url'],
-          ),
-        );
-      }
-
-      setState(() {
-        isLoading = false;
-      });
-      widget.categoryProvider.updateCategory(categories[0].title);
-    });
-  }
-
-  void setCurrentIconSection(int index) {
+  void setCurrentIconSection(int index, String title) {
     setState(() {
-      currentIconSectionIndex = index;
+      currentCategoryIndex = index;
+      currentCategoryTitle = title;
     });
-    widget.categoryProvider.updateCategory(categories[index].title);
-  }
-
-  @override
-  void didChangeDependencies() {
-    _fetchCategories();
-    super.didChangeDependencies();
+    widget.categoryProvider.updateCategory(title);
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    Stream<QuerySnapshot> streamCategory =
+        FirebaseFirestore.instance.collection('categories').snapshots();
+
     return SizedBox(
       height: size.height / 8,
-      child: !isLoading
-          ? ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                var item = categories[index];
-                return categories.isNotEmpty
-                    ? SingleCategorySection(
-                        item: item,
-                        index: index,
-                        setCurrentIconSection: setCurrentIconSection,
-                        currentIconSectionIndex: currentIconSectionIndex,
-                      )
-                    : const Center(child: Text('Categories is empty'));
-              },
-            )
-          : const Center(child: LoadingWidget(size: 20)),
+      child: StreamBuilder<QuerySnapshot>(
+        stream: streamCategory,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text(
+                'An error has occurred!',
+              ),
+            );
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: LoadingWidget(size: 50),
+            );
+          }
+
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              var item = snapshot.data!.docs[index];
+              Category category = Category(
+                id: index.toString(),
+                title: item['category'],
+                imgUrl: item['img_url'],
+              );
+
+              setState(() {
+                setCurrentIconSection(index, category.title);
+              });
+
+              return snapshot.data!.docs.isNotEmpty
+                  ? SingleCategorySection(
+                      item: Category(
+                        id: category.id,
+                        title: category.title,
+                        imgUrl: category.imgUrl,
+                      ),
+                      index: index,
+                      setCurrentCategory: setCurrentIconSection,
+                      currentCategoryIndex: currentCategoryIndex,
+                    )
+                  : const Center(
+                      child: Text('Categories is empty'),
+                    );
+            },
+          );
+        },
+      ),
     );
   }
 }

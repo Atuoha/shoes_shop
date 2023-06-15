@@ -11,13 +11,13 @@ class SingleCategorySection extends StatelessWidget {
     Key? key,
     required this.item,
     required this.index,
-    required this.setCurrentIconSection,
-    required this.currentIconSectionIndex,
+    required this.setCurrentCategory,
+    required this.currentCategoryIndex,
   }) : super(key: key);
   final Category item;
   final int index;
-  final Function setCurrentIconSection;
-  final int currentIconSectionIndex;
+  final Function setCurrentCategory;
+  final int currentCategoryIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +29,12 @@ class SingleCategorySection extends StatelessWidget {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () => setCurrentIconSection(index),
+            onTap: () => setCurrentCategory(index,item.title),
             child: Container(
               height: 40,
               width: 50,
               decoration: BoxDecoration(
-                color: currentIconSectionIndex == index ? accentColor : boxBg,
+                color: currentCategoryIndex == index ? accentColor : boxBg,
                 borderRadius: BorderRadius.circular(AppSize.s10),
               ),
               child: Center(
@@ -45,7 +45,7 @@ class SingleCategorySection extends StatelessWidget {
                   errorWidget: (context, url, error) =>
                       Image.asset(AssetManager.addImage,fit:BoxFit.cover),
                   width: 50,
-                  color: currentIconSectionIndex == index
+                  color: currentCategoryIndex == index
                       ? Colors.white
                       : iconColor,
                 ),
