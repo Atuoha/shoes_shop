@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:shoes_shop/views/widgets/single_category_section.dart';
 
 import '../../models/category.dart';
+import '../../providers/category.dart';
 import 'loading_widget.dart';
 
 class CategorySection extends StatefulWidget {
-  const CategorySection({Key? key}) : super(key: key);
+  const CategorySection({
+    Key? key,
+    required this.categoryProvider,
+  }) : super(key: key);
+  final CategoryData categoryProvider;
 
   @override
   State<CategorySection> createState() => _CategorySectionState();
@@ -37,6 +42,7 @@ class _CategorySectionState extends State<CategorySection> {
       setState(() {
         isLoading = false;
       });
+      widget.categoryProvider.updateCategory(categories[0].title);
     });
   }
 
@@ -44,6 +50,7 @@ class _CategorySectionState extends State<CategorySection> {
     setState(() {
       currentIconSectionIndex = index;
     });
+    widget.categoryProvider.updateCategory(categories[index].title);
   }
 
   @override

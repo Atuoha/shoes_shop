@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shoes_shop/resources/styles_manager.dart';
+import '../../providers/category.dart';
 import '../../resources/font_manager.dart';
 import '../../resources/values_manager.dart';
 import '../widgets/banners.dart';
@@ -19,10 +20,10 @@ class CustomerHomeScreen extends StatefulWidget {
 class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   final TextEditingController searchText = TextEditingController();
 
-
-
   @override
   Widget build(BuildContext context) {
+    final CategoryData categoryProvider = Provider.of<CategoryData>(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -59,7 +60,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
             ),
           ),
         ),
-        const CategorySection()
+        CategorySection(categoryProvider: categoryProvider)
       ],
     );
   }

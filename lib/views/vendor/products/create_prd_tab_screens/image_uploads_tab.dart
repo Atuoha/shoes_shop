@@ -343,27 +343,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                             ),
                           ),
                         ),
-                  const SizedBox(height: 10),
-                  productImages!.isNotEmpty
-                      ? CheckboxListTile(
-                          checkColor: Colors.white,
-                          activeColor: accentColor,
-                          side: const BorderSide(
-                            color: accentColor,
-                            width: 1,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          title: const Text(
-                            'Do you want to stay on this page after submitting form?',
-                          ),
-                          value: stayOnPage,
-                          onChanged: (value) => setState(() {
-                            stayOnPage = value!;
-                          }),
-                        )
-                      : const SizedBox.shrink(),
+
                   const SizedBox(height: 10),
                   productImages!.isNotEmpty
                       ? ElevatedButton(
@@ -386,7 +366,28 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                                       : 'Upload Images',
                                 ),
                         )
-                      : const SizedBox.shrink()
+                      : const SizedBox.shrink(),
+                  const SizedBox(height: 10),
+                  doneUploadingImage
+                      ? CheckboxListTile(
+                    checkColor: Colors.white,
+                    activeColor: accentColor,
+                    side: const BorderSide(
+                      color: accentColor,
+                      width: 1,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    title: const Text(
+                      'Stay on this page after uploading product?',
+                    ),
+                    value: stayOnPage,
+                    onChanged: (value) => setState(() {
+                      stayOnPage = value!;
+                    }),
+                  )
+                      : const SizedBox.shrink(),
                 ],
               ),
             )
