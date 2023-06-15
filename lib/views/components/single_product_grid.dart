@@ -35,7 +35,7 @@ class SingleProductGridItem extends StatelessWidget {
           left: 3,
           right: 3,
           child: Container(
-            height: size.height /15,
+            height: size.height / 15,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               gradient: LinearGradient(
@@ -55,10 +55,8 @@ class SingleProductGridItem extends StatelessWidget {
                   horizontal: 8.0,
                 ),
                 child: Column(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
-                  mainAxisAlignment:
-                  MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FittedBox(
                       child: Text(
@@ -72,8 +70,7 @@ class SingleProductGridItem extends StatelessWidget {
                       ),
                     ),
                     Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           '\$${product.price}',

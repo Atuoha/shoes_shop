@@ -180,9 +180,6 @@ class _ImageUploadTabState extends State<ImageUploadTab>
 
     // submit product
     Future<void> submitProduct() async {
-      setState(() {
-        isLoading = true;
-      });
       if (kDebugMode) {
         print(productProvider.productData);
       }
@@ -219,13 +216,15 @@ class _ImageUploadTabState extends State<ImageUploadTab>
         productProvider.updateProductAttributeState();
         productProvider.updateProductShippingInfoState();
         productProvider.resetProductData();
+        setState(() {
+          productImages = [];
+        });
         isLoadingFnc();
       }
     }
 
     return Scaffold(
-      floatingActionButton: productProvider.isDoneSubmittingDetails() &&
-              !productProvider.isProductImagesNull()
+      floatingActionButton: productProvider.isDoneSubmittingDetails()
           ? Directionality(
               textDirection: TextDirection.rtl,
               child: FloatingActionButton.extended(
@@ -238,7 +237,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
               ),
             )
           : const SizedBox.shrink(),
-      body: !isLoading || !uploadingImageStatus
+      body: !isLoading
           ? Padding(
               padding: const EdgeInsets.only(
                 top: 20,
@@ -299,6 +298,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                                 child: GestureDetector(
                                   onTap: () => setState(() {
                                     productProvider.clearProductImg();
+                                    productImages = [];
                                   }),
                                   child: const CircleAvatar(
                                     backgroundColor: accentColor,
@@ -343,7 +343,6 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                             ),
                           ),
                         ),
-
                   const SizedBox(height: 10),
                   productImages!.isNotEmpty
                       ? ElevatedButton(
@@ -362,7 +361,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                                 )
                               : Text(
                                   doneUploadingImage
-                                      ? 'Done uploading images'
+                                      ? 'Syncing images...'
                                       : 'Upload Images',
                                 ),
                         )
@@ -370,23 +369,23 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                   const SizedBox(height: 10),
                   doneUploadingImage
                       ? CheckboxListTile(
-                    checkColor: Colors.white,
-                    activeColor: accentColor,
-                    side: const BorderSide(
-                      color: accentColor,
-                      width: 1,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    title: const Text(
-                      'Stay on this page after uploading product?',
-                    ),
-                    value: stayOnPage,
-                    onChanged: (value) => setState(() {
-                      stayOnPage = value!;
-                    }),
-                  )
+                          checkColor: Colors.white,
+                          activeColor: accentColor,
+                          side: const BorderSide(
+                            color: accentColor,
+                            width: 1,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          title: const Text(
+                            'Stay on this page after uploading product?',
+                          ),
+                          value: stayOnPage,
+                          onChanged: (value) => setState(() {
+                            stayOnPage = value!;
+                          }),
+                        )
                       : const SizedBox.shrink(),
                 ],
               ),

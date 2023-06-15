@@ -28,8 +28,10 @@ class ProductData extends ChangeNotifier {
     bool status = false;
     if (_isProductAttributesSubmitted &&
         _isProductGeneralInfoSubmitted &&
-        _isProductShippingInfoSubmitted) {
+        _isProductShippingInfoSubmitted &&
+        productData['downLoadImgUrls'] != null) {
       status = true;
+      notifyListeners();
     }
     return status;
   }

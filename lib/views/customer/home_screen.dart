@@ -76,8 +76,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         // Product StreamBuilder
         StreamBuilder<QuerySnapshot>(
           stream: productStream,
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          builder: (
+            BuildContext context,
+            AsyncSnapshot<QuerySnapshot> snapshot,
+          ) {
             if (snapshot.hasError) {
               return Center(
                 child: Wrap(
@@ -143,7 +145,8 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
+                                child:
+                                Image.asset(
                                   AssetManager.addImage,
                                   fit: BoxFit.cover,
                                 ),
