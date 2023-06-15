@@ -58,6 +58,8 @@ class _ImageUploadTabState extends State<ImageUploadTab>
       isLoading = true;
     });
 
+    Future.delayed(const Duration(seconds: 2));
+
     Timer(const Duration(seconds: 2), () {
       kCoolAlert(
         message: 'Product uploaded successfully',
@@ -72,6 +74,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
   void completeFailureAction() {
     setState(() {
       isLoading = false;
+      doneUploadingImage = false;
     });
     Navigator.of(context).pop();
   }
@@ -80,6 +83,8 @@ class _ImageUploadTabState extends State<ImageUploadTab>
   void completeSuccessAction() {
     setState(() {
       isLoading = false;
+      doneUploadingImage = false;
+      productImages = [];
     });
 
     if (stayOnPage) {
@@ -154,10 +159,6 @@ class _ImageUploadTabState extends State<ImageUploadTab>
           await storageRef.putFile(File(img.path)).whenComplete(() async {
             await storageRef.getDownloadURL().then((value) {
               downLoadImgUrls.add(value);
-              setState(() {
-                uploadingImageStatus = false;
-                doneUploadingImage = true;
-              });
             });
           });
         }
@@ -171,6 +172,11 @@ class _ImageUploadTabState extends State<ImageUploadTab>
           context: cxt,
         );
       }
+
+      setState(() {
+        uploadingImageStatus = false;
+        doneUploadingImage = true;
+      });
 
       // persist downloadImgUrls using provider
       productProvider.updateProductImg(
@@ -216,9 +222,6 @@ class _ImageUploadTabState extends State<ImageUploadTab>
         productProvider.updateProductAttributeState();
         productProvider.updateProductShippingInfoState();
         productProvider.resetProductData();
-        setState(() {
-          productImages = [];
-        });
         isLoadingFnc();
       }
     }

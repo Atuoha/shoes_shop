@@ -21,10 +21,11 @@ class SingleProductGridItem extends StatelessWidget {
         Container(
           height: 205,
           decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
               image: NetworkImage(
-                product.downLoadImgUrls[0],
+                product.downLoadImgUrls[1],
               ),
               fit: BoxFit.cover,
             ),

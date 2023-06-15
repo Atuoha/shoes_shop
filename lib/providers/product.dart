@@ -90,7 +90,8 @@ class ProductData extends ChangeNotifier {
 
   // clear product images
   clearProductImg() {
-    productData['downLoadImgUrls'] = '';
+    productData['downLoadImgUrls'] = null;
+    notifyListeners();
   }
 
   // checking if product images is null
