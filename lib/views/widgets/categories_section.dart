@@ -4,6 +4,7 @@ import 'package:shoes_shop/views/widgets/single_category_section.dart';
 
 import '../../models/category.dart';
 import '../../providers/category.dart';
+import '../../resources/assets_manager.dart';
 import 'loading_widget.dart';
 
 class CategorySection extends StatefulWidget {
@@ -23,12 +24,12 @@ class _CategorySectionState extends State<CategorySection> {
   bool isLoading = true;
 
   void setCurrentIconSection(int index, String title) {
-    setState(() {
-      currentCategoryIndex = index;
-      currentCategoryTitle = title;
-    });
+    currentCategoryIndex = index;
+    currentCategoryTitle = title;
     widget.categoryProvider.updateCategory(title);
   }
+
+  // implemented this using streamBuilder. A previous commit has a another suitable version
 
   @override
   Widget build(BuildContext context) {
@@ -43,16 +44,27 @@ class _CategorySectionState extends State<CategorySection> {
         stream: streamCategory,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
-            return const Center(
-              child: Text(
-                'An error has occurred!',
+            return Center(
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      AssetManager.warningImage,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  const Text('An error occurred!'),
+                ],
               ),
             );
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-              child: LoadingWidget(size: 50),
+              child: LoadingWidget(size: 30),
             );
           }
 
@@ -67,10 +79,6 @@ class _CategorySectionState extends State<CategorySection> {
                 imgUrl: item['img_url'],
               );
 
-              setState(() {
-                setCurrentIconSection(index, category.title);
-              });
-
               return snapshot.data!.docs.isNotEmpty
                   ? SingleCategorySection(
                       item: Category(
@@ -82,8 +90,21 @@ class _CategorySectionState extends State<CategorySection> {
                       setCurrentCategory: setCurrentIconSection,
                       currentCategoryIndex: currentCategoryIndex,
                     )
-                  : const Center(
-                      child: Text('Categories is empty'),
+                  : Center(
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.asset(
+                              AssetManager.addImage,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          const Text('Categories is empty'),
+                        ],
+                      ),
                     );
             },
           );
