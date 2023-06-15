@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,26 +51,36 @@ class _ImageUploadTabState extends State<ImageUploadTab>
   get cxt => context;
 
   // loading fnc
-  isLoadingFnc() async {
+  isLoadingFnc() {
     setState(() {
       isLoading = true;
     });
 
-    // navigate back to products screen
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) =>
-            const VendorMainScreen(index: 2), // Todo: add index
-      ),
-    );
+    Timer(const Duration(seconds: 2), () {
+      kCoolAlert(
+        message: 'Product uploaded successfully',
+        context: context,
+        alert: CoolAlertType.success,
+        action: completeSuccessAction,
+      );
+    });
   }
 
-  // called after an action is completed
-  void completeAction() {
+  // called after a failure upload action is completed
+  void completeFailureAction() {
     setState(() {
       isLoading = false;
     });
-    Navigator.pop(context);
+    Navigator.of(context).pop();
+  }
+
+
+  // called after a success upload action is completed
+  void completeSuccessAction() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const VendorMainScreen(index: 2)),
+      (route) => false,
+    );
   }
 
   @override
@@ -134,6 +145,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
               downLoadImgUrls.add(value);
               setState(() {
                 uploadingImageStatus = false;
+                doneUploadingImage = true;
               });
             });
           });
@@ -157,6 +169,9 @@ class _ImageUploadTabState extends State<ImageUploadTab>
 
     // submit product
     Future<void> submitProduct() async {
+      setState(() {
+        isLoading = true;
+      });
       if (kDebugMode) {
         print(productProvider.productData);
       }
@@ -186,7 +201,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
           message: result.errorMessage!,
           context: cxt,
           alert: CoolAlertType.error,
-          action: completeAction,
+          action: completeFailureAction,
         );
       } else {
         productProvider.updateProductGeneralInfoState();
@@ -338,7 +353,14 @@ class _ImageUploadTabState extends State<ImageUploadTab>
               ),
             )
           : const Center(
-              child: LoadingWidget(size: 50),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LoadingWidget(size: 50),
+                  SizedBox(height: 10),
+                  Text('Uploading...')
+                ],
+              ),
             ),
       bottomSheet: doneUploadingImage
           ? Padding(
@@ -347,7 +369,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(
-                    'Upload images successfully',
+                    'Uploaded images successfully',
                     style: getRegularStyle(color: accentColor),
                   ),
                   const SizedBox(width: 5),

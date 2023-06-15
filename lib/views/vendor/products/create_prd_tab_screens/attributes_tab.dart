@@ -110,7 +110,7 @@ class _AttributesTabState extends State<AttributesTab>
                     textInputAction: TextInputAction.done,
                     controller: sizeAvailable,
                     decoration: const InputDecoration(
-                      hintText: 'Enter size available',
+                      hintText: 'Enter size available(s,m,l,xl,xxl)',
                       labelText: 'Size Available',
                     ),
                   ),
