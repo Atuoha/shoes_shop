@@ -28,6 +28,7 @@ class AssetManager{
   static const String warningImage = "$imagePath/warning.png";
 
   static const String allImage = "$imagePath/all.jpg";
+  static const String allNetworkImage = 'https://icon-library.com/images/show-all-icon/show-all-icon-6.jpg';
 
   static const String emptyImg = "$imagePath/empty-img.jpg";
   static const String placeholderImg = "$imagePath/placeholder-img.jpg";

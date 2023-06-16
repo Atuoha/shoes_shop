@@ -68,12 +68,32 @@ class _CategorySectionState extends State<CategorySection> {
             );
           }
 
+          if (snapshot.data!.docs.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      AssetManager.addImage,
+                      width: 50,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  const Text('Category list is empty'),
+                ],
+              ),
+            );
+          }
+
           // hard coding an "All Category" and adding it to the list
           List<Category> combinedList = [
             Category(
               id: 'title',
-              title: 'All',
-              imgUrl: AssetManager.allImage,
+              title: '',
+              imgUrl: AssetManager.allNetworkImage,
             ),
             ...snapshot.data!.docs.map(
               (item) => Category(
@@ -90,33 +110,16 @@ class _CategorySectionState extends State<CategorySection> {
             itemBuilder: (context, index) {
               var item = combinedList[index];
 
-              return snapshot.data!.docs.isNotEmpty
-                  ? SingleCategorySection(
-                      item: Category(
-                        id: item.id,
-                        title: item.title,
-                        imgUrl: item.imgUrl,
-                      ),
-                      index: index,
-                      setCurrentCategory: setCurrentIconSection,
-                      currentCategoryIndex: currentCategoryIndex,
-                    )
-                  : Center(
-                      child: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              AssetManager.addImage,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(width: 5),
-                          const Text('Categories is empty'),
-                        ],
-                      ),
-                    );
+              return SingleCategorySection(
+                item: Category(
+                  id: item.id,
+                  title: item.title,
+                  imgUrl: item.imgUrl,
+                ),
+                index: index,
+                setCurrentCategory: setCurrentIconSection,
+                currentCategoryIndex: currentCategoryIndex,
+              );
             },
           );
         },

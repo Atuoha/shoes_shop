@@ -123,6 +123,26 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
               );
             }
 
+            if (snapshot.data!.docs.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset(
+                        AssetManager.addImage,
+                        width: 200,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    const Text('Product list is empty'),
+                  ],
+                ),
+              );
+            }
+
             return SizedBox(
               height: size.height / 2.8,
               child: MasonryGridView.count(
@@ -155,24 +175,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                     uploadDate: item['uploadDate'].toDate(),
                   );
 
-                  return snapshot.data!.docs.isNotEmpty
-                      ? SingleProductGridItem(product: product, size: size)
-                      : Center(
-                          child: Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                  AssetManager.addImage,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              const Text('Product list is empty'),
-                            ],
-                          ),
-                        );
+                  return SingleProductGridItem(product: product, size: size);
                 },
               ),
             );
