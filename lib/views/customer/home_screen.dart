@@ -29,10 +29,28 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final CategoryData categoryProvider = Provider.of<CategoryData>(context);
-    Stream<QuerySnapshot> productStream =
-        FirebaseFirestore.instance.collection('products').orderBy('uploadDate',descending: true).snapshots();
+    // Stream<QuerySnapshot> productStream = FirebaseFirestore.instance
+    //     .collection('products')
+    //     .orderBy('uploadDate', descending: true)
+    //     .snapshots();
 
     Size size = MediaQuery.of(context).size;
+
+    Stream<QuerySnapshot> fetchProducts() {
+      CollectionReference productCollection =
+          FirebaseFirestore.instance.collection('products');
+
+      if (categoryProvider.currentCategory.isNotEmpty) {
+        return productCollection
+            .orderBy('uploadDate', descending: true)
+            .where('category', isEqualTo: categoryProvider.currentCategory)
+            .snapshots();
+      } else {
+        return productCollection
+            .orderBy('uploadDate', descending: true)
+            .snapshots();
+      }
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,15 +93,15 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
         // Product StreamBuilder
         StreamBuilder<QuerySnapshot>(
-          stream: productStream,
+          stream: fetchProducts(),
           builder: (
             BuildContext context,
             AsyncSnapshot<QuerySnapshot> snapshot,
           ) {
             if (snapshot.hasError) {
               return Center(
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
@@ -145,8 +163,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                                child:
-                                Image.asset(
+                                child: Image.asset(
                                   AssetManager.addImage,
                                   fit: BoxFit.cover,
                                 ),

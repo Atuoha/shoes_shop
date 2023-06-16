@@ -19,7 +19,7 @@ class CategorySection extends StatefulWidget {
 }
 
 class _CategorySectionState extends State<CategorySection> {
-  var currentCategoryIndex = 0;
+  int currentCategoryIndex = 0;
   String? currentCategoryTitle;
   bool isLoading = true;
 
@@ -68,23 +68,34 @@ class _CategorySectionState extends State<CategorySection> {
             );
           }
 
-          return ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              var item = snapshot.data!.docs[index];
-              Category category = Category(
-                id: index.toString(),
+          // hard coding an "All Category" and adding it to the list
+          List<Category> combinedList = [
+            Category(
+              id: 'title',
+              title: 'All',
+              imgUrl: AssetManager.allImage,
+            ),
+            ...snapshot.data!.docs.map(
+              (item) => Category(
+                id: item['category'],
                 title: item['category'],
                 imgUrl: item['img_url'],
-              );
+              ),
+            )
+          ];
+
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: combinedList.length,
+            itemBuilder: (context, index) {
+              var item = combinedList[index];
 
               return snapshot.data!.docs.isNotEmpty
                   ? SingleCategorySection(
                       item: Category(
-                        id: category.id,
-                        title: category.title,
-                        imgUrl: category.imgUrl,
+                        id: item.id,
+                        title: item.title,
+                        imgUrl: item.imgUrl,
                       ),
                       index: index,
                       setCurrentCategory: setCurrentIconSection,

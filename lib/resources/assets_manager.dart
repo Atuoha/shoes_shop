@@ -27,6 +27,8 @@ class AssetManager{
   static const String emailImage = "$imagePath/email.png";
   static const String warningImage = "$imagePath/warning.png";
 
+  static const String allImage = "$imagePath/all.jpg";
+
   static const String emptyImg = "$imagePath/empty-img.jpg";
   static const String placeholderImg = "$imagePath/placeholder-img.jpg";
 }
