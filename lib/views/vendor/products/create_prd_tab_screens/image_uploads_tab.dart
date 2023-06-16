@@ -244,176 +244,178 @@ class _ImageUploadTabState extends State<ImageUploadTab>
             )
           : const SizedBox.shrink(),
       body: !isLoading
-          ? Padding(
-              padding: const EdgeInsets.only(
-                top: 20,
-                left: 18,
-              ),
-              child: Column(
-                children: [
-                  Center(
-                    child: Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 80,
-                          backgroundColor: Colors.white,
-                          child: Center(
-                            child: productImages!.isEmpty
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(30),
-                                    child: Image.asset(
-                                      AssetManager.placeholderImg,
+          ? SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 20,
+                  left: 18,
+                ),
+                child: Column(
+                  children: [
+                    Center(
+                      child: Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 80,
+                            backgroundColor: Colors.white,
+                            child: Center(
+                              child: productImages!.isEmpty
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(30),
+                                      child: Image.asset(
+                                        AssetManager.placeholderImg,
+                                      ),
+                                    )
+                                  // this will load imgUrl from firebase
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(30),
+                                      child: Image.file(
+                                        File(productImages![currentImage].path),
+                                      ),
                                     ),
-                                  )
-                                // this will load imgUrl from firebase
-                                : ClipRRect(
-                                    borderRadius: BorderRadius.circular(30),
-                                    child: Image.file(
-                                      File(productImages![currentImage].path),
-                                    ),
-                                  ),
+                            ),
                           ),
-                        ),
 
-                        // image selection trigger
-                        doneUploadingImage || uploadingImageStatus
-                            ? const SizedBox.shrink()
-                            : Positioned(
-                                bottom: 10,
-                                right: 10,
-                                child: GestureDetector(
-                                  onTap: () => selectPhoto(),
-                                  child: const CircleAvatar(
-                                    backgroundColor: accentColor,
-                                    child: Icon(
-                                      Icons.photo,
-                                      color: Colors.white,
+                          // image selection trigger
+                          doneUploadingImage || uploadingImageStatus
+                              ? const SizedBox.shrink()
+                              : Positioned(
+                                  bottom: 10,
+                                  right: 10,
+                                  child: GestureDetector(
+                                    onTap: () => selectPhoto(),
+                                    child: const CircleAvatar(
+                                      backgroundColor: accentColor,
+                                      child: Icon(
+                                        Icons.photo,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
 
-                        // deleting of images trigger
-                        productImages!.isEmpty ||
-                                doneUploadingImage ||
-                                uploadingImageStatus
-                            ? const SizedBox.shrink()
-                            : Positioned(
-                                bottom: 10,
-                                left: 10,
+                          // deleting of images trigger
+                          productImages!.isEmpty ||
+                                  doneUploadingImage ||
+                                  uploadingImageStatus
+                              ? const SizedBox.shrink()
+                              : Positioned(
+                                  bottom: 10,
+                                  left: 10,
+                                  child: GestureDetector(
+                                    onTap: () => setState(() {
+                                      productProvider.clearProductImg();
+                                      productImages = [];
+                                    }),
+                                    child: const CircleAvatar(
+                                      backgroundColor: accentColor,
+                                      child: Icon(
+                                        Icons.delete_forever,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    // show a loading spinner while trying to fetch images from gallery
+                    fetchingImages
+                        ? const Column(
+                            children: [
+                              LoadingWidget(size: 30),
+                              SizedBox(height: 10),
+                              Text('Loading images'),
+                            ],
+                          )
+                        : const SizedBox.shrink(),
+
+                    const SizedBox(height: 10),
+
+                    productImages!.isEmpty
+                        ? const SizedBox.shrink()
+                        : SizedBox(
+                            height: 100,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: productImages!.length,
+                              itemBuilder: (context, index) => Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
                                 child: GestureDetector(
                                   onTap: () => setState(() {
-                                    productProvider.clearProductImg();
-                                    productImages = [];
+                                    currentImage = index;
                                   }),
-                                  child: const CircleAvatar(
-                                    backgroundColor: accentColor,
-                                    child: Icon(
-                                      Icons.delete_forever,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  // show a loading spinner while trying to fetch images from gallery
-                  fetchingImages
-                      ? const Column(
-                          children: [
-                            LoadingWidget(size: 30),
-                            SizedBox(height: 10),
-                            Text('Loading images'),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
-
-                  const SizedBox(height: 10),
-
-                  productImages!.isEmpty
-                      ? const SizedBox.shrink()
-                      : SizedBox(
-                          height: 100,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: productImages!.length,
-                            itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: GestureDetector(
-                                onTap: () => setState(() {
-                                  currentImage = index;
-                                }),
-                                child: Container(
-                                  height: 60,
-                                  width: 90,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
-                                      image: FileImage(
-                                        File(productImages![index].path),
+                                  child: Container(
+                                    height: 60,
+                                    width: 90,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      image: DecorationImage(
+                                        image: FileImage(
+                                          File(productImages![index].path),
+                                        ),
+                                        fit: BoxFit.cover,
                                       ),
-                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
 
-                  const SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
-                  productImages!.isNotEmpty
-                      ? ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: accentColor),
-                          onPressed: () =>
-                              uploadingImageStatus || doneUploadingImage
-                                  ? showMsg()
-                                  : uploadImages(),
-                          child: uploadingImageStatus
-                              ? const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
+                    productImages!.isNotEmpty
+                        ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: accentColor),
+                            onPressed: () =>
+                                uploadingImageStatus || doneUploadingImage
+                                    ? showMsg()
+                                    : uploadImages(),
+                            child: uploadingImageStatus
+                                ? const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Text(
+                                    doneUploadingImage
+                                        ? 'Image uploaded and saved'
+                                        : 'Upload Images',
                                   ),
-                                )
-                              : Text(
-                                  doneUploadingImage
-                                      ? 'Image uploaded and saved'
-                                      : 'Upload Images',
-                                ),
-                        )
-                      : const SizedBox.shrink(),
+                          )
+                        : const SizedBox.shrink(),
 
-                  const SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
-                  doneUploadingImage
-                      ? CheckboxListTile(
-                          checkColor: Colors.white,
-                          activeColor: accentColor,
-                          side: const BorderSide(
-                            color: accentColor,
-                            width: 1,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          title: const Text(
-                            'Stay on this page after uploading product?',
-                          ),
-                          value: stayOnPage,
-                          onChanged: (value) => setState(() {
-                            stayOnPage = value!;
-                          }),
-                        )
-                      : const SizedBox.shrink(),
-                ],
+                    doneUploadingImage
+                        ? CheckboxListTile(
+                            checkColor: Colors.white,
+                            activeColor: accentColor,
+                            side: const BorderSide(
+                              color: accentColor,
+                              width: 1,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            title: const Text(
+                              'Stay on this page after uploading product?',
+                            ),
+                            value: stayOnPage,
+                            onChanged: (value) => setState(() {
+                              stayOnPage = value!;
+                            }),
+                          )
+                        : const SizedBox.shrink(),
+                  ],
+                ),
               ),
-            )
+          )
 
           // loading is true
           : const Center(
