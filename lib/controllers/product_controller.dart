@@ -7,7 +7,6 @@ import '../models/success.dart';
 class ProductController {
   final firebase = FirebaseFirestore.instance;
 
-
   Future<RequestResult> createProduct({required Product product}) async {
     try {
       firebase.collection('products').doc(product.prodId).set({
@@ -25,6 +24,8 @@ class ProductController {
         'sizesAvailable': product.sizesAvailable,
         'downLoadImgUrls': product.downLoadImgUrls,
         'uploadDate': product.uploadDate,
+        'isFav': product.isFav,
+        'isApproved': product.isApproved,
       });
 
       return RequestResult.success(Success(msg: 'Upload successfully'));

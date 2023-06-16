@@ -1,5 +1,6 @@
 import 'package:shoes_shop/views/auth/vendor/forgot_password.dart';
 import 'package:shoes_shop/views/auth/vendor/vendor_auth.dart';
+import 'package:shoes_shop/views/customer/relational_screens/product_details.dart';
 
 import '../views/auth/account_type.dart';
 import '../views/auth/customer/customer_auth.dart';

@@ -13,6 +13,8 @@ class Product {
   final List<String> sizesAvailable;
   final List<String> downLoadImgUrls;
   final DateTime uploadDate;
+  bool isFav;
+  bool isApproved;
 
   Product({
     required this.prodId,
@@ -29,5 +31,7 @@ class Product {
     required this.sizesAvailable,
     required this.downLoadImgUrls,
     required this.uploadDate,
+    this.isFav = false,
+    this.isApproved = false,
   });
 }

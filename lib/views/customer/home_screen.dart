@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoes_shop/models/product.dart';
 import 'package:shoes_shop/resources/styles_manager.dart';
+import 'package:shoes_shop/views/customer/relational_screens/product_details.dart';
 import '../../providers/category.dart';
 import '../../resources/assets_manager.dart';
 import '../../resources/font_manager.dart';
@@ -43,11 +44,13 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
       if (categoryProvider.currentCategory.isNotEmpty) {
         return productCollection
             .orderBy('uploadDate', descending: true)
+            .where('isApproved', isEqualTo: true)
             .where('category', isEqualTo: categoryProvider.currentCategory)
             .snapshots();
       } else {
         return productCollection
             .orderBy('uploadDate', descending: true)
+            .where('isApproved', isEqualTo: true)
             .snapshots();
       }
     }
@@ -173,9 +176,23 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                     sizesAvailable: item['sizesAvailable'].cast<String>(),
                     downLoadImgUrls: item['downLoadImgUrls'].cast<String>(),
                     uploadDate: item['uploadDate'].toDate(),
+                    isApproved: item['isApproved'],
+                    isFav: item['isFav'],
                   );
 
-                  return SingleProductGridItem(product: product, size: size);
+                  return InkWell(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetailsScreen(
+                          product: product,
+                        ),
+                      ),
+                    ),
+                    child: SingleProductGridItem(
+                      product: product,
+                      size: size,
+                    ),
+                  );
                 },
               ),
             );

@@ -22,20 +22,28 @@ class SingleProductGridItem extends StatelessWidget {
       children: [
         CachedNetworkImage(
           imageUrl: product.downLoadImgUrls[1],
-          imageBuilder: (context, imageProvider) => Container(
-            height: 205,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
+          imageBuilder: (context, imageProvider) => Hero(
+            tag: product.prodId,
+            child: Container(
+              height: 205,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
-          placeholder: (context, url) => Image.asset(AssetManager.emptyImg),
-          errorWidget: (context, url, error) =>
-              Image.asset(AssetManager.emptyImg),
+          placeholder: (context, url) => ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(AssetManager.placeholderImg),
+          ),
+          errorWidget: (context, url, error) => ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(AssetManager.placeholderImg),
+          ),
         ),
         Positioned(
           bottom: 3,
