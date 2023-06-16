@@ -13,6 +13,7 @@ import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
 import '../../widgets/item_row.dart';
 import '../../widgets/loading_widget.dart';
+import 'package:intl/intl.dart' as intl;
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key, required this.product});
@@ -25,6 +26,23 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     with TickerProviderStateMixin {
+  String selectedProductSize = '';
+  int? selectedProductSizeIndex;
+
+  void setProductSize(String size, int index) {
+    if (index == selectedProductSizeIndex) {
+      setState(() {
+        selectedProductSize = '';
+        selectedProductSizeIndex = null;
+      });
+    } else {
+      setState(() {
+        selectedProductSize = size;
+        selectedProductSizeIndex = index;
+      });
+    }
+  }
+
 // images in bottom sheet
   void showImageBottom() {
     showModalBottomSheet(
@@ -267,16 +285,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                             value: widget.product.category,
                             title: 'Shoe Category: ',
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 5),
                           ItemRow(
                             value: widget.product.brandName,
                             title: 'Brand: ',
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 5),
                           ItemRow(
                             value: '\$${widget.product.billingAmount}',
                             title: 'Billing Amount: ',
                           ),
+                          const SizedBox(height: 5),
+                          Text(
+                            'Scheduled:  ${intl.DateFormat.yMMMEd().format(widget.product.scheduleDate)}',
+                            style: getLightStyle(color: Colors.black),
+                          )
                         ],
                       ),
                       Column(
@@ -311,11 +334,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                       itemCount: widget.product.sizesAvailable.length,
                       itemBuilder: (context, index) => Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: CircleAvatar(
-                          backgroundColor: gridBg,
-                          child: Text(
-                            widget.product.sizesAvailable[index],
-                            style: getRegularStyle(color: greyFontColor),
+                        child: GestureDetector(
+                          onTap: () => setProductSize(
+                              widget.product.sizesAvailable[index], index),
+                          child: CircleAvatar(
+                            backgroundColor: selectedProductSizeIndex == index
+                                ? accentColor
+                                : gridBg,
+                            child: Text(
+                              widget.product.sizesAvailable[index],
+                              style: getRegularStyle(color: greyFontColor),
+                            ),
                           ),
                         ),
                       ),
@@ -441,7 +470,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                               product.isFav, product.prodId),
                                           child: CircleAvatar(
                                             radius: 15,
-                                            backgroundColor: accentColor,
+                                            backgroundColor: accentColor.withOpacity(0.3),
                                             child: Icon(
                                               size: 15,
                                               product.isFav
@@ -457,10 +486,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                         left: 10,
                                         child: GestureDetector(
                                           onTap: () => null,
-                                          child: const CircleAvatar(
+                                          child:  CircleAvatar(
                                             radius: 15,
-                                            backgroundColor: accentColor,
-                                            child: Icon(
+                                            backgroundColor: accentColor.withOpacity(0.3),
+                                            child: const Icon(
                                               Icons.shopping_cart_outlined,
                                               color: Colors.white,
                                               size: 15,
