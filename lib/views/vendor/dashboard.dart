@@ -3,7 +3,7 @@ import '../../constants/color.dart';
 import '../../resources/styles_manager.dart';
 import '../../resources/values_manager.dart';
 import '../components/vendor_chart.dart';
-import '../widgets/build_vendor_dash_container.dart';
+import '../components/build_vendor_dash_container.dart';
 import '../widgets/vendor_logout_ac.dart';
 import '../widgets/vendor_welcome_intro.dart';
 import '../../models/app_data.dart';

@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:shoes_shop/views/widgets/single_category_section.dart';
+import 'package:shoes_shop/views/components/single_category_section.dart';
 
 import '../../models/category.dart';
 import '../../providers/category.dart';
 import '../../resources/assets_manager.dart';
-import 'loading_widget.dart';
+import '../widgets/loading_widget.dart';
 
 class CategorySection extends StatefulWidget {
   const CategorySection({

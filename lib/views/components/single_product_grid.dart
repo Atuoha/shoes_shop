@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/product.dart';
+import '../../resources/assets_manager.dart';
 import '../../resources/font_manager.dart';
 import '../../resources/styles_manager.dart';
 
@@ -18,18 +20,22 @@ class SingleProductGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          height: 205,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: NetworkImage(
-                product.downLoadImgUrls[1],
+        CachedNetworkImage(
+          imageUrl: product.downLoadImgUrls[1],
+          imageBuilder: (context, imageProvider) => Container(
+            height: 205,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.cover,
               ),
-              fit: BoxFit.cover,
             ),
           ),
+          placeholder: (context, url) => Image.asset(AssetManager.emptyImg),
+          errorWidget: (context, url, error) =>
+              Image.asset(AssetManager.emptyImg),
         ),
         Positioned(
           bottom: 3,
