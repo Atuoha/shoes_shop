@@ -279,12 +279,27 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                           ),
                         ],
                       ),
-                      Text(
-                        '${widget.product.quantity} available',
-                        style: getRegularStyle(
-                          color: greyFontColor,
-                          fontSize: FontSize.s16,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${widget.product.quantity} available',
+                            style: getRegularStyle(
+                              color: greyFontColor,
+                              fontSize: FontSize.s16,
+                            ),
+                          ),
+                          Text(
+                            widget.product.quantity > 0
+                                ? 'in stock'
+                                : 'out of stock',
+                            style: getRegularStyle(
+                              color: widget.product.quantity > 0
+                                  ? accentColor
+                                  : greyFontColor,
+                            ),
+                          )
+                        ],
                       )
                     ],
                   ),
@@ -330,165 +345,162 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     ),
                   ),
                   const SizedBox(height: 20),
-
                 ],
               ),
             ),
-            SizedBox(
-              height: size.height / 4,
-              width: double.infinity,
-              child: StreamBuilder<QuerySnapshot>(
-                stream: similarProducts,
-                builder:
-                    (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return const Center(
-                      child: LoadingWidget(
-                        size: 30,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: SizedBox(
+                height: size.height / 3.7,
+                width: double.infinity,
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: similarProducts,
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: LoadingWidget(
+                          size: 30,
+                        ),
+                      );
+                    }
+
+                    if (snapshot.data!.docs.isEmpty) {
+                      return Column(
+                        children: [
+                          Image.asset(
+                            AssetManager.addImage,
+                            width: 150,
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'No similar products available!',
+                            style: TextStyle(
+                              color: primaryColor,
+                            ),
+                          )
+                        ],
+                      );
+                    }
+
+                    return CarouselSlider.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index, i) {
+                        final item = snapshot.data!.docs[index];
+
+                        // modeling the item
+                        Product product = Product(
+                          prodId: item['prodId'],
+                          vendorId: item['vendorId'],
+                          productName: item['productName'],
+                          price: item['price'],
+                          quantity: item['quantity'],
+                          category: item['category'],
+                          description: item['description'],
+                          scheduleDate: item['scheduleDate'].toDate(),
+                          isCharging: item['isCharging'],
+                          billingAmount: item['billingAmount'],
+                          brandName: item['brandName'],
+                          sizesAvailable: item['sizesAvailable'].cast<String>(),
+                          downLoadImgUrls:
+                              item['downLoadImgUrls'].cast<String>(),
+                          uploadDate: item['uploadDate'].toDate(),
+                          isApproved: item['isApproved'],
+                          isFav: item['isFav'],
+                        );
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: GestureDetector(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ProductDetailsScreen(
+                                  product: product,
+                                ),
+                              ),
+                            ),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Column(
+                                  children: [
+                                    Stack(children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.network(
+                                          product.downLoadImgUrls[0],
+                                          width: 173,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 10,
+                                        right: 10,
+                                        child: GestureDetector(
+                                          onTap: () => toggleIsFav(
+                                              product.isFav, product.prodId),
+                                          child: CircleAvatar(
+                                            radius: 15,
+                                            backgroundColor: accentColor,
+                                            child: Icon(
+                                              size: 15,
+                                              product.isFav
+                                                  ? Icons.favorite
+                                                  : Icons.favorite_border,
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 10,
+                                        left: 10,
+                                        child: GestureDetector(
+                                          onTap: () => null,
+                                          child: const CircleAvatar(
+                                            radius: 15,
+                                            backgroundColor: accentColor,
+                                            child: Icon(
+                                              Icons.shopping_cart_outlined,
+                                              color: Colors.white,
+                                              size: 15,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ]),
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          product.productName,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Text('\$${product.price}')
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      options: CarouselOptions(
+                        viewportFraction: 0.5,
+                        aspectRatio: 1.5,
+                        height: size.height / 3.5,
+                        autoPlay: true,
                       ),
                     );
-                  }
-
-                  if (snapshot.data!.docs.isEmpty) {
-                    return Column(
-                      children: [
-                        Image.asset(
-                          AssetManager.addImage,
-                          width: 150,
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'No similar products available!',
-                          style: TextStyle(
-                            color: primaryColor,
-                          ),
-                        )
-                      ],
-                    );
-                  }
-
-                  return CarouselSlider.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index, i) {
-                      final item = snapshot.data!.docs[index];
-
-                      // modeling the item
-                      Product product = Product(
-                        prodId: item['prodId'],
-                        vendorId: item['vendorId'],
-                        productName: item['productName'],
-                        price: item['price'],
-                        quantity: item['quantity'],
-                        category: item['category'],
-                        description: item['description'],
-                        scheduleDate: item['scheduleDate'].toDate(),
-                        isCharging: item['isCharging'],
-                        billingAmount: item['billingAmount'],
-                        brandName: item['brandName'],
-                        sizesAvailable:
-                        item['sizesAvailable'].cast<String>(),
-                        downLoadImgUrls:
-                        item['downLoadImgUrls'].cast<String>(),
-                        uploadDate: item['uploadDate'].toDate(),
-                        isApproved: item['isApproved'],
-                        isFav: item['isFav'],
-                      );
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: GestureDetector(
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ProductDetailsScreen(
-                                product: product,
-                              ),
-                            ),
-                          ),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Column(
-                                children: [
-                                  Stack(children: [
-                                    ClipRRect(
-                                      borderRadius:
-                                      BorderRadius.circular(10),
-                                      child: Image.network(
-                                        product.downLoadImgUrls[0],
-                                        width: 173,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 10,
-                                      right: 10,
-                                      child: GestureDetector(
-                                        onTap: () => toggleIsFav(
-                                            product.isFav,
-                                            product.prodId),
-                                        child: CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: accentColor,
-                                          child: Icon(
-                                            size: 15,
-                                            product.isFav
-                                                ? Icons.favorite
-                                                : Icons.favorite_border,
-                                            color: Colors.redAccent,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 10,
-                                      left: 10,
-                                      child: GestureDetector(
-                                        onTap: () => null,
-                                        child: const CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: accentColor,
-                                          child: Icon(
-                                            Icons.shopping_cart_outlined,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ]),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        product.productName,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      Text('\$${product.price}')
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    options: CarouselOptions(
-                      viewportFraction: 0.5,
-                      aspectRatio: 1.5,
-                      height: size.height / 3.5,
-                      autoPlay: true,
-                    ),
-                  );
-                },
+                  },
+                ),
               ),
-            )
+            ),
           ],
         ),
       ),
