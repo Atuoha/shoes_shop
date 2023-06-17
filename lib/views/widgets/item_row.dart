@@ -21,14 +21,12 @@ class ItemRow extends StatelessWidget {
         text: title,
         style: getRegularStyle(
           color: greyFontColor,
-          fontSize: FontSize.s16,
         ),
         children: [
           TextSpan(
             text: value,
             style: getMediumStyle(
               color: greyFontColor,
-              fontSize: FontSize.s16,
             ),
           ),
         ],

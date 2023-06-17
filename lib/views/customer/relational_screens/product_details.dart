@@ -28,6 +28,32 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     with TickerProviderStateMixin {
   String selectedProductSize = '';
   int? selectedProductSizeIndex;
+  bool isLoadingVendor = true;
+  String vendorName = '';
+  String vendorImage = '';
+  String vendorAddress = '';
+
+  // fetch vendorDetails
+  Future<void> fetchVendorDetails() async {
+    await FirebaseFirestore.instance
+        .collection('vendors')
+        .doc(widget.product.vendorId)
+        .get()
+        .then((DocumentSnapshot data) {
+      setState(() {
+        vendorName = data['storeName'];
+        vendorImage = data['storeImgUrl'];
+        vendorAddress =
+            'Located in ${data['city']} ${data['state']} ${data['country']}';
+        isLoadingVendor = false;
+      });
+    });
+  }
+
+  // navigate to store
+  void navigateToVendorStore() {
+    // Todo: Navigate to vendor store
+  }
 
   void setProductSize(String size, int index) {
     if (index == selectedProductSizeIndex) {
@@ -123,6 +149,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
       _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
 
       //  fetching store details
+      fetchVendorDetails();
     }
     setState(() {
       isInit = false;
@@ -351,6 +378,99 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     ),
                   ),
                   const SizedBox(height: 10),
+                  Text(
+                    'Sold by:',
+                    style: getRegularStyle(
+                      color: greyFontColor,
+                      fontSize: FontSize.s16,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // store
+                  !isLoadingVendor
+                      ? SizedBox(
+                          height: 100,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CachedNetworkImage(
+                                imageUrl: vendorImage,
+                                imageBuilder: (context, imageProvider) => Hero(
+                                  tag: widget.product.vendorId,
+                                  child: CircleAvatar(
+                                    radius: 35,
+                                    backgroundImage: imageProvider,
+                                  ),
+                                ),
+                                placeholder: (context, url) =>
+                                    const CircleAvatar(
+                                  radius: 35,
+                                  backgroundImage: AssetImage(
+                                    AssetManager.placeholderImg,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const CircleAvatar(
+                                  radius: 35,
+                                  backgroundImage: AssetImage(
+                                    AssetManager.placeholderImg,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 15),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    vendorName,
+                                    style: getMediumStyle(
+                                      color: accentColor,
+                                      fontSize: FontSize.s18,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    vendorAddress,
+                                    style: getRegularStyle(
+                                      color: greyFontColor,
+                                      fontSize: FontSize.s14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 5),
+                                      side:
+                                          const BorderSide(color: accentColor),
+                                    ),
+                                    onPressed: () => navigateToVendorStore(),
+                                    child: Wrap(
+                                      crossAxisAlignment:
+                                          WrapCrossAlignment.center,
+                                      children: [
+                                        const Icon(Icons.storefront,
+                                            color: accentColor),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          'Visit store',
+                                          style: getRegularStyle(
+                                            color: accentColor,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      : const LoadingWidget(size: 20),
+
+                  const SizedBox(height: 10),
                   ReadMoreText(
                     widget.product.description,
                     trimLines: 2,
@@ -374,6 +494,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     ),
                   ),
                   const SizedBox(height: 20),
+                  Text(
+                    'Similar Items You May Like',
+                    style: getRegularStyle(
+                      color: greyFontColor,
+                      fontSize: FontSize.s16,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
@@ -470,7 +598,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                               product.isFav, product.prodId),
                                           child: CircleAvatar(
                                             radius: 15,
-                                            backgroundColor: accentColor.withOpacity(0.3),
+                                            backgroundColor:
+                                                accentColor.withOpacity(0.3),
                                             child: Icon(
                                               size: 15,
                                               product.isFav
@@ -486,9 +615,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                         left: 10,
                                         child: GestureDetector(
                                           onTap: () => null,
-                                          child:  CircleAvatar(
+                                          child: CircleAvatar(
                                             radius: 15,
-                                            backgroundColor: accentColor.withOpacity(0.3),
+                                            backgroundColor:
+                                                accentColor.withOpacity(0.3),
                                             child: const Icon(
                                               Icons.shopping_cart_outlined,
                                               color: Colors.white,
