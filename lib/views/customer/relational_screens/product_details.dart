@@ -310,7 +310,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                         children: [
                           ItemRow(
                             value: widget.product.category,
-                            title: 'Shoe Category: ',
+                            title: 'Shoe category: ',
                           ),
                           const SizedBox(height: 5),
                           ItemRow(
@@ -319,8 +319,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                           ),
                           const SizedBox(height: 5),
                           ItemRow(
+                            value: widget.product.isCharging ? 'Yes': 'No',
+                            title: 'Charging for shipping: ',
+                          ),
+                          const SizedBox(height: 5),
+                          ItemRow(
                             value: '\$${widget.product.billingAmount}',
-                            title: 'Billing Amount: ',
+                            title: 'Shipping amount: ',
                           ),
                           const SizedBox(height: 5),
                           Text(
@@ -495,7 +500,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'Similar Items You May Like',
+                    'Similar products you might like',
                     style: getRegularStyle(
                       color: greyFontColor,
                       fontSize: FontSize.s16,
