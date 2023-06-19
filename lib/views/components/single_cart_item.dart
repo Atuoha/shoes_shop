@@ -131,15 +131,13 @@ class _SingleCartItemState extends State<SingleCartItem> {
                     backgroundImage: imageProvider,
                   ),
                 ),
-                placeholder: (context, url) => ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
+                placeholder: (context, url) => const CircleAvatar(
+                  backgroundImage: AssetImage(
                     AssetManager.placeholderImg,
                   ),
                 ),
-                errorWidget: (context, url, error) => ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
+                errorWidget: (context, url, error) => const CircleAvatar(
+                  backgroundImage: AssetImage(
                     AssetManager.placeholderImg,
                   ),
                 ),
