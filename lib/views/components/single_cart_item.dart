@@ -81,7 +81,8 @@ class _SingleCartItemState extends State<SingleCartItem> {
         product.quantity) {
       widget.cartData.increaseQuantity(widget.item.prodId);
     } else {
-      showWarningMsg(message: 'Ops! You can\'t exceed available product quantity!');
+      showWarningMsg(
+          message: 'Ops! You can\'t exceed available product quantity!');
     }
   }
 
@@ -97,127 +98,153 @@ class _SingleCartItemState extends State<SingleCartItem> {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: ValueKey(widget.item.prodId),
-      confirmDismiss: (direction) => showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          elevation: 3,
-          title: Text(
-            'Are you sure?',
-            style: getMediumStyle(
-              color: Colors.black,
-              fontSize: FontSize.s18,
-            ),
-          ),
-          content: Text(
-            'Do you want to remove ${widget.item.prodName} from cart?',
-            style: getRegularStyle(
-              color: Colors.black,
-              fontSize: FontSize.s14,
-            ),
-          ),
-          actions: [
-            textAction('Yes', YesNo.yes, context),
-            textAction('No', YesNo.no, context),
-          ],
-        ),
-      ),
-      onDismissed: (direction) =>
-          widget.cartData.removeFromCart(widget.item.prodId),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        height: 115,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.red,
-        ),
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 20),
-        child: const Icon(
-          Icons.delete,
-          color: Colors.white,
-          size: 40,
-        ),
-      ),
-      child: InkWell(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => ProductDetailsScreen(
-              product: product,
-            ),
-          ),
-        ),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListTile(
-              leading: CachedNetworkImage(
-                imageUrl: widget.item.prodImg,
-                imageBuilder: (context, imageProvider) => Hero(
-                  tag: product.prodId,
-                  child: CircleAvatar(
-                    backgroundImage: imageProvider,
+        key: ValueKey(widget.item.prodId),
+        confirmDismiss: (direction) => showDialog(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                elevation: 3,
+                title: Text(
+                  'Are you sure?',
+                  style: getMediumStyle(
+                    color: Colors.black,
+                    fontSize: FontSize.s18,
                   ),
                 ),
-                placeholder: (context, url) => const CircleAvatar(
-                  backgroundImage: AssetImage(
-                    AssetManager.placeholderImg,
+                content: Text(
+                  'Do you want to remove ${widget.item.prodName} from cart?',
+                  style: getRegularStyle(
+                    color: Colors.black,
+                    fontSize: FontSize.s14,
                   ),
                 ),
-                errorWidget: (context, url, error) => const CircleAvatar(
-                  backgroundImage: AssetImage(
-                    AssetManager.placeholderImg,
-                  ),
-                ),
-              ),
-              title: Text(widget.item.prodName),
-              subtitle: Row(
-                children: [
-                  Text(
-                    '\$${widget.item.price}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: getMediumStyle(color: accentColor),
-                  ),
-                  const SizedBox(width: 5),
-                  Text('Quantity: ${widget.item.quantity}')
-                ],
-              ),
-              trailing: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () => decrementQuantity(),
-                    child: Text(
-                      '-',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                        color: widget.item.quantity == 1
-                            ? Colors.grey
-                            : primaryColor,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  GestureDetector(
-                    onTap: () => incrementQuantity(),
-                    child: const Text(
-                      '+',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                        color: primaryColor,
-                      ),
-                    ),
-                  )
+                actions: [
+                  textAction('Yes', YesNo.yes, context),
+                  textAction('No', YesNo.no, context),
                 ],
               ),
             ),
+        onDismissed: (direction) =>
+            widget.cartData.removeFromCart(widget.item.prodId),
+        direction: DismissDirection.endToStart,
+        background: Container(
+          height: 115,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.red,
+          ),
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 20),
+          child: const Icon(
+            Icons.delete,
+            color: Colors.white,
+            size: 40,
           ),
         ),
-      ),
-    );
+        child: InkWell(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ProductDetailsScreen(
+                product: product,
+              ),
+            ),
+          ),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListTile(
+                leading: CachedNetworkImage(
+                  imageUrl: widget.item.prodImg,
+                  imageBuilder: (context, imageProvider) => Hero(
+                    tag: product.prodId,
+                    child: CircleAvatar(
+                      backgroundImage: imageProvider,
+                    ),
+                  ),
+                  placeholder: (context, url) => const CircleAvatar(
+                    backgroundImage: AssetImage(
+                      AssetManager.placeholderImg,
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => const CircleAvatar(
+                    backgroundImage: AssetImage(
+                      AssetManager.placeholderImg,
+                    ),
+                  ),
+                ),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(widget.item.prodName),
+                    Text(
+                      '\$${widget.item.price}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: getMediumStyle(color: accentColor),
+                    ),
+                    Text(
+                      'Quantity: ${widget.item.quantity}',
+                      style: getMediumStyle(color: accentColor),
+                    )
+                  ],
+                ),
+                subtitle: Row(
+                  children: [
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () => decrementQuantity(),
+                          child: Chip(
+                            avatar: CircleAvatar(
+                              backgroundColor: accentColor.withOpacity(0.3),
+                              child: Center(
+                                child: Text(
+                                  '-',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 25,
+                                    color: widget.item.quantity == 1
+                                        ? Colors.grey
+                                        : accentColor,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                            label: const Text(
+                              'Decrease',
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        GestureDetector(
+                          onTap: () => incrementQuantity(),
+                          child: Chip(
+                            avatar: CircleAvatar(
+                              backgroundColor: accentColor.withOpacity(0.3),
+                              child: const Center(
+                                child: Text(
+                                  '+',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 25,
+                                    color: accentColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            label: const Text('Increase'),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                // trailing: Text('Quantity: ${widget.item.quantity}')),
+              ),
+            ),
+          ),
+        ));
   }
 }
