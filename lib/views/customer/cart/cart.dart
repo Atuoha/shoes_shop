@@ -150,7 +150,7 @@ class CartScreenState extends State<CartScreen> {
                         Text(
                           '\$${cartData.getCartTotalAmount().toStringAsFixed(2)}',
                           style: getMediumStyle(
-                            color: primaryColor,
+                            color: accentColor,
                             fontSize: FontSize.s25,
                           ),
                         )
@@ -162,9 +162,9 @@ class CartScreenState extends State<CartScreen> {
                         Container(
                           height: 50,
                           width: 80,
-                          decoration: const BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.only(
+                          decoration:  BoxDecoration(
+                            color: accentColor.withOpacity(0.3),
+                            borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(5),
                               topLeft: Radius.circular(5),
                             ),
