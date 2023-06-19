@@ -36,7 +36,6 @@ class _CustomerMainStateScreen extends State<VendorMainScreen> {
     if (widget.index != 0) {
       setNewPage(widget.index);
     }
-
     super.initState();
   }
 

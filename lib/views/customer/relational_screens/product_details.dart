@@ -20,6 +20,8 @@ import 'package:intl/intl.dart' as intl;
 import 'package:uuid/uuid.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+import '../main_screen.dart';
+
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key, required this.product});
 
@@ -173,6 +175,30 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     Size size = MediaQuery.of(context).size;
     CartProvider cartProvider = Provider.of<CartProvider>(context);
 
+    // buy now fnc
+    void buyNow() {
+      Cart cartItem = Cart(
+        cartId: uuid.v4(),
+        prodId: widget.product.prodId,
+        prodName: widget.product.productName,
+        prodImg: widget.product.imgUrls[0],
+        vendorId: widget.product.vendorId,
+        quantity: 1,
+        prodSize: selectedProductSize,
+        date: DateTime.now(),
+        price: widget.product.price,
+      );
+
+      cartProvider.addToCart(cartItem);
+
+      // navigate to cart
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const CustomerMainScreen(index: 4),
+        ),
+      );
+    }
+
     // toggle cart action
     void toggleCartAction(Product product) async {
       await EasyLoading.show(status: 'loading...');
@@ -229,16 +255,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
             },
           ),
           Bubble(
-            title: "Check store",
+            title: "Buy now",
             iconColor: Colors.white,
             bubbleColor: accentColor,
-            icon: Icons.storefront,
+            icon: Icons.shopping_cart_checkout,
             titleStyle: const TextStyle(
               fontSize: 16,
               color: Colors.white,
             ),
             onPress: () {
-              navigateToVendorStore();
+              buyNow();
               _animationController!.reverse();
             },
           ),

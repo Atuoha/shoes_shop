@@ -11,7 +11,8 @@ import 'cart/cart.dart';
 import 'home_screen.dart';
 
 class CustomerMainScreen extends StatefulWidget {
-  const CustomerMainScreen({super.key});
+  const CustomerMainScreen({super.key, required this.index});
+  final int index;
 
   @override
   State<CustomerMainScreen> createState() => _CustomerMainStateScreen();
@@ -32,6 +33,14 @@ class _CustomerMainStateScreen extends State<CustomerMainScreen> {
     setState(() {
       _pageIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    if (widget.index != 0) {
+      setNewPage(widget.index);
+    }
+    super.initState();
   }
 
   @override

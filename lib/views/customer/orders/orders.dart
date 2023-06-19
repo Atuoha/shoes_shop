@@ -1,105 +1,98 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shoes_shop/providers/cart.dart';
-import 'package:shoes_shop/views/customer/main_screen.dart';
 import '../../../constants/color.dart';
-import '../../../constants/enums/status.dart';
-import '../../../controllers/route_manager.dart';
-import '../../../models/cart.dart';
 import '../../../providers/order.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
-import '../../components/single_cart_item.dart';
+import '../../components/single_order_item.dart';
 import '../../vendor/main_screen.dart';
-import '../../widgets/cart_icon.dart';
-import '../../widgets/msg_snackbar.dart';
+import '../main_screen.dart';
 
-class CartScreen extends StatefulWidget {
-  const CartScreen({super.key});
+class OrdersScreen extends StatefulWidget {
+  const OrdersScreen({Key? key}) : super(key: key);
+  static const routeName = '/orders';
 
   @override
-  State<CartScreen> createState() => CartScreenState();
+  State<OrdersScreen> createState() => _OrdersScreenState();
 }
 
-class CartScreenState extends State<CartScreen> {
+class _OrdersScreenState extends State<OrdersScreen> {
   @override
   Widget build(BuildContext context) {
-    var cartData = Provider.of<CartProvider>(context);
+    final orderData = Provider.of<OrderProvider>(context, listen: false);
 
     void orderNow() {
-      if (cartData.getCartTotalAmount() > 0) {
-        Provider.of<OrderProvider>(context, listen: false).addOrder(
-          cartData.getCartTotalAmount(),
-          cartData.getCartItems.values.toList(),
-        );
-        Provider.of<CartProvider>(context, listen: false).clearCart();
-        Navigator.of(context).pushNamed(RouteManager.ordersScreen);
-      } else {
-        displaySnackBar(
-          status: Status.error,
-          message: 'Cart is empty!',
-          context: context,
-        );
-      }
+      orderData.clearOrder();
+      Navigator.of(context).pushNamed('');
     }
 
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          GestureDetector(
-            onTap: () => Navigator.of(context).pushNamed(
-              RouteManager.ordersScreen,
-            ),
-            child: const Icon(
-              Icons.shopping_cart_checkout,
-              color: iconColor,
-              size: 30,
-            ),
-          ),
-          const SizedBox(width: 18),
-        ],
-      ),
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: cartData.isItemEmpty()
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(AssetManager.empty),
-                    const SizedBox(height: 20),
-                    const Text('Ops! Cart is empty'),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: accentColor,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        shadowColor: Colors.transparent,
+        elevation: 0,
+        title: const Text(
+          'Orders',
+        ),
+        leading: Builder(
+          builder: (context) {
+            return GestureDetector(
+              onTap: () => Navigator.of(context).pop(),
+              child: const Icon(Icons.chevron_left, color: iconColor),
+            );
+          },
+        ),
+      ),
+      body: orderData.orders.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(AssetManager.empty),
+                  const SizedBox(height: 20),
+                  const Text('Ops! Order is empty'),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: accentColor,
+                    ),
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const CustomerMainScreen(index: 0),
                       ),
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const CustomerMainScreen(index: 0),
+                    ),
+                    child: const Text('Start shopping'),
+                  )
+                ],
+              ),
+            )
+          : Consumer<OrderProvider>(
+              builder: (_, orders, o) => Column(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: ListView.builder(
+                      itemCount: orders.orders.length,
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SingleOrderItem(
+                          id: orders.orders[index].id,
+                          totalAmount: orders.orders[index].totalAmount,
+                          date: orders.orders[index].orderDate,
+                          orders: orders.orders[index],
                         ),
                       ),
-                      child: const Text('Continue shopping'),
-                    )
-                  ],
-                ),
-              )
-            : ListView.builder(
-                itemCount: cartData.getCartQuantity,
-                itemBuilder: (context, index) {
-                  var item = cartData.getCartItems.values.toList()[index];
-
-                  return SingleCartItem(item: item, cartData: cartData);
-                },
+                    ),
+                  ),
+                ],
               ),
-      ),
-      bottomSheet: cartData.isItemEmpty()
-          ? const SizedBox.shrink()
-          : Container(
+            ),
+      bottomSheet: orderData.orders.isNotEmpty
+          ? Container(
               color: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -123,7 +116,7 @@ class CartScreenState extends State<CartScreen> {
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          '\$${cartData.getCartTotalAmount().toStringAsFixed(2)}',
+                          '\$${orderData.getTotal.toStringAsFixed(2)}',
                           style: getMediumStyle(
                             color: primaryColor,
                             fontSize: FontSize.s25,
@@ -152,7 +145,7 @@ class CartScreenState extends State<CartScreen> {
                                     color: Colors.white),
                                 const SizedBox(width: 15),
                                 Text(
-                                  cartData.getCartQuantity.toString(),
+                                  orderData.orders.length.toString(),
                                   style: getRegularStyle(
                                     color: Colors.white,
                                   ),
@@ -175,7 +168,7 @@ class CartScreenState extends State<CartScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                'Order Now',
+                                'Buy Now',
                                 style: getMediumStyle(
                                   color: Colors.white,
                                 ),
@@ -188,7 +181,8 @@ class CartScreenState extends State<CartScreen> {
                   ],
                 ),
               ),
-            ),
+            )
+          : const SizedBox.shrink(),
     );
   }
 }
