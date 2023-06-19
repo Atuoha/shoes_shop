@@ -1,6 +1,7 @@
 import 'package:shoes_shop/views/auth/vendor/forgot_password.dart';
 import 'package:shoes_shop/views/auth/vendor/vendor_auth.dart';
 import 'package:shoes_shop/views/customer/relational_screens/product_details.dart';
+import 'package:shoes_shop/views/vendor/orders/orders.dart';
 
 import '../views/auth/account_type.dart';
 import '../views/auth/customer/customer_auth.dart';
@@ -19,13 +20,13 @@ class RouteManager {
   static const String customerForgotPass = "/customerForgotPass";
   static const String signupAcknowledgeScreen = "/signupAcknowledge";
   static const String customerMainScreen = '/customerHomeScreen';
+  static const String ordersScreen = 'ordersScreen';
 
   static const String vendorAuthScreen = "/vendorAuthScreen";
   static const String vendorForgotPass = "/vendorForgotPass";
   static const String vendorMainScreen = '/vendorMainScreen';
   static const String vendorEntryScreen = '/vendorEntryScreen';
   static const String vendorCreatePost = '/vendorCreatePost';
-
 }
 
 final routes = {
@@ -34,6 +35,7 @@ final routes = {
   RouteManager.customerAuthScreen: (context) => const CustomerAuthScreen(),
   RouteManager.customerMainScreen: (context) => const CustomerMainScreen(),
   RouteManager.customerForgotPass: (context) => const CustomerForgotPassword(),
+  RouteManager.ordersScreen: (context) => const OrdersScreen(),
   RouteManager.vendorAuthScreen: (context) => const VendorAuthScreen(),
   RouteManager.vendorMainScreen: (context) => const VendorMainScreen(index: 0),
   RouteManager.vendorEntryScreen: (context) => const VendorEntryScreen(),

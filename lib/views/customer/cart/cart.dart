@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoes_shop/providers/cart.dart';
 import '../../../constants/color.dart';
 import '../../../constants/enums/status.dart';
+import '../../../controllers/route_manager.dart';
+import '../../../models/cart.dart';
+import '../../../providers/order.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
@@ -25,10 +29,12 @@ class CartScreenState extends State<CartScreen> {
 
     void orderNow() {
       if (cartData.getCartTotalAmount() > 0) {
-        // Provider.of<Orders>(context, listen: false)
-        //     .addOrder(cartData.totalAmount, cartData.items.values.toList());
-        // Provider.of<Cart>(context, listen: false).clearCart();
-        // Navigator.of(context).pushNamed(RouteManager.orderScreen);
+        Provider.of<OrderProvider>(context, listen: false).addOrder(
+          cartData.getCartTotalAmount(),
+          cartData.getCartItems.values.toList(),
+        );
+        Provider.of<CartProvider>(context, listen: false).clearCart();
+        Navigator.of(context).pushNamed(RouteManager.ordersScreen);
       } else {
         displaySnackBar(
           status: Status.error,
