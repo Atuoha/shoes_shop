@@ -38,6 +38,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   String vendorImage = '';
   String vendorAddress = '';
   Uuid uuid = const Uuid();
+  bool isFav = false;
 
   // fetch vendorDetails
   Future<void> fetchVendorDetails() async {
@@ -133,6 +134,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     final db = FirebaseFirestore.instance.collection('products').doc(id);
     setState(() {
       db.update({'isFav': !status});
+      isFav = !isFav;
     });
   }
 
@@ -156,6 +158,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
       //  fetching store details
       fetchVendorDetails();
+      setState(() {
+        isFav = widget.product.isFav;
+      });
     }
     setState(() {
       isInit = false;
@@ -169,23 +174,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     CartProvider cartProvider = Provider.of<CartProvider>(context);
 
     // toggle cart action
-    void toggleCartAction() async{
+    void toggleCartAction(Product product) async {
       await EasyLoading.show(status: 'loading...');
-      if (cartProvider.isItemOnCart(widget.product.prodId)) {
-        cartProvider.removeFromCart(widget.product.prodId);
+      if (cartProvider.isItemOnCart(product.prodId)) {
+        cartProvider.removeFromCart(product.prodId);
         Future.delayed(const Duration(seconds: 2));
         EasyLoading.dismiss();
       } else {
         Cart cartItem = Cart(
           cartId: uuid.v4(),
-          prodId: widget.product.prodId,
-          prodName: widget.product.productName,
-          prodImg: widget.product.imgUrls[0],
-          vendorId: widget.product.vendorId,
+          prodId: product.prodId,
+          prodName: product.productName,
+          prodImg: product.imgUrls[0],
+          vendorId: product.vendorId,
           quantity: 1,
           prodSize: selectedProductSize,
           date: DateTime.now(),
-          price: widget.product.price,
+          price: product.price,
         );
 
         cartProvider.addToCart(cartItem);
@@ -219,7 +224,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               color: Colors.white,
             ),
             onPress: () {
-              toggleCartAction();
+              toggleCartAction(widget.product);
               _animationController!.reverse();
             },
           ),
@@ -265,12 +270,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         ),
         actions: [
           GestureDetector(
-            onTap: () =>
-                toggleIsFav(widget.product.isFav, widget.product.prodId),
+            onTap: () => toggleIsFav(isFav, widget.product.prodId),
             child: Padding(
               padding: const EdgeInsets.only(right: 18.0),
               child: Icon(
-                widget.product.isFav ? Icons.favorite : Icons.favorite_border,
+                isFav ? Icons.favorite : Icons.favorite_border,
                 color: Colors.redAccent,
                 size: 35,
               ),
@@ -690,13 +694,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                         top: 10,
                                         left: 10,
                                         child: GestureDetector(
-                                          onTap: () => null,
+                                          onTap: () =>
+                                              toggleCartAction(product),
                                           child: CircleAvatar(
                                             radius: 15,
                                             backgroundColor:
                                                 accentColor.withOpacity(0.3),
-                                            child: const Icon(
-                                              Icons.shopping_cart_outlined,
+                                            child: Icon(
+                                              cartProvider.isItemOnCart(
+                                                      product.prodId)
+                                                  ? Icons.shopping_cart
+                                                  : Icons
+                                                      .shopping_cart_outlined,
                                               color: Colors.white,
                                               size: 15,
                                             ),

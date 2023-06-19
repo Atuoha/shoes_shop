@@ -1,0 +1,1 @@
+enum YesNo { yes, no }

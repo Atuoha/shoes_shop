@@ -34,4 +34,21 @@ class Product {
     this.isFav = false,
     this.isApproved = false,
   });
+
+  factory Product.initial() => Product(
+        prodId: '',
+        vendorId: '',
+        productName: '',
+        price: 0.0,
+        quantity: 0,
+        category: '',
+        description: '',
+        scheduleDate: DateTime.now(),
+        isCharging: false,
+        billingAmount: 0.0,
+        brandName: '',
+        sizesAvailable: [],
+        imgUrls: [],
+        uploadDate: DateTime.now(),
+      );
 }
