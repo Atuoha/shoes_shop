@@ -66,10 +66,32 @@ class _SingleCartItemState extends State<SingleCartItem> {
     fetchProduct();
   }
 
-
   // snack bar warning msg
-  void showWarningMsg(){
-    displaySnackBar(status: Status.error, message: 'Item quantity can\'t go any lower', context:context,);
+  void showWarningMsg({required String message}) {
+    displaySnackBar(
+      status: Status.error,
+      message: message,
+      context: context,
+    );
+  }
+
+  // increment product cart quantity
+  void incrementQuantity() {
+    if (widget.cartData.getProductQuantityOnCart(widget.item.prodId) <=
+        product.quantity) {
+      widget.cartData.increaseQuantity(widget.item.prodId);
+    } else {
+      showWarningMsg(message: 'Ops! You can\'t exceed available product quantity!');
+    }
+  }
+
+  // decrement product cart quantity
+  void decrementQuantity() {
+    if (widget.item.quantity > 1) {
+      widget.cartData.decreaseQuantity(widget.item.prodId);
+    } else {
+      showWarningMsg(message: 'Ops! Item quantity can\'t go any lower');
+    }
   }
 
   @override
@@ -165,13 +187,7 @@ class _SingleCartItemState extends State<SingleCartItem> {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   GestureDetector(
-                    onTap: () => {
-                      widget.item.quantity > 1
-                          ? widget.cartData.decreaseQuantity(
-                              widget.item.prodId,
-                            )
-                          : showWarningMsg()
-                    },
+                    onTap: () => decrementQuantity(),
                     child: Text(
                       '-',
                       style: TextStyle(
@@ -186,11 +202,7 @@ class _SingleCartItemState extends State<SingleCartItem> {
                   ),
                   const SizedBox(width: 5),
                   GestureDetector(
-                    onTap: () => {
-                      widget.cartData.increaseQuantity(
-                        widget.item.prodId,
-                      )
-                    },
+                    onTap: () => incrementQuantity(),
                     child: const Text(
                       '+',
                       style: TextStyle(
