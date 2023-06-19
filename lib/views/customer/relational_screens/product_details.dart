@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shoes_shop/providers/cart.dart';
 import '../../../constants/color.dart';
+import '../../../constants/enums/status.dart';
 import '../../../models/cart.dart';
 import '../../../models/product.dart';
 import '../../../resources/assets_manager.dart';
@@ -20,6 +21,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:uuid/uuid.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+import '../../widgets/msg_snackbar.dart';
 import '../main_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -170,6 +172,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     super.didChangeDependencies();
   }
 
+  // get context
+  get cxt => context;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -177,6 +182,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
     // buy now fnc
     void buyNow() {
+      // prompt if the size is not selected
+      if (selectedProductSize.isEmpty) {
+        EasyLoading.dismiss();
+        displaySnackBar(
+            message: 'Select product size',
+            context: context,
+            status: Status.error);
+        return;
+      }
+
       Cart cartItem = Cart(
         cartId: uuid.v4(),
         prodId: widget.product.prodId,
@@ -207,6 +222,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         Future.delayed(const Duration(seconds: 2));
         EasyLoading.dismiss();
       } else {
+        // prompt if the size is not selected
+        if (selectedProductSize.isEmpty) {
+          EasyLoading.dismiss();
+          displaySnackBar(
+            message: 'Select product size',
+            context: cxt,
+            status: Status.error,
+          );
+          return;
+        }
+
         Cart cartItem = Cart(
           cartId: uuid.v4(),
           prodId: product.prodId,
