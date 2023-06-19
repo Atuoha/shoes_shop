@@ -1,7 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../models/cart.dart';
 import '../../models/product.dart';
+import '../../providers/cart.dart';
 import '../../resources/assets_manager.dart';
 import '../../resources/font_manager.dart';
 import '../../resources/styles_manager.dart';
@@ -18,6 +23,30 @@ class SingleProductGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+    Uuid uuid = const Uuid();
+
+    // toggle cart action
+    void toggleCartAction() {
+      if (cartProvider.isItemOnCart(product.prodId)) {
+        cartProvider.removeFromCart(product.prodId);
+      } else {
+        Cart cartItem = Cart(
+          cartId: uuid.v4(),
+          prodId: product.prodId,
+          prodName: product.productName,
+          prodImg: product.imgUrls[0],
+          vendorId: product.vendorId,
+          quantity: 1,
+          prodSize: product.sizesAvailable[0],
+          date: DateTime.now(),
+          price: product.price,
+        );
+
+        cartProvider.addToCart(cartItem);
+      }
+    }
+
     return Stack(
       children: [
         CachedNetworkImage(
@@ -95,9 +124,11 @@ class SingleProductGridItem extends StatelessWidget {
                           ),
                         ),
                         InkWell(
-                          onTap: () => print('Hey!'),
-                          child: const Icon(
-                            Icons.shopping_cart_outlined,
+                          onTap: () => toggleCartAction(),
+                          child: Icon(
+                            cartProvider.isItemOnCart(product.prodId)
+                                ? Icons.shopping_cart
+                                : Icons.shopping_cart_outlined,
                           ),
                         )
                       ],

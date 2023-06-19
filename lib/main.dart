@@ -11,7 +11,7 @@ import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'helpers/shared_prefs.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Future<void> main() async {
@@ -47,6 +47,12 @@ class MyApp extends StatelessWidget {
         statusBarBrightness: Brightness.dark,
       ),
     );
+
+    EasyLoading.instance
+      ..backgroundColor = primaryColor
+      ..progressColor = Colors.white
+      ..loadingStyle = EasyLoadingStyle.light;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -70,6 +76,7 @@ class MyApp extends StatelessWidget {
             title: 'Shoe\'s Store',
             home: child,
             routes: routes,
+            builder: EasyLoading.init(),
           );
         },
         child: EntryScreen(

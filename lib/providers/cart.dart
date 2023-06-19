@@ -74,10 +74,11 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addToCart(Cart cartItem) {
-    _cartItems.putIfAbsent(cartItem.prodId, () => cartItem);
+  // checking if item is on cart
+  bool isItemOnCart(String prodId) => _cartItems.containsKey(prodId);
 
-    if (_cartItems.containsKey(cartItem.prodId)) {
+  void addToCart(Cart cartItem) {
+    if (isItemOnCart(cartItem.prodId)) {
       _cartItems.update(
         cartItem.cartId,
         (existingCartItem) => Cart(
@@ -93,7 +94,7 @@ class CartProvider extends ChangeNotifier {
         ),
       );
     } else {
-      _cartItems.putIfAbsent(cartItem.cartId, () => cartItem);
+      _cartItems.putIfAbsent(cartItem.prodId, () => cartItem);
     }
     notifyListeners();
   }
@@ -109,7 +110,4 @@ class CartProvider extends ChangeNotifier {
     _cartItems.clear();
     notifyListeners();
   }
-
-  // checking if item is on cart
-  bool isItemOnCart(String prodId) => _cartItems.containsKey(prodId);
 }

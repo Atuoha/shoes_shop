@@ -68,6 +68,7 @@ dependencies:
   floating_action_bubble: ^1.1.4
   flutter_swiper_null_safety: ^1.0.2
   readmore: ^2.2.0
+  flutter_easyloading: ^3.0.5
 
 dev_dependencies:
   flutter_test:

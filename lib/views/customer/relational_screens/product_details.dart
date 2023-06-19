@@ -18,6 +18,7 @@ import '../../widgets/item_row.dart';
 import '../../widgets/loading_widget.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:uuid/uuid.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key, required this.product});
@@ -168,9 +169,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     CartProvider cartProvider = Provider.of<CartProvider>(context);
 
     // toggle cart action
-    void toggleCartAction() {
+    void toggleCartAction() async{
+      await EasyLoading.show(status: 'loading...');
       if (cartProvider.isItemOnCart(widget.product.prodId)) {
         cartProvider.removeFromCart(widget.product.prodId);
+        Future.delayed(const Duration(seconds: 2));
+        EasyLoading.dismiss();
       } else {
         Cart cartItem = Cart(
           cartId: uuid.v4(),
@@ -185,6 +189,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         );
 
         cartProvider.addToCart(cartItem);
+        Future.delayed(const Duration(seconds: 2));
+        EasyLoading.dismiss();
       }
     }
 
@@ -205,7 +211,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 : "Add to cart",
             iconColor: Colors.white,
             bubbleColor: primaryColor,
-            icon: Icons.shopping_cart_outlined,
+            icon: cartProvider.isItemOnCart(widget.product.prodId)
+                ? Icons.shopping_cart
+                : Icons.shopping_cart_outlined,
             titleStyle: const TextStyle(
               fontSize: 16,
               color: Colors.white,
@@ -619,9 +627,43 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                     Stack(children: [
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(10),
-                                        child: Image.network(
-                                          product.imgUrls[0],
+                                        child: CachedNetworkImage(
+                                          imageUrl: product.imgUrls[0],
                                           width: 173,
+                                          imageBuilder:
+                                              (context, imageProvider) => Hero(
+                                            tag: product.prodId,
+                                            child: Container(
+                                              height: 160,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          placeholder: (context, url) =>
+                                              ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image.asset(
+                                              AssetManager.placeholderImg,
+                                              width: 173,
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image.asset(
+                                              AssetManager.placeholderImg,
+                                              width: 173,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                       Positioned(
