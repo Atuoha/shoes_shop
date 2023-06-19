@@ -5,6 +5,7 @@ class Cart {
   final String vendorId;
   final DateTime date;
   final String prodSize;
+  final double price;
 
   Cart({
     required this.cartId,
@@ -13,5 +14,6 @@ class Cart {
     required this.quantity,
     required this.prodSize,
     required this.date,
+    required this.price,
   });
 }
