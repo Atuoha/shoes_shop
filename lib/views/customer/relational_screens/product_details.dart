@@ -5,8 +5,11 @@ import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
+import 'package:shoes_shop/providers/cart.dart';
 import '../../../constants/color.dart';
+import '../../../models/cart.dart';
 import '../../../models/product.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
@@ -14,6 +17,7 @@ import '../../../resources/styles_manager.dart';
 import '../../widgets/item_row.dart';
 import '../../widgets/loading_widget.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:uuid/uuid.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key, required this.product});
@@ -32,6 +36,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   String vendorName = '';
   String vendorImage = '';
   String vendorAddress = '';
+  Uuid uuid = const Uuid();
 
   // fetch vendorDetails
   Future<void> fetchVendorDetails() async {
@@ -82,13 +87,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
       builder: (context) => SizedBox(
         height: 500,
         child: CarouselSlider.builder(
-          itemCount: widget.product.downLoadImgUrls.length,
+          itemCount: widget.product.imgUrls.length,
           itemBuilder: (context, index, i) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
                 Text(
-                  '${index + 1}/${widget.product.downLoadImgUrls.length}',
+                  '${index + 1}/${widget.product.imgUrls.length}',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -101,7 +106,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                   ),
                   child: CachedNetworkImage(
                     fit: BoxFit.cover,
-                    imageUrl: widget.product.downLoadImgUrls[index],
+                    imageUrl: widget.product.imgUrls[index],
                     placeholder: (context, url) =>
                         Image.asset(AssetManager.placeholderImg),
                     errorWidget: (context, url, error) =>
@@ -160,6 +165,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+
+    // toggle cart action
+    void toggleCartAction() {
+      if (cartProvider.isItemOnCart(widget.product.prodId)) {
+        cartProvider.removeFromCart(widget.product.prodId);
+      } else {
+        Cart cartItem = Cart(
+          cartId: uuid.v4(),
+          prodId: widget.product.prodId,
+          prodName: widget.product.productName,
+          prodImg: widget.product.imgUrls[0],
+          vendorId: widget.product.vendorId,
+          quantity: 1,
+          prodSize: selectedProductSize,
+          date: DateTime.now(),
+          price: widget.product.price,
+        );
+
+        cartProvider.addToCart(cartItem);
+      }
+    }
 
     // similar products query
     final Stream<QuerySnapshot> similarProducts = FirebaseFirestore.instance
@@ -173,7 +200,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
       floatingActionButton: FloatingActionBubble(
         items: <Bubble>[
           Bubble(
-            title: "Add to cart",
+            title: cartProvider.isItemOnCart(widget.product.prodId)
+                ? 'Remove from cart'
+                : "Add to cart",
             iconColor: Colors.white,
             bubbleColor: primaryColor,
             icon: Icons.shopping_cart_outlined,
@@ -182,6 +211,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               color: Colors.white,
             ),
             onPress: () {
+              toggleCartAction();
               _animationController!.reverse();
             },
           ),
@@ -195,7 +225,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               color: Colors.white,
             ),
             onPress: () {
-              // navigateToStore();
+              navigateToVendorStore();
               _animationController!.reverse();
             },
           ),
@@ -261,9 +291,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     pagination: const SwiperPagination(
                       builder: SwiperPagination.dots,
                     ),
-                    itemCount: widget.product.downLoadImgUrls.length,
+                    itemCount: widget.product.imgUrls.length,
                     itemBuilder: (context, index) => CachedNetworkImage(
-                      imageUrl: widget.product.downLoadImgUrls[index],
+                      imageUrl: widget.product.imgUrls[index],
                       imageBuilder: (context, imageProvider) => PhotoView(
                         backgroundDecoration: const BoxDecoration(
                           color: Colors.transparent,
@@ -319,7 +349,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                           ),
                           const SizedBox(height: 5),
                           ItemRow(
-                            value: widget.product.isCharging ? 'Yes': 'No',
+                            value: widget.product.isCharging ? 'Yes' : 'No',
                             title: 'Charging for shipping: ',
                           ),
                           const SizedBox(height: 5),
@@ -563,8 +593,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                           billingAmount: item['billingAmount'],
                           brandName: item['brandName'],
                           sizesAvailable: item['sizesAvailable'].cast<String>(),
-                          downLoadImgUrls:
-                              item['downLoadImgUrls'].cast<String>(),
+                          imgUrls: item['imgUrls'].cast<String>(),
                           uploadDate: item['uploadDate'].toDate(),
                           isApproved: item['isApproved'],
                           isFav: item['isFav'],
@@ -591,7 +620,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(10),
                                         child: Image.network(
-                                          product.downLoadImgUrls[0],
+                                          product.imgUrls[0],
                                           width: 173,
                                         ),
                                       ),

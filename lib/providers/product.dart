@@ -29,7 +29,7 @@ class ProductData extends ChangeNotifier {
     if (_isProductAttributesSubmitted &&
         _isProductGeneralInfoSubmitted &&
         _isProductShippingInfoSubmitted &&
-        productData['downLoadImgUrls'] != null) {
+        productData['imgUrls'] != null) {
       status = true;
     }
     return status;
@@ -83,17 +83,17 @@ class ProductData extends ChangeNotifier {
   }
 
   // update product images
-  updateProductImg({List<String>? downLoadImgUrls}) {
-    productData['downLoadImgUrls'] = downLoadImgUrls;
+  updateProductImg({List<String>? imgUrls}) {
+    productData['imgUrls'] = imgUrls;
   }
 
   // clear product images
   clearProductImg() {
-    productData['downLoadImgUrls'] = null;
+    productData['imgUrls'] = null;
     notifyListeners();
   }
 
   // checking if product images is null
   bool isProductImagesNull() =>
-      productData['downLoadImgUrls'] == null ? true : false;
+      productData['imgUrls'] == null ? true : false;
 }

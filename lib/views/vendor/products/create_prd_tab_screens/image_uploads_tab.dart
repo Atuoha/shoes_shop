@@ -155,13 +155,13 @@ class _ImageUploadTabState extends State<ImageUploadTab>
       });
 
       // upload images to firebase
-      List<String> downLoadImgUrls = [];
+      List<String> imgUrls = [];
       try {
         for (var img in productImages!) {
           var storageRef = firebaseStorage.ref('product-images/${uuid.v4()}');
           await storageRef.putFile(File(img.path)).whenComplete(() async {
             await storageRef.getDownloadURL().then((value) {
-              downLoadImgUrls.add(value);
+              imgUrls.add(value);
             });
           });
         }
@@ -181,9 +181,9 @@ class _ImageUploadTabState extends State<ImageUploadTab>
         doneUploadingImage = true;
       });
 
-      // persist downloadImgUrls using provider
+      // persist imgUrls using provider
       productProvider.updateProductImg(
-        downLoadImgUrls: downLoadImgUrls,
+        imgUrls: imgUrls,
       );
     }
 
@@ -208,7 +208,7 @@ class _ImageUploadTabState extends State<ImageUploadTab>
           billingAmount: productProvider.productData['billingAmount'],
           brandName: productProvider.productData['brandName'],
           sizesAvailable: productProvider.productData['sizesAvailable'],
-          downLoadImgUrls: productProvider.productData['downLoadImgUrls'],
+          imgUrls: productProvider.productData['imgUrls'],
           uploadDate: DateTime.now(),
         ),
       );

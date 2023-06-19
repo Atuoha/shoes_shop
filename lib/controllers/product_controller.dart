@@ -22,7 +22,7 @@ class ProductController {
         'billingAmount': product.billingAmount,
         'brandName': product.brandName,
         'sizesAvailable': product.sizesAvailable,
-        'downLoadImgUrls': product.downLoadImgUrls,
+        'imgUrls': product.imgUrls,
         'uploadDate': product.uploadDate,
         'isFav': product.isFav,
         'isApproved': product.isApproved,

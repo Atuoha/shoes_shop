@@ -174,7 +174,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                     billingAmount: item['billingAmount'],
                     brandName: item['brandName'],
                     sizesAvailable: item['sizesAvailable'].cast<String>(),
-                    downLoadImgUrls: item['downLoadImgUrls'].cast<String>(),
+                    imgUrls: item['imgUrls'].cast<String>(),
                     uploadDate: item['uploadDate'].toDate(),
                     isApproved: item['isApproved'],
                     isFav: item['isFav'],

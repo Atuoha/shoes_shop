@@ -21,7 +21,7 @@ class SingleProductGridItem extends StatelessWidget {
     return Stack(
       children: [
         CachedNetworkImage(
-          imageUrl: product.downLoadImgUrls[1],
+          imageUrl: product.imgUrls[1],
           imageBuilder: (context, imageProvider) => Hero(
             tag: product.prodId,
             child: Container(

@@ -11,7 +11,7 @@ class Product {
   final double billingAmount;
   final String brandName;
   final List<String> sizesAvailable;
-  final List<String> downLoadImgUrls;
+  final List<String> imgUrls;
   final DateTime uploadDate;
   bool isFav;
   bool isApproved;
@@ -29,7 +29,7 @@ class Product {
     required this.billingAmount,
     required this.brandName,
     required this.sizesAvailable,
-    required this.downLoadImgUrls,
+    required this.imgUrls,
     required this.uploadDate,
     this.isFav = false,
     this.isApproved = false,

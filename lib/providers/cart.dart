@@ -42,6 +42,8 @@ class CartProvider extends ChangeNotifier {
           cartId,
           (existingCartItem) => Cart(
             cartId: existingCartItem.cartId,
+            prodName: existingCartItem.prodName,
+            prodImg: existingCartItem.prodImg,
             prodId: existingCartItem.prodId,
             vendorId: existingCartItem.vendorId,
             quantity: existingCartItem.quantity + 1,
@@ -58,6 +60,8 @@ class CartProvider extends ChangeNotifier {
           (existingCartItem) => Cart(
             cartId: existingCartItem.cartId,
             prodId: existingCartItem.prodId,
+            prodName: existingCartItem.prodName,
+            prodImg: existingCartItem.prodImg,
             vendorId: existingCartItem.vendorId,
             quantity: existingCartItem.quantity - 1,
             prodSize: existingCartItem.prodSize,
@@ -77,23 +81,26 @@ class CartProvider extends ChangeNotifier {
       _cartItems.update(
         cartItem.cartId,
         (existingCartItem) => Cart(
-          cartId: cartItem.cartId,
-          prodId: cartItem.prodId,
-          vendorId: cartItem.vendorId,
+          cartId: existingCartItem.cartId,
+          prodId: existingCartItem.prodId,
+          prodName: existingCartItem.prodName,
+          prodImg: existingCartItem.prodImg,
+          vendorId: existingCartItem.vendorId,
           quantity: existingCartItem.quantity + 1,
-          prodSize: cartItem.prodSize,
-          price: cartItem.price,
-          date: cartItem.date,
+          prodSize: existingCartItem.prodSize,
+          price: existingCartItem.price,
+          date: existingCartItem.date,
         ),
       );
     } else {
       _cartItems.putIfAbsent(cartItem.cartId, () => cartItem);
     }
+    notifyListeners();
   }
 
   // removing item from cart
-  void removeFromCart(String cartId) {
-    _cartItems.remove(cartId);
+  void removeFromCart(String prodId) {
+    _cartItems.remove(prodId);
     notifyListeners();
   }
 
@@ -104,5 +111,5 @@ class CartProvider extends ChangeNotifier {
   }
 
   // checking if item is on cart
-  bool isItemOnCart(String cartId) => _cartItems.containsKey(cartId);
+  bool isItemOnCart(String prodId) => _cartItems.containsKey(prodId);
 }
