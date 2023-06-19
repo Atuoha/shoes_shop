@@ -9,10 +9,13 @@ class CartProvider extends ChangeNotifier {
   Map<String, Cart> get getCartItems => {..._cartItems};
 
   // get cart item length
-  get findCartQuantity => _cartItems.isEmpty ? 0 : getCartItems.length;
+  get getCartQuantity => _cartItems.isEmpty ? 0 : getCartItems.length;
+
+  // is cart empty
+  bool isItemEmpty() => _cartItems.isEmpty ? true : false;
 
   // get cart total amount
-  double cartTotalAmount() {
+  double getCartTotalAmount() {
     double totalAmount = 0.0;
 
     _cartItems.forEach((key, value) {
@@ -23,7 +26,7 @@ class CartProvider extends ChangeNotifier {
   }
 
   // get product quantity on cart
-  int productQuantityOnCart(String prodId) {
+  int getProductQuantityOnCart(String prodId) {
     int quantity = 0;
     _cartItems.forEach((key, value) {
       if (key == prodId) {

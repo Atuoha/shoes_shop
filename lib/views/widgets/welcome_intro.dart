@@ -40,6 +40,8 @@ class _WelcomeIntroState extends State<WelcomeIntro> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return !isLoading?  Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [

@@ -1,7 +1,9 @@
 // import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants/color.dart';
+import '../../providers/cart.dart';
 
 class CartIcon extends StatelessWidget {
   const CartIcon({
@@ -10,15 +12,17 @@ class CartIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Badge(
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+
+    return  Badge(
       backgroundColor: Colors.white,
       label: Text(
-        '1',
-        style: TextStyle(
+        '${cartProvider.getCartQuantity}',
+        style: const TextStyle(
           color: primaryColor,
         ),
       ),
-      child: Icon(
+      child: const Icon(
         Icons.shopping_cart,
         color: accentColor,
       ),
