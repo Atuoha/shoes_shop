@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:shoes_shop/constants/enums/quantity_operation.dart';
 import '../../constants/color.dart';
 import '../../constants/enums/yes_no.dart';
-import '../../controllers/route_manager.dart';
+import '../../constants/enums/status.dart';
 import '../../models/cart.dart';
 import '../../models/product.dart';
 import '../../providers/cart.dart';
@@ -12,6 +11,7 @@ import '../../resources/assets_manager.dart';
 import '../../resources/font_manager.dart';
 import '../../resources/styles_manager.dart';
 import '../customer/relational_screens/product_details.dart';
+import '../widgets/msg_snackbar.dart';
 import '../widgets/text_action.dart';
 
 class SingleCartItem extends StatefulWidget {
@@ -64,6 +64,12 @@ class _SingleCartItemState extends State<SingleCartItem> {
   void initState() {
     super.initState();
     fetchProduct();
+  }
+
+
+  // snack bar warning msg
+  void showWarningMsg(){
+    displaySnackBar(status: Status.error, message: 'Item quantity can\'t go any lower', context:context,);
   }
 
   @override
@@ -161,11 +167,10 @@ class _SingleCartItemState extends State<SingleCartItem> {
                   GestureDetector(
                     onTap: () => {
                       widget.item.quantity > 1
-                          ? widget.cartData.toggleQuantity(
-                              QuantityOperation.decrement,
+                          ? widget.cartData.decreaseQuantity(
                               widget.item.prodId,
                             )
-                          : null
+                          : showWarningMsg()
                     },
                     child: Text(
                       '-',
@@ -182,8 +187,7 @@ class _SingleCartItemState extends State<SingleCartItem> {
                   const SizedBox(width: 5),
                   GestureDetector(
                     onTap: () => {
-                      widget.cartData.toggleQuantity(
-                        QuantityOperation.increment,
+                      widget.cartData.increaseQuantity(
                         widget.item.prodId,
                       )
                     },

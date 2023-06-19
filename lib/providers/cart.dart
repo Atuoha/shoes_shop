@@ -37,8 +37,34 @@ class CartProvider extends ChangeNotifier {
     return quantity;
   }
 
-  // increment or decrement product in cart
+  // increase quantity
+  void increaseQuantity(String prodId) {
+    _cartItems.forEach((key, value) {
+      if (key == prodId) {
+        value.increaseQuantity();
+      }
+    });
+    notifyListeners();
+  }
+
+  // decrease quantity
+  void decreaseQuantity(String prodId) {
+    _cartItems.forEach((key, value) {
+      if (key == prodId) {
+        if (value.quantity > 1) {
+          value.decreaseQuantity();
+        }
+      }
+    });
+    notifyListeners();
+  }
+
+
+
+  // increment or decrement product in cart | alternative method - (NOT CURRENTLY USED)
   void toggleQuantity(QuantityOperation operation, String cartId) {
+    // another way you can implement this is by making use of the model and creating a method for increment and decrement
+
     switch (operation) {
       case QuantityOperation.increment:
         _cartItems.update(

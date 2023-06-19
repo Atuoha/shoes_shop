@@ -3,7 +3,7 @@ class Cart {
   final String prodId;
   final String prodName;
   final String prodImg;
-  final int quantity;
+  int quantity;
   final String vendorId;
   final DateTime date;
   final String prodSize;
@@ -20,4 +20,11 @@ class Cart {
     required this.date,
     required this.price,
   });
+
+
+  void increaseQuantity() =>
+      quantity++;
+
+
+  void decreaseQuantity() => quantity--;
 }
