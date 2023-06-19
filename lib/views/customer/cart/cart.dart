@@ -1,19 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoes_shop/providers/cart.dart';
 import 'package:shoes_shop/views/customer/main_screen.dart';
+import 'package:shoes_shop/views/widgets/are_you_sure_dialog.dart';
 import '../../../constants/color.dart';
 import '../../../constants/enums/status.dart';
 import '../../../controllers/route_manager.dart';
-import '../../../models/cart.dart';
 import '../../../providers/order.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
 import '../../components/single_cart_item.dart';
-import '../../vendor/main_screen.dart';
-import '../../widgets/cart_icon.dart';
 import '../../widgets/msg_snackbar.dart';
 
 class CartScreen extends StatefulWidget {
@@ -28,6 +25,22 @@ class CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     var cartData = Provider.of<CartProvider>(context);
 
+    // remove cart items
+    void removeAllCartItems() {
+      cartData.clearCart();
+    }
+
+    // remove all cart items dialog
+    void removeAllCartItemsDialog() {
+      areYouSureDialog(
+        title: 'Remove all cart items',
+        content: 'Are you sure you want to remove all cart items',
+        context: context,
+        action: removeAllCartItems,
+      );
+    }
+
+    // order now
     void orderNow() {
       if (cartData.getCartTotalAmount() > 0) {
         Provider.of<OrderProvider>(context, listen: false).addOrder(
@@ -47,6 +60,7 @@ class CartScreenState extends State<CartScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         actions: [
           GestureDetector(
             onTap: () => Navigator.of(context).pushNamed(
@@ -54,6 +68,17 @@ class CartScreenState extends State<CartScreen> {
             ),
             child: const Icon(
               Icons.shopping_cart_checkout,
+              color: iconColor,
+              size: 30,
+            ),
+          ),
+          const SizedBox(width: 10),
+          cartData.isItemEmpty()
+              ? const SizedBox.shrink()
+              :   GestureDetector(
+            onTap: () => removeAllCartItemsDialog(),
+            child: const Icon(
+              Icons.delete_forever,
               color: iconColor,
               size: 30,
             ),
@@ -148,8 +173,10 @@ class CartScreenState extends State<CartScreen> {
                             child: Wrap(
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: [
-                                const Icon(Icons.shopping_bag_outlined,
-                                    color: Colors.white),
+                                const Icon(
+                                  Icons.shopping_cart_checkout,
+                                  color: Colors.white,
+                                ),
                                 const SizedBox(width: 15),
                                 Text(
                                   cartData.getCartQuantity.toString(),
