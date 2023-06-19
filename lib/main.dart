@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shoes_shop/controllers/route_manager.dart';
+import 'package:shoes_shop/providers/cart.dart';
 import 'package:shoes_shop/providers/category.dart';
 import 'package:shoes_shop/providers/product.dart';
 import 'package:shoes_shop/resources/theme_manager.dart';
@@ -50,6 +51,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => ProductData(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CartProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => CategoryData(),
