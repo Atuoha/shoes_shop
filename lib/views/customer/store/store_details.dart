@@ -139,7 +139,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              const SizedBox(width: 5),
+                              const SizedBox(height: 10),
                               const Text('An error occurred!'),
                             ],
                           ),
@@ -165,7 +165,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              const SizedBox(width: 5),
+                              const SizedBox(height: 10),
                               const Text('Product list is empty'),
                             ],
                           ),
@@ -176,7 +176,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                         height: size.height / 3,
                         child: GridView.builder(
 
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             mainAxisSpacing: 10,
                             crossAxisSpacing: 10,

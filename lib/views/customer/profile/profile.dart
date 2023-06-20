@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shoes_shop/views/customer/main_screen.dart';
 
 import '../../../constants/color.dart';
 import '../../../controllers/route_manager.dart';
@@ -258,8 +259,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                   ),
                                 ),
-                                onPressed: () =>
-                                    Navigator.of(context).pushNamed(''),
+                                onPressed: () => Navigator.of(context)
+                                    .pushNamed(RouteManager.ordersScreen),
                                 child: const Text(
                                   'Orders',
                                   style: TextStyle(
@@ -280,7 +281,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                 ),
-                                onPressed: () {},
+                                onPressed: () => Navigator.of(context)
+                                    .pushNamed(RouteManager.wishList),
                                 child: const Text(
                                   'Wishlist',
                                   style: TextStyle(
@@ -304,7 +306,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                   ),
                                 ),
-                                onPressed: () {},
+                                onPressed: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CustomerMainScreen(index: 4),
+                                  ),
+                                ),
                                 child: const Text(
                                   'Cart',
                                   style: TextStyle(

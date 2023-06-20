@@ -7,6 +7,7 @@ import '../views/auth/account_type.dart';
 import '../views/auth/customer/customer_auth.dart';
 import '../views/auth/customer/forgot_password.dart';
 import '../views/customer/main_screen.dart';
+import '../views/customer/relational_screens/wishlist_products.dart';
 import '../views/vendor/entry_screen.dart';
 import '../views/splash/splash.dart';
 import '../views/vendor/main_screen.dart';
@@ -21,7 +22,7 @@ class RouteManager {
   static const String signupAcknowledgeScreen = "/signupAcknowledge";
   static const String customerMainScreen = '/customerHomeScreen';
   static const String ordersScreen = '/OrdersScreen';
-
+  static const String wishList = '/wishList';
 
   static const String vendorAuthScreen = "/vendorAuthScreen";
   static const String vendorForgotPass = "/vendorForgotPass";
@@ -38,8 +39,7 @@ final routes = {
       const CustomerMainScreen(index: 0),
   RouteManager.customerForgotPass: (context) => const CustomerForgotPassword(),
   RouteManager.ordersScreen: (context) => const OrdersScreen(),
-
-
+  RouteManager.wishList: (context) => const WishListProducts(),
   RouteManager.vendorAuthScreen: (context) => const VendorAuthScreen(),
   RouteManager.vendorMainScreen: (context) => const VendorMainScreen(index: 0),
   RouteManager.vendorEntryScreen: (context) => const VendorEntryScreen(),

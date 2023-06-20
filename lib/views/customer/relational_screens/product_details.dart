@@ -193,26 +193,35 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         return;
       }
 
-      Cart cartItem = Cart(
-        cartId: uuid.v4(),
-        prodId: widget.product.prodId,
-        prodName: widget.product.productName,
-        prodImg: widget.product.imgUrls[0],
-        vendorId: widget.product.vendorId,
-        quantity: 1,
-        prodSize: selectedProductSize,
-        date: DateTime.now(),
-        price: widget.product.price,
-      );
+      if (cartProvider.isItemOnCart(widget.product.prodId)) {
+        // navigate to cart
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const CustomerMainScreen(index: 4),
+          ),
+        );
+      } else {
+        Cart cartItem = Cart(
+          cartId: uuid.v4(),
+          prodId: widget.product.prodId,
+          prodName: widget.product.productName,
+          prodImg: widget.product.imgUrls[0],
+          vendorId: widget.product.vendorId,
+          quantity: 1,
+          prodSize: selectedProductSize,
+          date: DateTime.now(),
+          price: widget.product.price,
+        );
 
-      cartProvider.addToCart(cartItem);
+        cartProvider.addToCart(cartItem);
 
-      // navigate to cart
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const CustomerMainScreen(index: 4),
-        ),
-      );
+        // navigate to cart
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const CustomerMainScreen(index: 4),
+          ),
+        );
+      }
     }
 
     // toggle cart action

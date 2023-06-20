@@ -32,4 +32,7 @@ class AssetManager{
 
   static const String emptyImg = "$imagePath/empty-img.jpg";
   static const String placeholderImg = "$imagePath/placeholder-img.jpg";
+
+  static const String ops = "$imagePath/ops.png";
+  static const String love = "$imagePath/love.gif";
 }

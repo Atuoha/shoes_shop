@@ -1,40 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:shoes_shop/views/customer/relational_screens/product_details.dart';
 
+import '../../../constants/color.dart';
 import '../../../models/product.dart';
 import '../../../resources/assets_manager.dart';
 import '../../components/single_product_grid.dart';
 import '../../widgets/loading_widget.dart';
-import '../../widgets/search_box.dart';
-import '../relational_screens/product_details.dart';
 
-class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+class WishListProducts extends StatefulWidget {
+  const WishListProducts({super.key});
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
+  State<WishListProducts> createState() => _WishListProductsState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
-  TextEditingController searchText = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-
-    searchText.addListener(() {
-      setState(() {});
-    });
-  }
-
+class _WishListProductsState extends State<WishListProducts> {
   @override
   Widget build(BuildContext context) {
     Stream<QuerySnapshot> searchProductsStream = FirebaseFirestore.instance
         .collection('products')
         .where('isApproved', isEqualTo: true)
-        .where('productName', isGreaterThanOrEqualTo: searchText.text.trim())
-        .where('productName', isLessThan: '${searchText.text.trim()}z')
+        .where('isFav', isEqualTo: true)
         .snapshots();
 
     Size size = MediaQuery.of(context).size;
@@ -42,11 +30,18 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SearchBox(
-            searchText: searchText,
-          ),
+        title: Text('WishList'),
+        leading: Builder(
+          builder: (context) {
+            return GestureDetector(
+              onTap: () => Navigator.of(context).pop(),
+              child: const Icon(
+                Icons.chevron_left,
+                color: primaryColor,
+                size: 35,
+              ),
+            );
+          },
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -81,25 +76,23 @@ class _SearchScreenState extends State<SearchScreen> {
           }
 
           if (snapshot.data!.docs.isEmpty) {
-            return searchText.text.isNotEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            AssetManager.ops,
-                            width: 200,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Text('Ops! No product matches search word'),
-                      ],
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      AssetManager.love,
+                      width: 200,
+                      fit: BoxFit.cover,
                     ),
-                  )
-                : const SizedBox.shrink();
+                  ),
+                  const SizedBox(height: 10),
+                  const Text('Ops! Wish list is empty'),
+                ],
+              ),
+            );
           }
 
           return MasonryGridView.count(
