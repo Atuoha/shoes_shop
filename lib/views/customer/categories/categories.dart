@@ -6,7 +6,7 @@ import '../../../models/category.dart';
 import '../../../resources/assets_manager.dart';
 import '../../components/single_category_grid.dart';
 import '../../widgets/loading_widget.dart';
-import '../relational_screens/product_by_category_screen.dart';
+import 'product_by_category.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({Key? key}) : super(key: key);
