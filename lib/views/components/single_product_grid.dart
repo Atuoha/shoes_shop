@@ -51,17 +51,14 @@ class SingleProductGridItem extends StatelessWidget {
       children: [
         CachedNetworkImage(
           imageUrl: product.imgUrls[1],
-          imageBuilder: (context, imageProvider) => Hero(
-            tag: product.prodId,
-            child: Container(
-              height: 205,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
-                ),
+          imageBuilder: (context, imageProvider) => Container(
+            height: 205,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.cover,
               ),
             ),
           ),

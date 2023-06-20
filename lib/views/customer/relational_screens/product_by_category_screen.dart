@@ -5,7 +5,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shoes_shop/constants/color.dart';
 import 'package:shoes_shop/resources/styles_manager.dart';
 import 'package:shoes_shop/views/customer/relational_screens/product_details.dart';
-
 import '../../../models/category.dart';
 import '../../../models/product.dart';
 import '../../../resources/assets_manager.dart';

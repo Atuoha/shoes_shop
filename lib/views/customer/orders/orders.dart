@@ -7,6 +7,7 @@ import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
 import '../../components/single_order_item.dart';
 import '../../vendor/main_screen.dart';
+import '../../widgets/are_you_sure_dialog.dart';
 import '../main_screen.dart';
 
 class OrdersScreen extends StatefulWidget {
@@ -22,6 +23,22 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     final orderData = Provider.of<OrderProvider>(context, listen: false);
 
+    // remove cart items
+    void removeAllOrderItems() {
+      orderData.clearOrder();
+    }
+
+    // remove all cart items dialog
+    void removeAllOrderItemsDialog() {
+      areYouSureDialog(
+        title: 'Remove all cart items',
+        content: 'Are you sure you want to remove all cart items',
+        context: context,
+        action: removeAllOrderItems,
+      );
+    }
+
+    // order now button
     void orderNow() {
       orderData.clearOrder();
       Navigator.of(context).pushNamed('');
@@ -45,6 +62,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
             );
           },
         ),
+        actions: [
+          orderData.orders.isEmpty
+              ? const SizedBox.shrink()
+              : GestureDetector(
+                  onTap: () => removeAllOrderItemsDialog(),
+                  child: const Icon(
+                    Icons.delete_forever,
+                    color: iconColor,
+                    size: 30,
+                  ),
+                ),
+          const SizedBox(width: 18),
+        ],
       ),
       body: orderData.orders.isEmpty
           ? Center(
@@ -130,7 +160,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         Container(
                           height: 50,
                           width: 80,
-                          decoration:  BoxDecoration(
+                          decoration: BoxDecoration(
                             color: accentColor.withOpacity(0.3),
                             borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(5),
