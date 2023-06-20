@@ -33,7 +33,7 @@ class _CategorySectionState extends State<CategorySection> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.sizeOf(context);
 
     Stream<QuerySnapshot> streamCategory =
         FirebaseFirestore.instance.collection('categories').snapshots();

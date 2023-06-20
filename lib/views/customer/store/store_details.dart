@@ -26,7 +26,7 @@ class StoreDetailsScreen extends StatefulWidget {
 class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.sizeOf(context);
 
     Stream<QuerySnapshot> productsStream = FirebaseFirestore.instance
         .collection('products')

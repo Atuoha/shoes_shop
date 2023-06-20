@@ -50,7 +50,7 @@ class _AttributesTabState extends State<AttributesTab>
   Widget build(BuildContext context) {
     super.build(context);
     final productProvider = Provider.of<ProductData>(context);
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.sizeOf(context);
 
     // submit data to provider
     submitData() {

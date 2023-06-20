@@ -178,7 +178,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.sizeOf(context);
     CartProvider cartProvider = Provider.of<CartProvider>(context);
 
     // buy now fnc

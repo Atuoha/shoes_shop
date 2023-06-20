@@ -37,7 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
         .where('productName', isLessThan: '${searchText.text.trim()}z')
         .snapshots();
 
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.sizeOf(context);
 
     return Scaffold(
       appBar: AppBar(

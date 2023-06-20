@@ -40,7 +40,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   Widget build(BuildContext context) {
     final CategoryData categoryProvider = Provider.of<CategoryData>(context);
 
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.sizeOf(context);
 
     Stream<QuerySnapshot> fetchProducts() {
       CollectionReference productCollection =

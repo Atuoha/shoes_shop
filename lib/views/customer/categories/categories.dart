@@ -21,7 +21,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.sizeOf(context);
 
     return Padding(
       padding:  EdgeInsets.only(top:MediaQuery.of(context).padding.top),

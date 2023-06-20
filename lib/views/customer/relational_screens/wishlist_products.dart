@@ -25,7 +25,7 @@ class _WishListProductsState extends State<WishListProducts> {
         .where('isFav', isEqualTo: true)
         .snapshots();
 
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.sizeOf(context);
 
     return Scaffold(
       appBar: AppBar(

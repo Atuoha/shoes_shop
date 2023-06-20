@@ -31,7 +31,7 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
         .where('category', isEqualTo: widget.category.title)
         .snapshots();
 
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.sizeOf(context);
 
     return Scaffold(
       appBar: AppBar(
