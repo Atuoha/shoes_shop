@@ -47,14 +47,24 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
           FirebaseFirestore.instance.collection('products');
 
       if (searchText.text.isNotEmpty) {
-        return productCollection
-            .orderBy('productName', descending: true)
-            .where('isApproved', isEqualTo: true)
-            .where('productName',
-                isGreaterThanOrEqualTo: searchText.text.trim())
-            .where('productName', isLessThan: '${searchText.text.trim()}z')
-            .where('category', isEqualTo: categoryProvider.currentCategory)
-            .snapshots();
+        if (categoryProvider.currentCategory.isNotEmpty) {
+          return productCollection
+              .orderBy('productName', descending: true)
+              .where('isApproved', isEqualTo: true)
+              .where('productName',
+                  isGreaterThanOrEqualTo: searchText.text.trim())
+              .where('productName', isLessThan: '${searchText.text.trim()}z')
+              .snapshots();
+        } else {
+          return productCollection
+              .orderBy('productName', descending: true)
+              .where('isApproved', isEqualTo: true)
+              .where('productName',
+                  isGreaterThanOrEqualTo: searchText.text.trim())
+              .where('productName', isLessThan: '${searchText.text.trim()}z')
+              .where('category', isEqualTo: categoryProvider.currentCategory)
+              .snapshots();
+        }
       } else {
         if (categoryProvider.currentCategory.isNotEmpty) {
           return productCollection

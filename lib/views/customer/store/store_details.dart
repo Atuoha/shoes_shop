@@ -174,14 +174,15 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
 
                       return SizedBox(
                         height: size.height / 3,
-                        child: MasonryGridView.count(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
+                        child: GridView.builder(
+
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 10,
+                            crossAxisSpacing: 10,
+                          ),
                           padding: const EdgeInsets.only(
                             top: 0,
-                            right: 18,
-                            left: 18,
                           ),
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index) {

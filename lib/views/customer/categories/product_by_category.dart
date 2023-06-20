@@ -137,8 +137,6 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
               crossAxisSpacing: 10,
               padding: const EdgeInsets.only(
                 top: 0,
-                right: 18,
-                left: 18,
               ),
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
