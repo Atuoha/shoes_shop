@@ -10,6 +10,7 @@ import 'package:readmore/readmore.dart';
 import 'package:shoes_shop/providers/cart.dart';
 import '../../../constants/color.dart';
 import '../../../constants/enums/status.dart';
+import '../../../helpers/word_reverse.dart';
 import '../../../models/cart.dart';
 import '../../../models/product.dart';
 import '../../../resources/assets_manager.dart';
@@ -55,7 +56,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         vendorName = data['storeName'];
         vendorImage = data['storeImgUrl'];
         vendorAddress =
-            'Located in ${data['city']} ${data['state']} ${data['country']}';
+            'Located in ${data['city']} ${data['state']} ${reversedWord(data['country'])}';
         isLoadingVendor = false;
       });
     });

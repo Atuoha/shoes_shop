@@ -173,7 +173,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                       }
 
                       return SizedBox(
-                        height: size.height / 2.5,
+                        height: size.height / 3,
                         child: MasonryGridView.count(
                           crossAxisCount: 2,
                           mainAxisSpacing: 10,
@@ -224,7 +224,8 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                         ),
                       );
                     },
-                  )
+                  ),
+                  const SizedBox(height:20),
                 ],
               ),
             ),
