@@ -28,12 +28,17 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   final TextEditingController searchText = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+
+    searchText.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final CategoryData categoryProvider = Provider.of<CategoryData>(context);
-    // Stream<QuerySnapshot> productStream = FirebaseFirestore.instance
-    //     .collection('products')
-    //     .orderBy('uploadDate', descending: true)
-    //     .snapshots();
 
     Size size = MediaQuery.of(context).size;
 
@@ -41,164 +46,177 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
       CollectionReference productCollection =
           FirebaseFirestore.instance.collection('products');
 
-      if (categoryProvider.currentCategory.isNotEmpty) {
+      if (searchText.text.isNotEmpty) {
         return productCollection
-            .orderBy('uploadDate', descending: true)
+            .orderBy('productName', descending: true)
             .where('isApproved', isEqualTo: true)
+            .where('productName',
+                isGreaterThanOrEqualTo: searchText.text.trim())
+            .where('productName', isLessThan: '${searchText.text.trim()}z')
             .where('category', isEqualTo: categoryProvider.currentCategory)
             .snapshots();
       } else {
-        return productCollection
-            .orderBy('uploadDate', descending: true)
-            .where('isApproved', isEqualTo: true)
-            .snapshots();
+        if (categoryProvider.currentCategory.isNotEmpty) {
+          return productCollection
+              .orderBy('uploadDate', descending: true)
+              .where('isApproved', isEqualTo: true)
+              .where('category', isEqualTo: categoryProvider.currentCategory)
+              .snapshots();
+        } else {
+          return productCollection
+              .orderBy('uploadDate', descending: true)
+              .where('isApproved', isEqualTo: true)
+              .snapshots();
+        }
       }
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top,
-            right: 18,
-            left: 18,
-          ),
-          child: Column(
-            children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  WelcomeIntro(),
-                  CartIcon(),
-                ],
-              ),
-              const SizedBox(height: AppSize.s10),
-              SearchBox(searchText: searchText),
-            ],
-          ),
-        ),
-        const SizedBox(height: AppSize.s10),
-        const BannerComponent(),
-        const SizedBox(height: AppSize.s10),
-        Padding(
-          padding: const EdgeInsets.only(left: 10.0),
-          child: Text(
-            'Categories',
-            style: getMediumStyle(
-              color: Colors.black,
-              fontSize: FontSize.s14,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top,
+              right: 18,
+              left: 18,
+            ),
+            child: Column(
+              children: [
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    WelcomeIntro(),
+                    CartIcon(),
+                  ],
+                ),
+                const SizedBox(height: AppSize.s10),
+                SearchBox(searchText: searchText),
+              ],
             ),
           ),
-        ),
-        CategorySection(categoryProvider: categoryProvider),
-        // const SizedBox(height: 15),
+          const SizedBox(height: AppSize.s10),
+          const BannerComponent(),
+          const SizedBox(height: AppSize.s10),
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: Text(
+              'Categories',
+              style: getMediumStyle(
+                color: Colors.black,
+                fontSize: FontSize.s14,
+              ),
+            ),
+          ),
+          CategorySection(categoryProvider: categoryProvider),
+          // const SizedBox(height: 15),
 
-        // Product StreamBuilder
-        StreamBuilder<QuerySnapshot>(
-          stream: fetchProducts(),
-          builder: (
-            BuildContext context,
-            AsyncSnapshot<QuerySnapshot> snapshot,
-          ) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        AssetManager.warningImage,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    const Text('An error occurred!'),
-                  ],
-                ),
-              );
-            }
-
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: LoadingWidget(size: 30),
-              );
-            }
-
-            if (snapshot.data!.docs.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        AssetManager.addImage,
-                        width: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    const Text('Product list is empty'),
-                  ],
-                ),
-              );
-            }
-
-            return SizedBox(
-              height: size.height / 2.8,
-              child: MasonryGridView.count(
-                crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                padding: const EdgeInsets.only(
-                  top: 0,
-                  right: 18,
-                  left: 18,
-                ),
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  final item = snapshot.data!.docs[index];
-
-                  Product product = Product(
-                    prodId: item['prodId'],
-                    vendorId: item['vendorId'],
-                    productName: item['productName'],
-                    price: item['price'],
-                    quantity: item['quantity'],
-                    category: item['category'],
-                    description: item['description'],
-                    scheduleDate: item['scheduleDate'].toDate(),
-                    isCharging: item['isCharging'],
-                    billingAmount: item['billingAmount'],
-                    brandName: item['brandName'],
-                    sizesAvailable: item['sizesAvailable'].cast<String>(),
-                    imgUrls: item['imgUrls'].cast<String>(),
-                    uploadDate: item['uploadDate'].toDate(),
-                    isApproved: item['isApproved'],
-                    isFav: item['isFav'],
-                  );
-
-                  return InkWell(
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ProductDetailsScreen(
-                          product: product,
+          // Product StreamBuilder
+          StreamBuilder<QuerySnapshot>(
+            stream: fetchProducts(),
+            builder: (
+              BuildContext context,
+              AsyncSnapshot<QuerySnapshot> snapshot,
+            ) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          AssetManager.warningImage,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ),
-                    child: SingleProductGridItem(
-                      product: product,
-                      size: size,
-                    ),
-                  );
-                },
-              ),
-            );
-          },
-        )
-      ],
+                      const SizedBox(width: 5),
+                      const Text('An error occurred!'),
+                    ],
+                  ),
+                );
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: LoadingWidget(size: 30),
+                );
+              }
+
+              if (snapshot.data!.docs.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          AssetManager.addImage,
+                          width: 200,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      const Text('Product list is empty'),
+                    ],
+                  ),
+                );
+              }
+
+              return SizedBox(
+                height: size.height / 2.8,
+                child: MasonryGridView.count(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  padding: const EdgeInsets.only(
+                    top: 0,
+                    right: 18,
+                    left: 18,
+                  ),
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    final item = snapshot.data!.docs[index];
+
+                    Product product = Product(
+                      prodId: item['prodId'],
+                      vendorId: item['vendorId'],
+                      productName: item['productName'],
+                      price: item['price'],
+                      quantity: item['quantity'],
+                      category: item['category'],
+                      description: item['description'],
+                      scheduleDate: item['scheduleDate'].toDate(),
+                      isCharging: item['isCharging'],
+                      billingAmount: item['billingAmount'],
+                      brandName: item['brandName'],
+                      sizesAvailable: item['sizesAvailable'].cast<String>(),
+                      imgUrls: item['imgUrls'].cast<String>(),
+                      uploadDate: item['uploadDate'].toDate(),
+                      isApproved: item['isApproved'],
+                      isFav: item['isFav'],
+                    );
+
+                    return InkWell(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ProductDetailsScreen(
+                            product: product,
+                          ),
+                        ),
+                      ),
+                      child: SingleProductGridItem(
+                        product: product,
+                        size: size,
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          )
+        ],
+      ),
     );
   }
 }
