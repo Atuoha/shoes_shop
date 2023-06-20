@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shoes_shop/models/product.dart';
 import 'package:shoes_shop/resources/styles_manager.dart';
 import 'package:shoes_shop/views/customer/relational_screens/product_details.dart';
+import '../../constants/firebase_refs/collections.dart';
 import '../../providers/category.dart';
 import '../../resources/assets_manager.dart';
 import '../../resources/font_manager.dart';
@@ -44,7 +45,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
     Stream<QuerySnapshot> fetchProducts() {
       CollectionReference productCollection =
-          FirebaseFirestore.instance.collection('products');
+          FirebaseCollections.productsCollection;
 
       if (searchText.text.isNotEmpty) {
         if (categoryProvider.currentCategory.isNotEmpty) {
@@ -55,6 +56,8 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                   isGreaterThanOrEqualTo: searchText.text.trim())
               .where('productName', isLessThan: '${searchText.text.trim()}z')
               .snapshots();
+
+
         } else {
           return productCollection
               .orderBy('productName', descending: true)

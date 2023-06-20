@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-
 import '../../helpers/word_reverse.dart';
 import '../../models/vendor.dart';
 import '../../resources/assets_manager.dart';

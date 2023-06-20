@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
+import '../../../constants/firebase_refs/collections.dart';
 import '../../../models/category.dart';
 import '../../../resources/assets_manager.dart';
 import '../../components/single_category_grid.dart';
@@ -17,7 +18,7 @@ class CategoriesScreen extends StatefulWidget {
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
   Stream<QuerySnapshot> categoryStream =
-      FirebaseFirestore.instance.collection('categories').snapshots();
+     FirebaseCollections.categoriesCollection.snapshots();
 
   @override
   Widget build(BuildContext context) {

@@ -8,11 +8,14 @@ import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shoes_shop/providers/cart.dart';
+import 'package:shoes_shop/views/customer/store/store_details.dart';
 import '../../../constants/color.dart';
 import '../../../constants/enums/status.dart';
+import '../../../constants/firebase_refs/collections.dart';
 import '../../../helpers/word_reverse.dart';
 import '../../../models/cart.dart';
 import '../../../models/product.dart';
+import '../../../models/vendor.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
@@ -44,15 +47,30 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   String vendorAddress = '';
   Uuid uuid = const Uuid();
   bool isFav = false;
+  Vendor vendor = Vendor.initial();
 
   // fetch vendorDetails
   Future<void> fetchVendorDetails() async {
-    await FirebaseFirestore.instance
-        .collection('vendors')
+    await FirebaseCollections.vendorsCollection
         .doc(widget.product.vendorId)
         .get()
         .then((DocumentSnapshot data) {
       setState(() {
+        vendor = Vendor(
+          storeId: data['storeId'],
+          storeName: data['storeName'],
+          email: data['email'],
+          phone: data['phone'],
+          taxNumber: data['taxNumber'],
+          storeNumber: data['storeNumber'],
+          country: data['country'],
+          state: data['state'],
+          city: data['city'],
+          storeImgUrl: data['storeImgUrl'],
+          address: data['address'],
+          authType: data['authType'],
+        );
+
         vendorName = data['storeName'];
         vendorImage = data['storeImgUrl'];
         vendorAddress =
@@ -65,6 +83,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   // navigate to store
   void navigateToVendorStore() {
     // Todo: Navigate to vendor store
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => StoreDetailsScreen(vendor: vendor),
+      ),
+    );
   }
 
   void setProductSize(String size, int index) {
@@ -136,7 +159,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
   // toggle isFav
   void toggleIsFav(bool status, String id) {
-    final db = FirebaseFirestore.instance.collection('products').doc(id);
+    final db = FirebaseCollections.productsCollection.doc(id);
     setState(() {
       db.update({'isFav': !status});
       isFav = !isFav;
@@ -231,6 +254,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         cartProvider.removeFromCart(product.prodId);
         Future.delayed(const Duration(seconds: 2));
         EasyLoading.dismiss();
+
+        // msg for user after adding item to cart
+        displaySnackBar(
+          status: Status.success,
+          message: '${product.productName} removed from cart successfully',
+          context: cxt,
+        );
       } else {
         // prompt if the size is not selected
         if (selectedProductSize.isEmpty) {
@@ -258,6 +288,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         cartProvider.addToCart(cartItem);
         Future.delayed(const Duration(seconds: 2));
         EasyLoading.dismiss();
+
+        // msg for user after adding item to cart
+        displaySnackBar(
+          status: Status.success,
+          message: '${product.productName} added to cart successfully',
+          context: cxt,
+        );
       }
     }
 

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shoes_shop/controllers/auth_controller.dart';
 
 import '../../constants/color.dart';
+import '../../constants/firebase_refs/collections.dart';
 import '../../controllers/route_manager.dart';
 import '../../models/vendor.dart';
 import '../../resources/assets_manager.dart';
@@ -61,8 +62,7 @@ class _VendorEntryScreenState extends State<VendorEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Stream<DocumentSnapshot> query = FirebaseFirestore.instance
-        .collection('vendors')
+    final Stream<DocumentSnapshot> query = FirebaseCollections.vendorsCollection
         .doc(userId)
         .snapshots();
 

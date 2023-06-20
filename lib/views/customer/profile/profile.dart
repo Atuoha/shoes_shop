@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop/views/customer/main_screen.dart';
-
 import '../../../constants/color.dart';
 import '../../../controllers/route_manager.dart';
 import '../../../resources/assets_manager.dart';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
 import '../../models/app_data.dart';
 
 class VendorDataGraph extends StatelessWidget {

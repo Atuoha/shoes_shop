@@ -57,7 +57,7 @@ class _EditProfileState extends State<EditProfile> {
     });
   }
 
-  // custom textfield for all form fields
+  // custom text field for all form fields
   Widget kTextField(
     TextEditingController controller,
     String hint,

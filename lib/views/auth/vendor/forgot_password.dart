@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shoes_shop/controllers/route_manager.dart';
 import 'package:shoes_shop/resources/assets_manager.dart';
-
 import '../../../constants/color.dart';
 
 class VendorForgotPassword extends StatefulWidget {
@@ -100,7 +99,7 @@ class _VendorForgotPasswordState extends State<VendorForgotPassword> {
                     textDirection: TextDirection.rtl,
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        primary: primaryColor,
+                        backgroundColor: primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),

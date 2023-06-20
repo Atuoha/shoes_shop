@@ -9,12 +9,12 @@ import '../../../constants/color.dart';
 import '../../../constants/enums/account_type.dart';
 import '../../../constants/enums/fields.dart';
 import '../../../constants/enums/status.dart';
+import '../../../constants/firebase_refs/collections.dart';
 import '../../../controllers/auth_controller.dart';
 import '../../../controllers/route_manager.dart';
 import '../../../helpers/auth_error_formatter.dart';
 import '../../../helpers/shared_prefs.dart';
 import '../../../models/auth_result.dart';
-import '../../../models/vendor.dart';
 import '../../../resources/assets_manager.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/msg_snackbar.dart';
@@ -175,8 +175,7 @@ class _VendorAuthScreenState extends State<VendorAuthScreen> {
   // routing to the main screen or the entry screen based on whether approved or not
   routingVendor() async {
     var userId = FirebaseAuth.instance.currentUser!.uid;
-    var data = await FirebaseFirestore.instance
-        .collection('vendors')
+    var data = await FirebaseCollections.vendorsCollection
         .doc(userId)
         .get();
 

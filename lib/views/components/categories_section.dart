@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop/views/components/single_category_section.dart';
-
+import '../../constants/firebase_refs/collections.dart';
 import '../../models/category.dart';
 import '../../providers/category.dart';
 import '../../resources/assets_manager.dart';
@@ -36,7 +36,7 @@ class _CategorySectionState extends State<CategorySection> {
     Size size = MediaQuery.sizeOf(context);
 
     Stream<QuerySnapshot> streamCategory =
-        FirebaseFirestore.instance.collection('categories').snapshots();
+       FirebaseCollections.categoriesCollection.snapshots();
 
     return SizedBox(
       height: size.height / 8,

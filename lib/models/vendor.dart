@@ -31,6 +31,21 @@ class Vendor {
     this.isStoreRegistered = false,
   });
 
+  factory Vendor.initial() => Vendor(
+        storeId: '',
+        storeName: '',
+        email: '',
+        phone: '',
+        taxNumber: '',
+        storeNumber: '',
+        country: '',
+        state: '',
+        city: '',
+        storeImgUrl: '',
+        address: '',
+        authType: '',
+      );
+
   Vendor.fromJson(Map<String, dynamic> data)
       : this(
           storeId: data['storeId'],

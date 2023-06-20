@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import '../../constants/firebase_refs/collections.dart';
 import '../../resources/assets_manager.dart';
 import 'loading_widget.dart';
 
@@ -16,11 +17,9 @@ class BannerComponent extends StatefulWidget {
 
 class _BannerComponentState extends State<BannerComponent> {
   final List<String> _banners = [];
-  final firebaseFirestore = FirebaseFirestore.instance;
 
   Future<void> _fetchBanners() async {
-    await firebaseFirestore
-        .collection('banners')
+    await FirebaseCollections.bannersCollection
         .get()
         .then((QuerySnapshot querySnapshot) {
       for (var data in querySnapshot.docs) {

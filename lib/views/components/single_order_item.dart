@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoes_shop/providers/order.dart';
-import '../../constants/color.dart';
 import '../../constants/enums/yes_no.dart';
 import '../../models/order.dart';
 import '../../resources/assets_manager.dart';

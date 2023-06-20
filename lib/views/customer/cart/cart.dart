@@ -62,28 +62,30 @@ class CartScreenState extends State<CartScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: [
-          GestureDetector(
-            onTap: () => Navigator.of(context).pushNamed(
-              RouteManager.ordersScreen,
+          if (cartData.isItemEmpty()) ...[
+            const SizedBox.shrink()
+          ] else ...[
+            GestureDetector(
+              onTap: () => Navigator.of(context).pushNamed(
+                RouteManager.ordersScreen,
+              ),
+              child: const Icon(
+                Icons.shopping_cart_checkout,
+                color: iconColor,
+                size: 30,
+              ),
             ),
-            child: const Icon(
-              Icons.shopping_cart_checkout,
-              color: iconColor,
-              size: 30,
+            const SizedBox(width: 10),
+            GestureDetector(
+              onTap: () => removeAllCartItemsDialog(),
+              child: const Icon(
+                Icons.delete_forever,
+                color: iconColor,
+                size: 30,
+              ),
             ),
-          ),
-          const SizedBox(width: 10),
-          cartData.isItemEmpty()
-              ? const SizedBox.shrink()
-              :   GestureDetector(
-            onTap: () => removeAllCartItemsDialog(),
-            child: const Icon(
-              Icons.delete_forever,
-              color: iconColor,
-              size: 30,
-            ),
-          ),
-          const SizedBox(width: 18),
+            const SizedBox(width: 18),
+          ]
         ],
       ),
       backgroundColor: Colors.white,
@@ -162,7 +164,7 @@ class CartScreenState extends State<CartScreen> {
                         Container(
                           height: 50,
                           width: 80,
-                          decoration:  BoxDecoration(
+                          decoration: BoxDecoration(
                             color: accentColor.withOpacity(0.3),
                             borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(5),

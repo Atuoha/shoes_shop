@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shoes_shop/models/vendor.dart';
 import 'package:shoes_shop/views/customer/store/store_details.dart';
 
+import '../../../constants/firebase_refs/collections.dart';
 import '../../../resources/assets_manager.dart';
 import '../../components/single_store_grid.dart';
 import '../../widgets/loading_widget.dart';
@@ -16,8 +17,7 @@ class StoreScreen extends StatefulWidget {
 }
 
 class _StoreScreenState extends State<StoreScreen> {
-  Stream<QuerySnapshot> vendorStream = FirebaseFirestore.instance
-      .collection('vendors')
+  Stream<QuerySnapshot> vendorStream = FirebaseCollections.vendorsCollection
       .where('isApproved', isEqualTo: true)
       .snapshots();
 

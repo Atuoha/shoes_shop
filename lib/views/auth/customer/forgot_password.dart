@@ -100,7 +100,7 @@ class _CustomerForgotPasswordState extends State<CustomerForgotPassword> {
                     textDirection: TextDirection.rtl,
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        primary: primaryColor,
+                        backgroundColor: primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
