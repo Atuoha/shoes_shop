@@ -191,7 +191,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                               prodId: item['prodId'],
                               vendorId: item['vendorId'],
                               productName: item['productName'],
-                              price: item['price'],
+                              price: double.parse(item['price'].toString()),
                               quantity: item['quantity'],
                               category: item['category'],
                               description: item['description'],

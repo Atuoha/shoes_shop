@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,7 +8,6 @@ import 'package:shoes_shop/constants/firebase_refs/collections.dart';
 import 'package:shoes_shop/views/widgets/kcool_alert.dart';
 import '../../../constants/color.dart';
 import '../../../constants/enums/status.dart';
-import '../../../helpers/extractor.dart';
 import '../../../providers/order.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
@@ -109,7 +106,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final orderData = Provider.of<OrderProvider>(context, listen: false);
+    final orderData = Provider.of<OrderProvider>(context);
 
     // remove cart items
     void removeAllOrderItems() {
@@ -194,8 +191,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       if (response.success == true) {
         showLoading("Payment made", Status.success);
         submitOrderToFirebase(); // upload to firebase
-
-        orderData.clearOrder(); // remove order
+        removeAllOrderItems(); // remove order
       } else {
         showLoading(
           'Ops! Payment was not successful',
@@ -260,27 +256,25 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 ],
               ),
             )
-          : Consumer<OrderProvider>(
-              builder: (_, orders, o) => Column(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: ListView.builder(
-                      itemCount: orders.orders.length,
-                      itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SingleOrderItem(
-                          id: orders.orders[index].id,
-                          totalAmount: orders.orders[index].totalAmount,
-                          date: orders.orders[index].orderDate,
-                          orders: orders.orders[index],
-                        ),
-                      ),
+          : Column(
+            children: [
+              Expanded(
+                flex: 5,
+                child: ListView.builder(
+                  itemCount: orderData.orders.length,
+                  itemBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SingleOrderItem(
+                      id: orderData.orders[index].id,
+                      totalAmount: orderData.orders[index].totalAmount,
+                      date: orderData.orders[index].orderDate,
+                      orders: orderData.orders[index],
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
+          ),
       bottomSheet: orderData.orders.isNotEmpty
           ? Container(
               color: Colors.white,
