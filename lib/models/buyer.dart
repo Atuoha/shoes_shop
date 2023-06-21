@@ -1,4 +1,4 @@
-class Customer {
+class Buyer {
   final String customerId;
   final String fullname;
   final String image;
@@ -6,7 +6,7 @@ class Customer {
   final String phone;
   final String address;
 
-  Customer({
+  Buyer({
     required this.customerId,
     required this.fullname,
     required this.image,
@@ -15,7 +15,7 @@ class Customer {
     required this.address,
   });
 
-  factory Customer.initial() => Customer(
+  factory Buyer.initial() => Buyer(
     customerId: '',
         fullname: '',
         email: '',

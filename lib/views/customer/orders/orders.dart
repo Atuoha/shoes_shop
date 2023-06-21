@@ -1,11 +1,16 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:shoes_shop/constants/firebase_refs/collections.dart';
 import 'package:shoes_shop/views/widgets/kcool_alert.dart';
 import '../../../constants/color.dart';
+import '../../../constants/enums/status.dart';
+import '../../../helpers/extractor.dart';
 import '../../../providers/order.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
@@ -13,7 +18,9 @@ import '../../../resources/styles_manager.dart';
 import '../../components/single_order_item.dart';
 import '../../widgets/are_you_sure_dialog.dart';
 import '../main_screen.dart';
-import '../../../models/customer.dart';
+import '../../../models/buyer.dart';
+import 'package:flutterwave_standard/flutterwave.dart';
+import 'package:uuid/uuid.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({Key? key}) : super(key: key);
@@ -23,18 +30,30 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
-  Customer customer = Customer.initial();
+  Buyer buyer = Buyer.initial();
   bool profileIncomplete = false;
   bool isAddressEmpty = false;
   bool isPhoneNumberEmpty = false;
+  String? apiPublicKey;
+  String? apiEncryptKey;
+  FlutterSecureStorage storage = const FlutterSecureStorage();
+  bool isTestMode = true;
+  Uuid uuid = const Uuid();
 
+  // fetch Api keys
+  Future<void> fetchAPIKeys() async {
+    apiPublicKey = await storage.read(key: 'flutterwave_public_key');
+    apiEncryptKey = await storage.read(key: 'flutterwave_encrypt_key');
+  }
+
+  // fetch customer details
   Future<void> fetchCustomerDetails() async {
-    FirebaseCollections.customersCollection
+    await FirebaseCollections.customersCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get()
         .then((DocumentSnapshot data) {
       setState(() {
-        customer = Customer(
+        buyer = Buyer(
           customerId: data['customerId'],
           fullname: data['fullname'],
           image: data['image'],
@@ -62,10 +81,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
           isAddressEmpty = true;
         });
       }
-
-      print(
-          'THIS IS CUSTOMER: ${customer.fullname}, ${customer.email}, ${customer.phone}, ${customer.address}');
-      print('PROFILE INCOMPLETE: $profileIncomplete');
     });
   }
 
@@ -73,6 +88,23 @@ class _OrdersScreenState extends State<OrdersScreen> {
   void initState() {
     super.initState();
     fetchCustomerDetails();
+    fetchAPIKeys();
+  }
+
+  // pop out
+  void popOut() {
+    Navigator.of(context).pop();
+  }
+
+  // show loading
+  Future<void> showLoading(String message, Status status) async {
+    kCoolAlert(
+      message: message,
+      context: context,
+      alert:
+          status == Status.error ? CoolAlertType.error : CoolAlertType.success,
+      action: popOut,
+    );
   }
 
   @override
@@ -103,8 +135,28 @@ class _OrdersScreenState extends State<OrdersScreen> {
       );
     }
 
+    // submit individual order to firebase
+    Future<void> submitOrderToFirebase() async {
+      for (var order in orderData.orders) {
+        for (var item in order.products) {
+          var id = uuid.v4();
+          FirebaseCollections.ordersCollection.doc(id).set({
+            'orderId': id,
+            'vendorId': item.vendorId,
+            'prodId': item.prodId,
+            'prodName': item.prodName,
+            'prodImg': item.prodImg,
+            'prodSize': item.price,
+            'prodQuantity': item.quantity,
+            'date': item.date,
+            'isDelivered': false,
+          });
+        }
+      }
+    }
+
     // order now button
-    void orderNow() {
+    Future<void> orderNow() async {
       if (profileIncomplete) {
         kCoolAlert(
           message: isAddressEmpty && isPhoneNumberEmpty
@@ -119,10 +171,37 @@ class _OrdersScreenState extends State<OrdersScreen> {
         );
       }
 
+      // handle payment
+      final Customer customer =
+          Customer(email: buyer.email, phoneNumber: buyer.phone);
 
+      final Flutterwave flutterwave = Flutterwave(
+        context: context,
+        publicKey: apiPublicKey!,
+        currency: 'USD',
+        redirectUrl: 'https://github.com/Atuoha/shoes_shop',
+        txRef: uuid.v1(),
+        amount: orderData.getTotal.toString(),
+        customer: customer,
+        paymentOptions: "card, payattitude, barter, bank transfer, ussd",
+        customization: Customization(
+          title: "Make Payment",
+          description: 'Make payment for the order items',
+        ),
+        isTestMode: isTestMode,
+      );
+      final ChargeResponse response = await flutterwave.charge();
+      if (response.success == true) {
+        showLoading("Payment made", Status.success);
+        submitOrderToFirebase(); // upload to firebase
 
-
-      // orderData.clearOrder();
+        orderData.clearOrder(); // remove order
+      } else {
+        showLoading(
+          'Ops! Payment was not successful',
+          Status.error,
+        );
+      }
     }
 
     return Scaffold(

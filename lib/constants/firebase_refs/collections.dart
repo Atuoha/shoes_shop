@@ -15,4 +15,7 @@ class FirebaseCollections {
 
   static final categoriesCollection =
   FirebaseFirestore.instance.collection('categories');
+
+  static final ordersCollection =
+  FirebaseFirestore.instance.collection('orders');
 }

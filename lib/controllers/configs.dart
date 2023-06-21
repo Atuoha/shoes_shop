@@ -5,6 +5,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 class Config {
   static Future<void> fetchApiKeys() async {
     String flutterwavePublicKey = '';
+    String flutterwaveEncryptKey = '';
 
     try {
       final remoteConfig = FirebaseRemoteConfig.instance;
@@ -16,6 +17,7 @@ class Config {
       );
       await remoteConfig.fetchAndActivate();
       flutterwavePublicKey = remoteConfig.getString('flutterwave_public_key');
+      flutterwaveEncryptKey = remoteConfig.getString('flutterwave_encrypt_key');
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -25,9 +27,7 @@ class Config {
     const storage = FlutterSecureStorage();
     await storage.write(
         key: 'flutterwave_public_key', value: flutterwavePublicKey);
-    String? apiPublicKey = await storage.read(key: 'flutterwave_public_key');
-    if (kDebugMode) {
-      print('PUBLIC KEY:$apiPublicKey');
-    }
+    await storage.write(
+        key: 'flutterwave_encrypt_key', value: flutterwaveEncryptKey);
   }
 }
