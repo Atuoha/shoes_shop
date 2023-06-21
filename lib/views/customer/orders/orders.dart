@@ -111,6 +111,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     // remove cart items
     void removeAllOrderItems() {
       orderData.clearOrder();
+      popOut();
     }
 
     // remove all cart items dialog
@@ -189,7 +190,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       );
       final ChargeResponse response = await flutterwave.charge();
       if (response.success == true) {
-        showLoading("Payment made", Status.success);
+        showLoading("You have successfully placed your order", Status.success);
         submitOrderToFirebase(); // upload to firebase
         removeAllOrderItems(); // remove order
       } else {
