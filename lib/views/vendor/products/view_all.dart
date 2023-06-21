@@ -68,8 +68,8 @@ class _ProductScreenState extends State<ProductScreen>
       body: TabBarView(
         controller: _tabBarController,
         children: const [
-          UnPublishedProducts(),
           PublishedProducts(),
+          UnPublishedProducts(),
         ],
       ),
     );

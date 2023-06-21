@@ -115,7 +115,7 @@ class _VendorProductDetailsScreenState extends State<VendorProductDetailsScreen>
           Bubble(
             title: isPublished ? "Unpublish Product" : ' Publish Product',
             iconColor: Colors.white,
-            bubbleColor: primaryColor,
+            bubbleColor: isPublished ? primaryColor:Colors.green,
             icon: isPublished ? Icons.cancel : Icons.check_circle,
             titleStyle: const TextStyle(
               fontSize: 16,
