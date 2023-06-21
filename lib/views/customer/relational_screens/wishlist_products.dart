@@ -36,7 +36,6 @@ class _WishListProductsState extends State<WishListProducts> {
         });
       }
     });
-    print(prodIds);
   }
 
   @override

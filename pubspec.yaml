@@ -69,6 +69,9 @@ dependencies:
   flutter_swiper_null_safety: ^1.0.2
   readmore: ^2.2.0
   flutter_easyloading: ^3.0.5
+  firebase_remote_config: ^4.2.3
+  flutter_secure_storage: ^8.0.0
+  flutterwave_standard: ^1.0.7
 
 dev_dependencies:
   flutter_test:
