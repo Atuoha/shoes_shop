@@ -74,11 +74,19 @@ class _SingleVendorCheckOutListTileState
                   ),
                   placeholder: (context, url) => ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(AssetManager.placeholderImg),
+                    child: Image.asset(
+                      AssetManager.placeholderImg,
+                      width: 120,
+                      height: 100,
+                    ),
                   ),
                   errorWidget: (context, url, error) => ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(AssetManager.placeholderImg),
+                    child: Image.asset(
+                      AssetManager.placeholderImg,
+                      width: 120,
+                      height: 100,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),

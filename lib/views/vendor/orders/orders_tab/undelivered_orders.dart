@@ -4,11 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:provider/provider.dart';
 import 'package:shoes_shop/constants/firebase_refs/collections.dart';
 import 'package:shoes_shop/models/checked_out_item.dart';
 import '../../../../constants/color.dart';
-import '../../../../providers/order.dart';
 import '../../../../resources/assets_manager.dart';
 import '../../../../resources/font_manager.dart';
 import '../../../../resources/styles_manager.dart';
@@ -25,8 +23,6 @@ class UnDeliveredProducts extends StatefulWidget {
 
 class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
   var userId = FirebaseAuth.instance.currentUser!.uid;
-
-
 
   // toggle publish dialog
   void togglePublishProductDialog(CheckedOutItem checkedOutItem) {
@@ -97,7 +93,6 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
   }
 
   Future<void> deliverAll() async {
-    // Todo: Implement deliver all
     FirebaseCollections.ordersCollection
         .where('isDelivered', isEqualTo: false)
         .get()
@@ -114,7 +109,6 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
 
   @override
   Widget build(BuildContext context) {
-    final orderData = Provider.of<OrderProvider>(context);
 
     Stream<QuerySnapshot> ordersStream = FirebaseCollections.ordersCollection
         .where('vendorId', isEqualTo: userId)
@@ -258,10 +252,13 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
                 return const SizedBox.shrink();
               }
 
-              List<CheckedOutItem> checkOutItems = [];
+              int checkedOutList = 0;
               double totalAmount = 0.0;
 
-              // totalAmount += snapshot.data!.docs['prodPrice'];
+              checkedOutList = snapshot.data!.docs.length;
+              for (var doc in snapshot.data!.docs) {
+                totalAmount += doc['prodPrice'];
+              }
 
               return Container(
                 color: Colors.white,
@@ -287,8 +284,7 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            // '\$${orderData.totalCheckedOutAmount.toStringAsFixed(2)}',
-                            '',
+                            '\$${totalAmount.toStringAsFixed(2)}',
                             style: getMediumStyle(
                               color: accentColor,
                               fontSize: FontSize.s25,
@@ -317,8 +313,7 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
                                       color: Colors.white),
                                   const SizedBox(width: 15),
                                   Text(
-                                    // orderData.checkedOutItems.length.toString(),
-                                    '',
+                                    checkedOutList.toString(),
                                     style: getRegularStyle(
                                       color: Colors.white,
                                     ),
