@@ -8,7 +8,7 @@ import '../../../../providers/product.dart';
 import '../../../widgets/msg_snackbar.dart';
 
 class EditAttributesTab extends StatefulWidget {
-  const EditAttributesTab({Key? key,required this.product}) : super(key: key);
+  const EditAttributesTab({Key? key, required this.product}) : super(key: key);
   final Product product;
 
   @override
@@ -40,12 +40,21 @@ class _EditAttributesTabState extends State<EditAttributesTab>
     });
   }
 
+  // assign data from product
+  void assignData() {
+    setState(() {
+      brandName.text = widget.product.brandName;
+      sizes = widget.product.sizesAvailable;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     sizeAvailable.addListener(() {
       setState(() {});
     });
+    assignData();
   }
 
   @override

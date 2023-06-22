@@ -67,12 +67,15 @@ class ProductData extends ChangeNotifier {
     productData['category'] = category;
     productData['description'] = description;
     productData['scheduleDate'] = scheduleDate;
+
+    notifyListeners();
   }
 
   // update product shipping info
   updateProductShippingInfo({bool? isCharging, double? billingAmount}) {
     productData['isCharging'] = isCharging;
     productData['billingAmount'] = billingAmount;
+    notifyListeners();
   }
 
   // update product attributes info
@@ -80,11 +83,14 @@ class ProductData extends ChangeNotifier {
       {String? brandName, List<String>? sizesAvailable}) {
     productData['brandName'] = brandName;
     productData['sizesAvailable'] = sizesAvailable;
+
+    notifyListeners();
   }
 
   // update product images
   updateProductImg({List<String>? imgUrls}) {
     productData['imgUrls'] = imgUrls;
+    notifyListeners();
   }
 
   // clear product images
@@ -94,6 +100,5 @@ class ProductData extends ChangeNotifier {
   }
 
   // checking if product images is null
-  bool isProductImagesNull() =>
-      productData['imgUrls'] == null ? true : false;
+  bool isProductImagesNull() => productData['imgUrls'] == null ? true : false;
 }

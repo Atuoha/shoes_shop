@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../models/product.dart';
+import '../../../providers/product.dart';
 import '../../../resources/styles_manager.dart';
 import 'edit_prd_tab_screens/tabs_export.dart';
 
@@ -35,6 +37,9 @@ class _VendorEditProductState extends State<VendorEditProduct>
 
   @override
   Widget build(BuildContext context) {
+    final productProvider = Provider.of<ProductData>(context);
+
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -78,7 +83,7 @@ class _VendorEditProductState extends State<VendorEditProduct>
           ),
           EditShippingTab(product: widget.product),
           EditAttributesTab(product: widget.product),
-          EditImageUploadTab(product: widget.product),
+          EditImageUploadTab(product: widget.product,productProvider: productProvider,),
         ],
       ),
     );

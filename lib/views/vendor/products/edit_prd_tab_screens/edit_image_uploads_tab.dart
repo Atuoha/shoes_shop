@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -25,8 +26,11 @@ import 'package:uuid/uuid.dart';
 import '../../main_screen.dart';
 
 class EditImageUploadTab extends StatefulWidget {
-  const EditImageUploadTab({Key? key,required this.product}) : super(key: key);
+  const EditImageUploadTab(
+      {Key? key, required this.product, required this.productProvider})
+      : super(key: key);
   final Product product;
+  final ProductData productProvider;
 
   @override
   State<EditImageUploadTab> createState() => _EditImageUploadTabState();
@@ -49,6 +53,7 @@ class _EditImageUploadTabState extends State<EditImageUploadTab>
   var currentImage = 0;
   List<XFile>? productImages = [];
   bool stayOnPage = false;
+  bool editingImages = false;
 
   // get context
   get cxt => context;
@@ -98,6 +103,17 @@ class _EditImageUploadTabState extends State<EditImageUploadTab>
         (route) => false,
       );
     }
+  }
+
+  // assign data from product
+  void assignData() {
+    widget.productProvider.updateProductImg(imgUrls: widget.product.imgUrls);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    assignData();
   }
 
   @override
@@ -193,12 +209,11 @@ class _EditImageUploadTabState extends State<EditImageUploadTab>
       if (kDebugMode) {
         print(productProvider.productData);
       }
-      var id = uuid.v4();
 
-      RequestResult? result = await _productController.createProduct(
+      RequestResult? result = await _productController.editProduct(
         product: Product(
-          prodId: id,
-          vendorId: vendorId,
+          prodId: widget.product.prodId,
+          vendorId: widget.product.vendorId,
           productName: productProvider.productData['productName'],
           price: productProvider.productData['price'],
           quantity: productProvider.productData['quantity'],
@@ -210,7 +225,9 @@ class _EditImageUploadTabState extends State<EditImageUploadTab>
           brandName: productProvider.productData['brandName'],
           sizesAvailable: productProvider.productData['sizesAvailable'],
           imgUrls: productProvider.productData['imgUrls'],
-          uploadDate: DateTime.now(),
+          isFav: widget.product.isFav,
+          isApproved: widget.product.isApproved,
+          uploadDate: widget.product.uploadDate,
         ),
       );
 
@@ -246,128 +263,222 @@ class _EditImageUploadTabState extends State<EditImageUploadTab>
           : const SizedBox.shrink(),
       body: !isLoading
           ? SingleChildScrollView(
-            child: Padding(
+              child: Padding(
                 padding: const EdgeInsets.only(
                   top: 20,
                   left: 18,
                 ),
                 child: Column(
                   children: [
-                    Center(
-                      child: Stack(
-                        children: [
-                          CircleAvatar(
-                            radius: 80,
-                            backgroundColor: Colors.white,
-                            child: Center(
-                              child: productImages!.isEmpty
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(30),
-                                      child: Image.asset(
-                                        AssetManager.placeholderImg,
-                                      ),
-                                    )
-                                  // this will load imgUrl from firebase
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(30),
-                                      child: Image.file(
-                                        File(productImages![currentImage].path),
-                                      ),
-                                    ),
-                            ),
-                          ),
-
-                          // image selection trigger
-                          doneUploadingImage || uploadingImageStatus
-                              ? const SizedBox.shrink()
-                              : Positioned(
-                                  bottom: 10,
-                                  right: 10,
-                                  child: GestureDetector(
-                                    onTap: () => selectPhoto(),
-                                    child: const CircleAvatar(
-                                      backgroundColor: accentColor,
-                                      child: Icon(
-                                        Icons.photo,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                          // deleting of images trigger
-                          productImages!.isEmpty ||
-                                  doneUploadingImage ||
-                                  uploadingImageStatus
-                              ? const SizedBox.shrink()
-                              : Positioned(
-                                  bottom: 10,
-                                  left: 10,
-                                  child: GestureDetector(
-                                    onTap: () => setState(() {
-                                      productProvider.clearProductImg();
-                                      productImages = [];
-                                    }),
-                                    child: const CircleAvatar(
-                                      backgroundColor: accentColor,
-                                      child: Icon(
-                                        Icons.delete_forever,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                        ],
+                    CheckboxListTile(
+                      checkColor: Colors.white,
+                      activeColor: accentColor,
+                      side: const BorderSide(
+                        color: accentColor,
+                        width: 1,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      title: const Text('Are you updating the images?'),
+                      value: editingImages,
+                      onChanged: (value) => setState(
+                        () {
+                          editingImages = value!;
+                          productProvider.clearProductImg();
+                        },
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    if (editingImages) ...[
+                      // editing images
 
-                    // show a loading spinner while trying to fetch images from gallery
-                    fetchingImages
-                        ? const Column(
-                            children: [
-                              LoadingWidget(size: 30),
-                              SizedBox(height: 10),
-                              Text('Loading images'),
-                            ],
-                          )
-                        : const SizedBox.shrink(),
-
-                    const SizedBox(height: 10),
-
-                    productImages!.isEmpty
-                        ? const SizedBox.shrink()
-                        : SizedBox(
-                            height: 100,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: productImages!.length,
-                              itemBuilder: (context, index) => Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: GestureDetector(
-                                  onTap: () => setState(() {
-                                    currentImage = index;
-                                  }),
-                                  child: Container(
-                                    height: 60,
-                                    width: 90,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      image: DecorationImage(
-                                        image: FileImage(
-                                          File(productImages![index].path),
+                      Center(
+                        child: Stack(
+                          children: [
+                            CircleAvatar(
+                              radius: 80,
+                              backgroundColor: Colors.white,
+                              child: Center(
+                                child: productImages!.isEmpty
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(30),
+                                        child: Image.asset(
+                                          AssetManager.placeholderImg,
                                         ),
-                                        fit: BoxFit.cover,
+                                      )
+                                    // this will load imgUrl from firebase
+                                    : ClipRRect(
+                                        borderRadius: BorderRadius.circular(30),
+                                        child: Image.file(
+                                          File(productImages![currentImage]
+                                              .path),
+                                        ),
+                                      ),
+                              ),
+                            ),
+
+                            // image selection trigger
+                            doneUploadingImage || uploadingImageStatus
+                                ? const SizedBox.shrink()
+                                : Positioned(
+                                    bottom: 10,
+                                    right: 10,
+                                    child: GestureDetector(
+                                      onTap: () => selectPhoto(),
+                                      child: const CircleAvatar(
+                                        backgroundColor: accentColor,
+                                        child: Icon(
+                                          Icons.photo,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+
+                            // deleting of images trigger
+                            productImages!.isEmpty ||
+                                    doneUploadingImage ||
+                                    uploadingImageStatus
+                                ? const SizedBox.shrink()
+                                : Positioned(
+                                    bottom: 10,
+                                    left: 10,
+                                    child: GestureDetector(
+                                      onTap: () => setState(() {
+                                        productProvider.clearProductImg();
+                                        productImages = [];
+                                      }),
+                                      child: const CircleAvatar(
+                                        backgroundColor: accentColor,
+                                        child: Icon(
+                                          Icons.delete_forever,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+
+                      // show a loading spinner while trying to fetch images from gallery
+                      fetchingImages
+                          ? const Column(
+                              children: [
+                                LoadingWidget(size: 30),
+                                SizedBox(height: 10),
+                                Text('Loading images'),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
+
+                      const SizedBox(height: 10),
+
+                      productImages!.isEmpty
+                          ? const SizedBox.shrink()
+                          : SizedBox(
+                              height: 100,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: productImages!.length,
+                                itemBuilder: (context, index) => Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: GestureDetector(
+                                    onTap: () => setState(() {
+                                      currentImage = index;
+                                    }),
+                                    child: Container(
+                                      height: 60,
+                                      width: 90,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        image: DecorationImage(
+                                          image: FileImage(
+                                            File(productImages![index].path),
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
+                    ] else ...[
+                      // not editing images
+                      Center(
+                        child: Center(
+                          child: CachedNetworkImage(
+                            imageUrl: widget.product.imgUrls[currentImage],
+                            imageBuilder: (context, imageProvider) =>
+                                CircleAvatar(
+                              radius: 80,
+                              backgroundImage: imageProvider,
+                            ),
+                            placeholder: (context, url) => ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.asset(
+                                AssetManager.placeholderImg,
+                                width: 120,
+                                height: 100,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.asset(
+                                AssetManager.placeholderImg,
+                                width: 120,
+                                height: 100,
+                              ),
+                            ),
                           ),
-
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      SizedBox(
+                        height: 100,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: widget.product.imgUrls.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: GestureDetector(
+                              onTap: () => setState(() {
+                                currentImage = index;
+                              }),
+                              child: CachedNetworkImage(
+                                imageUrl: widget.product.imgUrls[index],
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  height: 60,
+                                  width: 90,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                placeholder: (context, url) => ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child:
+                                      Image.asset(AssetManager.placeholderImg),
+                                ),
+                                errorWidget: (context, url, error) => ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child:
+                                      Image.asset(AssetManager.placeholderImg),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                     const SizedBox(height: 10),
-
                     productImages!.isNotEmpty
                         ? ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -390,9 +501,7 @@ class _EditImageUploadTabState extends State<EditImageUploadTab>
                                   ),
                           )
                         : const SizedBox.shrink(),
-
                     const SizedBox(height: 10),
-
                     doneUploadingImage
                         ? CheckboxListTile(
                             checkColor: Colors.white,
@@ -416,7 +525,7 @@ class _EditImageUploadTabState extends State<EditImageUploadTab>
                   ],
                 ),
               ),
-          )
+            )
 
           // loading is true
           : const Center(

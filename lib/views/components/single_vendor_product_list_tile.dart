@@ -20,12 +20,9 @@ class SingleVendorProductListTile extends StatelessWidget {
         child: ListTile(
           leading: CachedNetworkImage(
             imageUrl: product.imgUrls[0],
-            imageBuilder: (context, imageProvider) => Hero(
-              tag: product.prodId,
-              child: CircleAvatar(
-                radius: 30,
-                backgroundImage: imageProvider,
-              ),
+            imageBuilder: (context, imageProvider) => CircleAvatar(
+              radius: 30,
+              backgroundImage: imageProvider,
             ),
             placeholder: (context, url) => const CircleAvatar(
               backgroundImage: AssetImage(

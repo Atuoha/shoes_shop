@@ -22,6 +22,21 @@ class _EditShippingTabState extends State<EditShippingTab>
   bool chargingForShipping = false;
   final TextEditingController billingAmount = TextEditingController();
 
+  // assign data from product
+  void assignData() {
+    setState(() {
+      billingAmount.text = widget.product.billingAmount.toString();
+      chargingForShipping = widget.product.isCharging;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    assignData();
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);

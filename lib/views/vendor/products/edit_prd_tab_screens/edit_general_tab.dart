@@ -45,6 +45,22 @@ class _EditGeneralTabState extends State<EditGeneralTab>
 
   bool dateSelected = false;
 
+
+  // assign data from product
+  void assignData(){
+    setState(() {
+      productName.text = widget.product.productName;
+      productPrice.text = widget.product.price.toString();
+      productDescription.text = widget.product.description;
+      productQuantity.text = widget.product.quantity.toString();
+      selectedDate = widget.product.scheduleDate;
+      dateSelected = true;
+      currentCategory = widget.product.category;
+    });
+  }
+
+
+
   // pick date
   Future pickDate() async {
     var pickedDate = await showDatePicker(
@@ -90,6 +106,7 @@ class _EditGeneralTabState extends State<EditGeneralTab>
   @override
   void initState() {
     super.initState();
+    assignData();
     fetchCategories();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -100,6 +117,7 @@ class _EditGeneralTabState extends State<EditGeneralTab>
         });
       }
     });
+
   }
 
   @override
@@ -195,6 +213,7 @@ class _EditGeneralTabState extends State<EditGeneralTab>
                       !isFetchingCategories
                           ? DropdownButtonFormField(
                               hint: const Text('Select Category'),
+                              value: widget.product.category,
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return 'Please select category';
