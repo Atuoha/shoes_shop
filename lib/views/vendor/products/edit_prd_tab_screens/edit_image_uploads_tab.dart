@@ -68,7 +68,7 @@ class _EditImageUploadTabState extends State<EditImageUploadTab>
 
     Timer(const Duration(seconds: 2), () {
       kCoolAlert(
-        message: 'Product uploaded successfully',
+        message: 'Product edited successfully',
         context: context,
         alert: CoolAlertType.success,
         action: completeSuccessAction,
