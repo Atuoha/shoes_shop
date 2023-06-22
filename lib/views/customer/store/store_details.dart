@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../../constants/color.dart';
@@ -10,6 +9,7 @@ import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
 import '../../components/single_product_grid.dart';
 import '../../widgets/item_row.dart';
+import '../../widgets/k_cached_image.dart';
 import '../../widgets/loading_widget.dart';
 import '../relational_screens/product_details.dart';
 
@@ -57,27 +57,10 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CachedNetworkImage(
-              imageUrl: widget.vendor.storeImgUrl,
-              imageBuilder: (context, imageProvider) => Container(
-                height: size.height / 2.3,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              placeholder: (context, url) => ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(AssetManager.placeholderImg),
-              ),
-              errorWidget: (context, url, error) => ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(AssetManager.placeholderImg),
-              ),
+            KCachedImage(
+              image: widget.vendor.storeImgUrl,
+              height: size.height / 2.3,
+              width: double.infinity,
             ),
             const SizedBox(height: 20),
             Padding(
@@ -174,8 +157,8 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                       return SizedBox(
                         height: size.height / 3,
                         child: GridView.builder(
-
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             mainAxisSpacing: 10,
                             crossAxisSpacing: 10,
@@ -207,7 +190,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                       );
                     },
                   ),
-                  const SizedBox(height:20),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

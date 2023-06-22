@@ -11,7 +11,7 @@ class KCachedImage extends StatelessWidget {
     this.width = 60,
     this.radius = 60,
     this.isCircleAvatar = false,
-    this.isFit =true,
+    this.isFit = true,
   });
 
   final String image;
@@ -38,7 +38,7 @@ class KCachedImage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
                   image: imageProvider,
-                  fit: isFit? BoxFit.cover: BoxFit.contain,
+                  fit: isFit ? BoxFit.cover : BoxFit.contain,
                 ),
               ),
             ),
@@ -51,7 +51,9 @@ class KCachedImage extends StatelessWidget {
             )
           : ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.asset(AssetManager.placeholderImg),
+              child: Image.asset(
+                AssetManager.placeholderImg,
+              ),
             ),
       errorWidget: (context, url, error) => isCircleAvatar
           ? CircleAvatar(
@@ -62,7 +64,9 @@ class KCachedImage extends StatelessWidget {
             )
           : ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.asset(AssetManager.placeholderImg),
+              child: Image.asset(
+                AssetManager.placeholderImg,
+              ),
             ),
     );
   }
