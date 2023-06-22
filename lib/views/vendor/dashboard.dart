@@ -25,6 +25,13 @@ class _VendorDashboardState extends State<VendorDashboard> {
   var products = 0;
 
   Future<void> fetchData() async {
+    // init because of refresh indicator
+    setState(() {
+      orders = 0;
+      cashOuts = 0.0;
+      products = 0;
+    });
+
     // orders
     FirebaseCollections.ordersCollection
         .where('vendorId', isEqualTo: vendorId)
@@ -71,64 +78,70 @@ class _VendorDashboardState extends State<VendorDashboard> {
     ];
 
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top,
-          right: 18,
-          left: 18,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: RefreshIndicator(
+        color: accentColor,
+        onRefresh: () => fetchData(),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top,
+              right: 18,
+              left: 18,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                VendorWelcomeIntro(),
-                VendorLogoutAc(),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    VendorWelcomeIntro(),
+                    VendorLogoutAc(),
+                  ],
+                ),
+                const SizedBox(height: AppSize.s10),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 6.5,
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    // crossAxisCount: 3,
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      BuildDashboardContainer(
+                        title: 'Orders',
+                        value: '$orders',
+                        color: dashBlue,
+                        icon: Icons.shopping_cart_checkout,
+                        index: 1,
+                      ),
+                      BuildDashboardContainer(
+                        title: 'Cash Outs',
+                        value: '\$$cashOuts',
+                        color: dashGrey,
+                        icon: Icons.monetization_on,
+                        index: 3,
+                      ),
+                      BuildDashboardContainer(
+                        title: 'Products',
+                        value: '$products',
+                        color: dashRed,
+                        icon: Icons.shopping_bag,
+                        index: 2,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Your store analysis',
+                  style: getMediumStyle(color: Colors.black),
+                ),
+                const SizedBox(height: 10),
+                VendorDataGraph(data: data)
               ],
             ),
-            const SizedBox(height: AppSize.s10),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 6.5,
-              child: ListView(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                // crossAxisCount: 3,
-                scrollDirection: Axis.horizontal,
-                children: [
-                  // Todo: Implement each container using StreamBuilder
-                  BuildDashboardContainer(
-                    title: 'Orders',
-                    value: '$orders',
-                    color: dashBlue,
-                    icon: Icons.shopping_cart_checkout,
-                    index: 1,
-                  ),
-                  BuildDashboardContainer(
-                    title: 'Cash Outs',
-                    value: '\$$cashOuts',
-                    color: dashGrey,
-                    icon: Icons.monetization_on,
-                    index: 3,
-                  ),
-                  BuildDashboardContainer(
-                    title: 'Products',
-                    value: '$products',
-                    color: dashRed,
-                    icon: Icons.shopping_bag,
-                    index: 2,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Your store analysis',
-              style: getMediumStyle(color: Colors.black),
-            ),
-            const SizedBox(height: 10),
-            VendorDataGraph(data: data)
-          ],
+          ),
         ),
       ),
     );
