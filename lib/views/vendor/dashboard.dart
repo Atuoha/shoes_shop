@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shoes_shop/constants/firebase_refs/collections.dart';
 import '../../constants/color.dart';
 import '../../resources/styles_manager.dart';
 import '../../resources/values_manager.dart';
@@ -8,16 +11,59 @@ import '../widgets/vendor_logout_ac.dart';
 import '../widgets/vendor_welcome_intro.dart';
 import '../../models/app_data.dart';
 
-class VendorDashboard extends StatelessWidget {
+class VendorDashboard extends StatefulWidget {
   const VendorDashboard({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    var orders = 0.0;
-    var cashOuts = 0.0;
-    var products = 0.0;
+  State<VendorDashboard> createState() => _VendorDashboardState();
+}
 
-    // Todo: auto fill with data from firebase  -- in fact I think StreamBuilder for all the data will be more awesome
+class _VendorDashboardState extends State<VendorDashboard> {
+  var vendorId = FirebaseAuth.instance.currentUser!.uid;
+  var orders = 0;
+  var cashOuts = 0.0;
+  var products = 0;
+
+  Future<void> fetchData() async {
+    // orders
+    FirebaseCollections.ordersCollection
+        .where('vendorId', isEqualTo: vendorId)
+        .get()
+        .then(
+          (QuerySnapshot data) => {
+            setState(() {
+              orders = data.docs.length;
+            }),
+            for (var doc in data.docs)
+              {
+                setState(() {
+                  cashOuts += doc['prodPrice'];
+                })
+              }
+          },
+        );
+
+    // products
+    FirebaseCollections.productsCollection
+        .where('vendorId', isEqualTo: vendorId)
+        .get()
+        .then(
+          (QuerySnapshot data) => {
+            setState(() {
+              products = data.docs.length;
+            }),
+          },
+        );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     List<AppData> data = [
       AppData('Orders', orders),
       AppData('Cash outs', cashOuts),
