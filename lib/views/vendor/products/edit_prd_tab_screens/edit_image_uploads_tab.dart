@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,6 +16,7 @@ import '../../../../models/product.dart';
 import '../../../../models/request_result.dart';
 import '../../../../providers/product.dart';
 import '../../../../resources/styles_manager.dart';
+import '../../../widgets/k_cached_image.dart';
 import '../../../widgets/kcool_alert.dart';
 import '../../../widgets/loading_widget.dart';
 import '../../../widgets/msg_snackbar.dart';
@@ -409,30 +409,15 @@ class _EditImageUploadTabState extends State<EditImageUploadTab>
                       // not editing images
                       Center(
                         child: Center(
-                          child: CachedNetworkImage(
-                            imageUrl: widget.product.imgUrls[currentImage],
-                            imageBuilder: (context, imageProvider) =>
-                                CircleAvatar(
-                              radius: 80,
-                              backgroundImage: imageProvider,
-                            ),
-                            placeholder: (context, url) => ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.asset(
-                                AssetManager.placeholderImg,
-                                width: 120,
-                                height: 100,
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.asset(
-                                AssetManager.placeholderImg,
-                                width: 120,
-                                height: 100,
-                              ),
-                            ),
+                          child:
+
+                          KCachedImage(
+                            image: widget.product.imgUrls[currentImage],
+                            radius:80,
+                            isCircleAvatar:true,
                           ),
+
+
                         ),
                       ),
                       const SizedBox(height: 15),
@@ -447,31 +432,10 @@ class _EditImageUploadTabState extends State<EditImageUploadTab>
                               onTap: () => setState(() {
                                 currentImage = index;
                               }),
-                              child: CachedNetworkImage(
-                                imageUrl: widget.product.imgUrls[index],
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  height: 60,
-                                  width: 90,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                placeholder: (context, url) => ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child:
-                                      Image.asset(AssetManager.placeholderImg),
-                                ),
-                                errorWidget: (context, url, error) => ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child:
-                                      Image.asset(AssetManager.placeholderImg),
-                                ),
+                              child: KCachedImage(
+                                image: widget.product.imgUrls[index],
+                                height: 70,
+                                width: 60,
                               ),
                             ),
                           ),

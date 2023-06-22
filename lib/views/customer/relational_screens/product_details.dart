@@ -20,6 +20,7 @@ import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
 import '../../widgets/item_row.dart';
+import '../../widgets/k_cached_image.dart';
 import '../../widgets/loading_widget.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:uuid/uuid.dart';
@@ -540,29 +541,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CachedNetworkImage(
-                                imageUrl: vendorImage,
-                                imageBuilder: (context, imageProvider) => Hero(
-                                  tag: widget.product.vendorId,
-                                  child: CircleAvatar(
-                                    radius: 35,
-                                    backgroundImage: imageProvider,
-                                  ),
-                                ),
-                                placeholder: (context, url) =>
-                                    const CircleAvatar(
-                                  radius: 35,
-                                  backgroundImage: AssetImage(
-                                    AssetManager.placeholderImg,
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    const CircleAvatar(
-                                  radius: 35,
-                                  backgroundImage: AssetImage(
-                                    AssetManager.placeholderImg,
-                                  ),
-                                ),
+                              KCachedImage(
+                                image: vendorImage,
+                                isCircleAvatar: true,
+                                radius: 35,
                               ),
                               const SizedBox(width: 15),
                               Column(
@@ -714,43 +696,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                     Stack(children: [
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(10),
-                                        child: CachedNetworkImage(
-                                          imageUrl: product.imgUrls[0],
+                                        child: KCachedImage(
+                                          image: product.imgUrls[0],
+                                          height: 160,
                                           width: 173,
-                                          imageBuilder:
-                                              (context, imageProvider) => Hero(
-                                            tag: product.prodId,
-                                            child: Container(
-                                              height: 160,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          placeholder: (context, url) =>
-                                              ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            child: Image.asset(
-                                              AssetManager.placeholderImg,
-                                              width: 173,
-                                            ),
-                                          ),
-                                          errorWidget: (context, url, error) =>
-                                              ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            child: Image.asset(
-                                              AssetManager.placeholderImg,
-                                              width: 173,
-                                            ),
-                                          ),
                                         ),
                                       ),
                                       Positioned(

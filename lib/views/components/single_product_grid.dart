@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -6,9 +5,10 @@ import 'package:uuid/uuid.dart';
 import '../../models/cart.dart';
 import '../../models/product.dart';
 import '../../providers/cart.dart';
-import '../../resources/assets_manager.dart';
+
 import '../../resources/font_manager.dart';
 import '../../resources/styles_manager.dart';
+import '../widgets/k_cached_image.dart';
 
 class SingleProductGridItem extends StatelessWidget {
   const SingleProductGridItem({
@@ -48,27 +48,10 @@ class SingleProductGridItem extends StatelessWidget {
 
     return Stack(
       children: [
-        CachedNetworkImage(
-          imageUrl: product.imgUrls[1],
-          imageBuilder: (context, imageProvider) => Container(
-            height: 205,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          placeholder: (context, url) => ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(AssetManager.placeholderImg),
-          ),
-          errorWidget: (context, url, error) => ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(AssetManager.placeholderImg),
-          ),
+        KCachedImage(
+          image: product.imgUrls[1],
+          height: 205,
+          width: double.infinity,
         ),
         Positioned(
           bottom: 3,

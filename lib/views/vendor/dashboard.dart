@@ -46,7 +46,7 @@ class _VendorDashboardState extends State<VendorDashboard> {
             for (var doc in data.docs)
               {
                 setState(() {
-                  cashOuts += doc['prodPrice'];
+                  cashOuts += doc['prodPrice'] * doc['prodQuantity'];
                 })
               }
           },

@@ -270,7 +270,7 @@ class _DeliveredProductsState extends State<DeliveredProducts> {
 
           checkedOutList = snapshot.data!.docs.length;
           for (var doc in snapshot.data!.docs) {
-            totalAmount += doc['prodPrice'];
+            totalAmount += doc['prodPrice'] * doc['prodQuantity'];
           }
 
           return Container(

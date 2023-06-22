@@ -268,7 +268,7 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
 
           checkedOutList = snapshot.data!.docs.length;
           for (var doc in snapshot.data!.docs) {
-            totalAmount += doc['prodPrice'];
+            totalAmount += doc['prodPrice'] *doc['prodQuantity'];
           }
 
           return Container(

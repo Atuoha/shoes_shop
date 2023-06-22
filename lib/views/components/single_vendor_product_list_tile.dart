@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shoes_shop/views/widgets/k_cached_image.dart';
 
 import '../../models/product.dart';
-import '../../resources/assets_manager.dart';
+
 
 class SingleVendorProductListTile extends StatelessWidget {
   const SingleVendorProductListTile({
@@ -18,23 +18,10 @@ class SingleVendorProductListTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListTile(
-          leading: CachedNetworkImage(
-            imageUrl: product.imgUrls[0],
-            imageBuilder: (context, imageProvider) => CircleAvatar(
-              radius: 30,
-              backgroundImage: imageProvider,
-            ),
-            placeholder: (context, url) => const CircleAvatar(
-              backgroundImage: AssetImage(
-                AssetManager.placeholderImg,
-              ),
-            ),
-            errorWidget: (context, url, error) =>
-            const CircleAvatar(
-              backgroundImage: AssetImage(
-                AssetManager.placeholderImg,
-              ),
-            ),
+          leading: KCachedImage(
+            image: product.imgUrls[0],
+            isCircleAvatar: true,
+            radius: 30,
           ),
           title: Text(product.productName),
           subtitle: Row(

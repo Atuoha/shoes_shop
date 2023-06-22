@@ -1,15 +1,14 @@
 import 'dart:math';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoes_shop/providers/order.dart';
 import '../../constants/enums/yes_no.dart';
 import '../../models/order.dart';
-import '../../resources/assets_manager.dart';
 import '../../resources/font_manager.dart';
 import '../../resources/styles_manager.dart';
 import 'package:intl/intl.dart';
 
+import '../widgets/k_cached_image.dart';
 import '../widgets/text_action.dart';
 
 class SingleOrderItem extends StatefulWidget {
@@ -120,26 +119,13 @@ class _SingleOrderItemState extends State<SingleOrderItem> {
                   child: ListView.builder(
                     itemCount: widget.orders.products.length,
                     itemBuilder: (context, index) => ListTile(
-                      leading: CachedNetworkImage(
-                        imageUrl: widget.orders.products[index].prodImg,
-                        imageBuilder: (context, imageProvider) => Hero(
-                          tag: widget.orders.products[index].prodId,
-                          child: CircleAvatar(
-                            backgroundImage: imageProvider,
-                          ),
-                        ),
-                        placeholder: (context, url) => const CircleAvatar(
-                          backgroundImage: AssetImage(
-                            AssetManager.placeholderImg,
-                          ),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const CircleAvatar(
-                          backgroundImage: AssetImage(
-                            AssetManager.placeholderImg,
-                          ),
-                        ),
+                      leading:
+                      KCachedImage(
+                        image: widget.orders.products[index].prodImg,
+                        isCircleAvatar:true,
+                        radius:40,
                       ),
+
                       title: Text(
                         widget.orders.products[index].prodName,
                       ),

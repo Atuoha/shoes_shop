@@ -1,10 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../helpers/word_reverse.dart';
 import '../../models/vendor.dart';
-import '../../resources/assets_manager.dart';
 import '../../resources/font_manager.dart';
 import '../../resources/styles_manager.dart';
+import '../widgets/k_cached_image.dart';
 
 class SingleStoreGridItem extends StatelessWidget {
   const SingleStoreGridItem({
@@ -20,28 +19,12 @@ class SingleStoreGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        CachedNetworkImage(
-          imageUrl: vendor.storeImgUrl,
-          imageBuilder: (context, imageProvider) => Container(
-            height: 205,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          placeholder: (context, url) => ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(AssetManager.placeholderImg),
-          ),
-          errorWidget: (context, url, error) => ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(AssetManager.placeholderImg),
-          ),
+        KCachedImage(
+          image:  vendor.storeImgUrl,
+          height:205,
+          width:double.infinity,
         ),
+
         Positioned(
           bottom: 3,
           left: 3,

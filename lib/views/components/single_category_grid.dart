@@ -1,9 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../models/category.dart';
-import '../../resources/assets_manager.dart';
 import '../../resources/font_manager.dart';
 import '../../resources/styles_manager.dart';
+import '../widgets/k_cached_image.dart';
 
 class SingleCategoryGridItem extends StatelessWidget {
   const SingleCategoryGridItem({
@@ -19,30 +18,14 @@ class SingleCategoryGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        CachedNetworkImage(
-          imageUrl: category.imgUrl,
-          imageBuilder: (context, imageProvider) => Hero(
-            tag: category.id,
-            child: Container(
-              height: 205,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: imageProvider,
-                ),
-              ),
-            ),
-          ),
-          placeholder: (context, url) => ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(AssetManager.placeholderImg),
-          ),
-          errorWidget: (context, url, error) => ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(AssetManager.placeholderImg),
-          ),
+        KCachedImage(
+          image:  category.imgUrl,
+          height:205,
+          width:double.infinity,
+          isFit:false
         ),
+
+
         Positioned(
           bottom: 3,
           left: 3,

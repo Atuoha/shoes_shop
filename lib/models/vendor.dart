@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Vendor {
   final String storeId;
   final String storeName;
@@ -31,6 +33,11 @@ class Vendor {
     this.isStoreRegistered = false,
   });
 
+
+
+
+
+
   factory Vendor.initial() => Vendor(
         storeId: '',
         storeName: '',
@@ -63,6 +70,25 @@ class Vendor {
           isApproved: data['isApproved'],
           isStoreRegistered: data['isStoreRegistered'],
         );
+
+
+  Vendor.fromDoc(DocumentSnapshot data)
+      : this(
+    storeId: data['storeId'],
+    storeName: data['storeName'],
+    email: data['email'],
+    phone: data['phone'],
+    taxNumber: data['taxNumber'],
+    storeNumber: data['storeNumber'],
+    country: data['country'],
+    state: data['state'],
+    city: data['city'],
+    address: data['address'],
+    authType: data['authType'],
+    storeImgUrl: data['storeImgUrl'],
+    isApproved: data['isApproved'],
+    isStoreRegistered: data['isStoreRegistered'],
+  );
 
   Map<String, dynamic> toJson() => {
         'storeId': storeId,

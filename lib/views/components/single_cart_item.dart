@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../constants/color.dart';
@@ -7,10 +6,10 @@ import '../../constants/enums/status.dart';
 import '../../models/cart.dart';
 import '../../models/product.dart';
 import '../../providers/cart.dart';
-import '../../resources/assets_manager.dart';
 import '../../resources/font_manager.dart';
 import '../../resources/styles_manager.dart';
 import '../customer/relational_screens/product_details.dart';
+import '../widgets/k_cached_image.dart';
 import '../widgets/msg_snackbar.dart';
 import '../widgets/text_action.dart';
 
@@ -152,25 +151,16 @@ class _SingleCartItemState extends State<SingleCartItem> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListTile(
-              leading: CachedNetworkImage(
-                imageUrl: widget.item.prodImg,
-                imageBuilder: (context, imageProvider) => Hero(
-                  tag: product.prodId,
-                  child: CircleAvatar(
-                    backgroundImage: imageProvider,
-                  ),
-                ),
-                placeholder: (context, url) => const CircleAvatar(
-                  backgroundImage: AssetImage(
-                    AssetManager.placeholderImg,
-                  ),
-                ),
-                errorWidget: (context, url, error) => const CircleAvatar(
-                  backgroundImage: AssetImage(
-                    AssetManager.placeholderImg,
-                  ),
-                ),
+              leading:
+
+              KCachedImage(
+                image: widget.item.prodImg,
+                isCircleAvatar:true,
+                radius:25,
               ),
+
+
+
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

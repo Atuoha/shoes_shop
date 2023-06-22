@@ -12,6 +12,8 @@ import '../../resources/font_manager.dart';
 import '../widgets/item_row.dart';
 import 'package:intl/intl.dart' as intl;
 
+import '../widgets/k_cached_image.dart';
+
 class SingleVendorCheckOutListTile extends StatefulWidget {
   const SingleVendorCheckOutListTile({
     super.key,
@@ -59,36 +61,12 @@ class _SingleVendorCheckOutListTileState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CachedNetworkImage(
-                  imageUrl: widget.checkoutItem.prodImg,
-                  imageBuilder: (context, imageProvider) => Container(
-                    height: 100,
-                    width: 120,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: imageProvider,
-                      ),
-                    ),
-                  ),
-                  placeholder: (context, url) => ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      AssetManager.placeholderImg,
-                      width: 120,
-                      height: 100,
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      AssetManager.placeholderImg,
-                      width: 120,
-                      height: 100,
-                    ),
-                  ),
+                KCachedImage(
+                  image: widget.checkoutItem.prodImg,
+                  height:100,
+                  width:120,
                 ),
+
                 const SizedBox(height: 10),
                 Text(
                   widget.checkoutItem.prodName,
