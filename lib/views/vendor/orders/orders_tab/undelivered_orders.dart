@@ -24,7 +24,7 @@ class UnDeliveredProducts extends StatefulWidget {
 class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
   var userId = FirebaseAuth.instance.currentUser!.uid;
 
-  // toggle publish dialog
+  // toggle delivery dialog
   void togglePublishProductDialog(CheckedOutItem checkedOutItem) {
     showDialog(
       context: context,
@@ -47,8 +47,8 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            onPressed: () => togglePublication(
-                checkedOutItem.prodId, checkedOutItem.isDelivered),
+            onPressed: () => toggleDelivery(
+                checkedOutItem.orderId, checkedOutItem.isDelivered),
             child: const Text('Yes'),
           ),
           ElevatedButton(
@@ -66,9 +66,9 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
     );
   }
 
-  // togglePublication
-  Future<void> togglePublication(String prodId, bool isDelivered) async {
-    await FirebaseCollections.productsCollection.doc(prodId).update({
+  // toggleDelivery
+  Future<void> toggleDelivery(String orderId, bool isDelivered) async {
+    await FirebaseCollections.ordersCollection.doc(orderId).update({
       'isDelivered': !isDelivered,
     }).whenComplete(
       () => Navigator.of(context).pop(),
@@ -92,6 +92,17 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
     await FirebaseCollections.ordersCollection.doc(prodId).delete();
   }
 
+  // deliver all items dialog
+  void deliverAllProductsDialog() {
+    areYouSureDialog(
+      title: 'Deliver all product',
+      content: 'Are you sure you want to deliver all items?',
+      context: context,
+      action: deliverAll,
+    );
+  }
+
+  // deliver all items
   Future<void> deliverAll() async {
     FirebaseCollections.ordersCollection
         .where('isDelivered', isEqualTo: false)
@@ -104,12 +115,13 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
           });
         }
       },
+    ).whenComplete(
+          () => Navigator.of(context).pop(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-
     Stream<QuerySnapshot> ordersStream = FirebaseCollections.ordersCollection
         .where('vendorId', isEqualTo: userId)
         .where('isDelivered', isEqualTo: false)
@@ -323,7 +335,7 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () => deliverAll(),
+                            onTap: () => deliverAllProductsDialog(),
                             child: Container(
                               height: 50,
                               width: 120,

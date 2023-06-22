@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +23,7 @@ class DeliveredProducts extends StatefulWidget {
 class _DeliveredProductsState extends State<DeliveredProducts> {
   var userId = FirebaseAuth.instance.currentUser!.uid;
 
-  // toggle publish dialog
+  // toggle delivery dialog
   void togglePublishProductDialog(CheckedOutItem checkedOutItem) {
     showDialog(
       context: context,
@@ -47,8 +46,8 @@ class _DeliveredProductsState extends State<DeliveredProducts> {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            onPressed: () => togglePublication(
-                checkedOutItem.prodId, checkedOutItem.isDelivered),
+            onPressed: () => toggleDelivery(
+                checkedOutItem.orderId, checkedOutItem.isDelivered),
             child: const Text('Yes'),
           ),
           ElevatedButton(
@@ -66,9 +65,9 @@ class _DeliveredProductsState extends State<DeliveredProducts> {
     );
   }
 
-  // togglePublication
-  Future<void> togglePublication(String prodId, bool isDelivered) async {
-    await FirebaseCollections.productsCollection.doc(prodId).update({
+  // toggleDelivery
+  Future<void> toggleDelivery(String orderId, bool isDelivered) async {
+    await FirebaseCollections.ordersCollection.doc(orderId).update({
       'isDelivered': !isDelivered,
     }).whenComplete(
       () => Navigator.of(context).pop(),
@@ -92,7 +91,18 @@ class _DeliveredProductsState extends State<DeliveredProducts> {
     await FirebaseCollections.ordersCollection.doc(prodId).delete();
   }
 
-  Future<void> canceldelivery() async {
+  // deliver all items dialog
+  void deliverAllProductsDialog() {
+    areYouSureDialog(
+      title: 'Cancel all delivery of products',
+      content: 'Are you sure you want to cancel delivery of all items?',
+      context: context,
+      action: cancelAllDeliveries,
+    );
+  }
+
+  // cancel all deliveries
+  Future<void> cancelAllDeliveries() async {
     FirebaseCollections.ordersCollection
         .where('isDelivered', isEqualTo: true)
         .get()
@@ -104,6 +114,8 @@ class _DeliveredProductsState extends State<DeliveredProducts> {
           });
         }
       },
+    ).whenComplete(
+      () => Navigator.of(context).pop(),
     );
   }
 
@@ -207,8 +219,9 @@ class _DeliveredProductsState extends State<DeliveredProducts> {
                         icon: checkedOutItem.isDelivered
                             ? Icons.cancel
                             : Icons.check_circle,
-                        label:
-                            checkedOutItem.isDelivered ? 'Cancel' : 'Deliver',
+                        label: checkedOutItem.isDelivered
+                            ? 'Cancel Delivery'
+                            : 'Deliver',
                       ),
                     ],
                   ),
@@ -322,7 +335,7 @@ class _DeliveredProductsState extends State<DeliveredProducts> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () => canceldelivery(),
+                            onTap: () => deliverAllProductsDialog(),
                             child: Container(
                               height: 50,
                               width: 120,
