@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shoes_shop/constants/firebase_refs/collections.dart';
+import 'package:shoes_shop/views/vendor/products/edit.dart';
 import '../../../../models/product.dart';
 import '../../../../resources/assets_manager.dart';
 import '../../../../resources/font_manager.dart';
@@ -75,7 +76,11 @@ class _PublishedProductsState extends State<PublishedProducts> {
 
   // edit product
   void navigateToEditingProduct(Product product) {
-    // Todo: Implement
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => VendorEditProduct(product: product),
+      ),
+    );
   }
 
   // delete product dialog

@@ -14,6 +14,8 @@ import '../../../resources/styles_manager.dart';
 import '../../widgets/item_row.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'edit.dart';
+
 class VendorProductDetailsScreen extends StatefulWidget {
   const VendorProductDetailsScreen({super.key, required this.product});
 
@@ -74,7 +76,11 @@ class _VendorProductDetailsScreenState extends State<VendorProductDetailsScreen>
 
   // edit product
   void navigateToEditProduct() {
-    // Todo: implement edit product
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => VendorEditProduct(product: widget.product),
+      ),
+    );
   }
 
   // toggle publication

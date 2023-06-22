@@ -1,7 +1,6 @@
 import 'package:shoes_shop/views/auth/vendor/forgot_password.dart';
 import 'package:shoes_shop/views/auth/vendor/vendor_auth.dart';
 import 'package:shoes_shop/views/customer/orders/orders.dart';
-import 'package:shoes_shop/views/customer/store/store_details.dart';
 
 import '../views/auth/account_type.dart';
 import '../views/auth/customer/customer_auth.dart';
@@ -44,5 +43,5 @@ final routes = {
   RouteManager.vendorMainScreen: (context) => const VendorMainScreen(index: 0),
   RouteManager.vendorEntryScreen: (context) => const VendorEntryScreen(),
   RouteManager.vendorForgotPass: (context) => const VendorForgotPassword(),
-  RouteManager.vendorCreatePost: (context) => const VendorCreatePost(),
+  RouteManager.vendorCreatePost: (context) => const VendorCreateProduct(),
 };

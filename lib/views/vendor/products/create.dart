@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import '../../../resources/styles_manager.dart';
 import 'create_prd_tab_screens/tabs_export.dart';
 
 import '../../../constants/color.dart';
 import '../main_screen.dart';
 
-class VendorCreatePost extends StatefulWidget {
-  const VendorCreatePost({Key? key}) : super(key: key);
+class VendorCreateProduct extends StatefulWidget {
+  const VendorCreateProduct({Key? key}) : super(key: key);
 
   @override
-  State<VendorCreatePost> createState() => _VendorCreatePostState();
+  State<VendorCreateProduct> createState() => _VendorCreateProductState();
 }
 
-class _VendorCreatePostState extends State<VendorCreatePost>
+class _VendorCreateProductState extends State<VendorCreateProduct>
     with SingleTickerProviderStateMixin {
   TabController? _tabBarController;
 
@@ -35,6 +36,12 @@ class _VendorCreatePostState extends State<VendorCreatePost>
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        title: Text(
+          'Create a product',
+          style: getRegularStyle(
+            color: Colors.white,
+          ),
+        ),
         leading: Builder(builder: (context) {
           return IconButton(
             onPressed: () => Navigator.of(context).push(

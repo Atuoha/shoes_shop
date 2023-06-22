@@ -11,6 +11,7 @@ import '../../../../resources/styles_manager.dart';
 import '../../../components/single_vendor_product_list_tile.dart';
 import '../../../widgets/are_you_sure_dialog.dart';
 import '../../../widgets/loading_widget.dart';
+import '../edit.dart';
 import '../single_product.dart';
 
 class UnPublishedProducts extends StatefulWidget {
@@ -75,7 +76,11 @@ class _UnPublishedProductsState extends State<UnPublishedProducts> {
 
   // edit product
   void navigateToEditingProduct(Product product) {
-    // Todo: Implement
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => VendorEditProduct(product: product),
+      ),
+    );
   }
 
   // delete product dialog

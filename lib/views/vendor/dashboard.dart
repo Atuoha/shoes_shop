@@ -41,6 +41,8 @@ class _VendorDashboardState extends State<VendorDashboard> {
             setState(() {
               orders = data.docs.length;
             }),
+
+            // checkouts
             for (var doc in data.docs)
               {
                 setState(() {

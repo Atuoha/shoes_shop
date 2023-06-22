@@ -104,7 +104,7 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
 
   // deliver all items
   Future<void> deliverAll() async {
-    FirebaseCollections.ordersCollection
+    await FirebaseCollections.ordersCollection
         .where('isDelivered', isEqualTo: false)
         .get()
         .then(
