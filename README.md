@@ -21,6 +21,7 @@ It is controlled by a shop web admin currently being built with Flutter also whi
 
 Both are built using Modern UI/UX and MVC architecture
 
+- [Use this to get testing cards for payments](https://developer.flutterwave.com/docs/integration-guides/testing-helpers)
 
 Color: 
 primary: #DC1D25

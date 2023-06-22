@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +69,7 @@ class _UnPublishedProductsState extends State<UnPublishedProducts> {
     await FirebaseCollections.productsCollection.doc(prodId).update({
       'isApproved': !isApproved,
     }).whenComplete(
-          () => Navigator.of(context).pop(),
+      () => Navigator.of(context).pop(),
     );
   }
 
@@ -115,9 +114,9 @@ class _UnPublishedProductsState extends State<UnPublishedProducts> {
       body: StreamBuilder<QuerySnapshot>(
         stream: productsStream,
         builder: (
-            BuildContext context,
-            AsyncSnapshot<QuerySnapshot> snapshot,
-            ) {
+          BuildContext context,
+          AsyncSnapshot<QuerySnapshot> snapshot,
+        ) {
           if (snapshot.hasError) {
             return Center(
               child: Column(
@@ -173,24 +172,7 @@ class _UnPublishedProductsState extends State<UnPublishedProducts> {
             itemBuilder: (context, index) {
               final item = snapshot.data!.docs[index];
 
-              Product product = Product(
-                prodId: item['prodId'],
-                vendorId: item['vendorId'],
-                productName: item['productName'],
-                price: double.parse(item['price'].toString()),
-                quantity: item['quantity'],
-                category: item['category'],
-                description: item['description'],
-                scheduleDate: item['scheduleDate'].toDate(),
-                isCharging: item['isCharging'],
-                billingAmount: item['billingAmount'],
-                brandName: item['brandName'],
-                sizesAvailable: item['sizesAvailable'].cast<String>(),
-                imgUrls: item['imgUrls'].cast<String>(),
-                uploadDate: item['uploadDate'].toDate(),
-                isApproved: item['isApproved'],
-                isFav: item['isFav'],
-              );
+              Product product = Product.fromJson(item);
 
               return InkWell(
                 onTap: () => Navigator.of(context).push(
@@ -260,4 +242,3 @@ class _UnPublishedProductsState extends State<UnPublishedProducts> {
     );
   }
 }
-

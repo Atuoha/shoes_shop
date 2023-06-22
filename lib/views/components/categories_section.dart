@@ -36,7 +36,7 @@ class _CategorySectionState extends State<CategorySection> {
     Size size = MediaQuery.sizeOf(context);
 
     Stream<QuerySnapshot> streamCategory =
-       FirebaseCollections.categoriesCollection.snapshots();
+        FirebaseCollections.categoriesCollection.snapshots();
 
     return SizedBox(
       height: size.height / 8,
@@ -95,13 +95,7 @@ class _CategorySectionState extends State<CategorySection> {
               title: '',
               imgUrl: AssetManager.allNetworkImage,
             ),
-            ...snapshot.data!.docs.map(
-              (item) => Category(
-                id: item['category'],
-                title: item['category'],
-                imgUrl: item['img_url'],
-              ),
-            )
+            ...snapshot.data!.docs.map((item) => Category.fromJson(item))
           ];
 
           return ListView.builder(

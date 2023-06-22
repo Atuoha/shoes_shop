@@ -691,24 +691,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                         final item = snapshot.data!.docs[index];
 
                         // modeling the item
-                        Product product = Product(
-                          prodId: item['prodId'],
-                          vendorId: item['vendorId'],
-                          productName: item['productName'],
-                          price: double.parse(item['price'].toString()),
-                          quantity: item['quantity'],
-                          category: item['category'],
-                          description: item['description'],
-                          scheduleDate: item['scheduleDate'].toDate(),
-                          isCharging: item['isCharging'],
-                          billingAmount: item['billingAmount'],
-                          brandName: item['brandName'],
-                          sizesAvailable: item['sizesAvailable'].cast<String>(),
-                          imgUrls: item['imgUrls'].cast<String>(),
-                          uploadDate: item['uploadDate'].toDate(),
-                          isApproved: item['isApproved'],
-                          isFav: item['isFav'],
-                        );
+                        Product product = Product.fromJson(item);
+
                         return Padding(
                           padding: const EdgeInsets.only(right: 10.0),
                           child: GestureDetector(

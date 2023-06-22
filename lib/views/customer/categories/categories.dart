@@ -90,11 +90,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             itemBuilder: (context, index) {
               final item = snapshot.data!.docs[index];
 
-              Category category = Category(
-                id: item['category'],
-                title: item['category'],
-                imgUrl: item['img_url'],
-              );
+              Category category = Category.fromJson(item);
 
               return InkWell(
                 onTap: () => Navigator.of(context).push(

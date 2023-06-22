@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Buyer {
   final String customerId;
   final String fullname;
@@ -16,11 +18,21 @@ class Buyer {
   });
 
   factory Buyer.initial() => Buyer(
-    customerId: '',
+        customerId: '',
         fullname: '',
         email: '',
         image: '',
         phone: '',
         address: '',
       );
+
+  Buyer.fromJson(DocumentSnapshot data)
+      : this(
+          customerId: data['customerId'],
+          fullname: data['fullname'],
+          image: data['image'],
+          email: data['email'],
+          phone: data['phone'],
+          address: data['address'],
+        );
 }

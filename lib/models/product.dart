@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Product {
   final String prodId;
   final String vendorId;
@@ -51,4 +53,24 @@ class Product {
         imgUrls: [],
         uploadDate: DateTime.now(),
       );
+
+  Product.fromJson(QueryDocumentSnapshot item)
+      : this(
+          prodId: item['prodId'],
+          vendorId: item['vendorId'],
+          productName: item['productName'],
+          price: double.parse(item['price'].toString()),
+          quantity: item['quantity'],
+          category: item['category'],
+          description: item['description'],
+          scheduleDate: item['scheduleDate'].toDate(),
+          isCharging: item['isCharging'],
+          billingAmount: item['billingAmount'],
+          brandName: item['brandName'],
+          sizesAvailable: item['sizesAvailable'].cast<String>(),
+          imgUrls: item['imgUrls'].cast<String>(),
+          uploadDate: item['uploadDate'].toDate(),
+          isApproved: item['isApproved'],
+          isFav: item['isFav'],
+        );
 }

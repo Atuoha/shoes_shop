@@ -50,14 +50,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
         .get()
         .then((DocumentSnapshot data) {
       setState(() {
-        buyer = Buyer(
-          customerId: data['customerId'],
-          fullname: data['fullname'],
-          image: data['image'],
-          email: data['email'],
-          phone: data['phone'],
-          address: data['address'],
-        );
+        buyer = Buyer.fromJson(data);
       });
 
       if (data['phone'].toString().isEmpty ||
@@ -141,10 +134,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
           FirebaseCollections.ordersCollection.doc(id).set({
             'orderId': id,
             'vendorId': item.vendorId,
+            'customerId':buyer.customerId,
             'prodId': item.prodId,
             'prodName': item.prodName,
             'prodImg': item.prodImg,
-            'prodSize': item.price,
+            'prodSize': item.prodSize,
+            'prodPrice':item.price,
             'prodQuantity': item.quantity,
             'date': item.date,
             'isDelivered': false,
