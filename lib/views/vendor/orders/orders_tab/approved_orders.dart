@@ -48,8 +48,8 @@ class _ApprovedOrdersState extends State<ApprovedOrders> {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            onPressed: () => toggleDelivery(
-                checkedOutItem.orderId, checkedOutItem.isDelivered),
+            onPressed: () => toggleApproval(
+                checkedOutItem.orderId, checkedOutItem.isApproved),
             child: const Text('Yes'),
           ),
           ElevatedButton(
@@ -68,7 +68,7 @@ class _ApprovedOrdersState extends State<ApprovedOrders> {
   }
 
   // toggleDelivery
-  Future<void> toggleDelivery(String orderId, bool isApproved) async {
+  Future<void> toggleApproval(String orderId, bool isApproved) async {
     await FirebaseCollections.ordersCollection.doc(orderId).update({
       'isApproved': !isApproved,
     }).whenComplete(
@@ -107,6 +107,7 @@ class _ApprovedOrdersState extends State<ApprovedOrders> {
   Future<void> cancelAllApprovals() async {
     await FirebaseCollections.ordersCollection
         .where('isApproved', isEqualTo: true)
+        .where('isDelivered', isEqualTo: false)
         .get()
         .then(
       (QuerySnapshot data) {
@@ -127,6 +128,7 @@ class _ApprovedOrdersState extends State<ApprovedOrders> {
     Stream<QuerySnapshot> ordersStream = FirebaseCollections.ordersCollection
         .where('vendorId', isEqualTo: userId)
         .where('isApproved', isEqualTo: true)
+        .where('isDelivered', isEqualTo: false)
         .snapshots();
 
     return Scaffold(

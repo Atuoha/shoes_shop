@@ -18,7 +18,7 @@ class _OrdersScreenState extends State<OrdersScreen>
   void initState() {
     super.initState();
     _tabBarController = TabController(
-      length: 2,
+      length: 4,
       vsync: this,
     );
   }
@@ -45,10 +45,10 @@ class _OrdersScreenState extends State<OrdersScreen>
           controller: _tabBarController,
           indicatorColor: accentColor,
           tabs: const [
-            Tab(child: Text('Approved Orders')),
-            Tab(child: Text('Unapproved Orders')),
-            Tab(child: Text('Undelivered Orders')),
-            Tab(child: Text('Delivered Orders')),
+            Tab(child: Text('Approved')),
+            Tab(child: Text('Unapproved')),
+            Tab(child: Text('Undelivered')),
+            Tab(child: Text('Delivered')),
           ],
         ),
       ),

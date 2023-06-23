@@ -48,8 +48,8 @@ class _UnApprovedOrdersState extends State<UnApprovedOrders> {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            onPressed: () => toggleDelivery(
-                checkedOutItem.orderId, checkedOutItem.isDelivered),
+            onPressed: () => toggleApproval(
+                checkedOutItem.orderId, checkedOutItem.isApproved),
             child: const Text('Yes'),
           ),
           ElevatedButton(
@@ -68,7 +68,7 @@ class _UnApprovedOrdersState extends State<UnApprovedOrders> {
   }
 
   // toggleDelivery
-  Future<void> toggleDelivery(String orderId, bool isApproved) async {
+  Future<void> toggleApproval(String orderId, bool isApproved) async {
     await FirebaseCollections.ordersCollection.doc(orderId).update({
       'isApproved': !isApproved,
     }).whenComplete(
@@ -126,7 +126,7 @@ class _UnApprovedOrdersState extends State<UnApprovedOrders> {
   Widget build(BuildContext context) {
     Stream<QuerySnapshot> ordersStream = FirebaseCollections.ordersCollection
         .where('vendorId', isEqualTo: userId)
-        .where('isApproved', isEqualTo: true)
+        .where('isApproved', isEqualTo: false)
         .snapshots();
 
     return Scaffold(
@@ -175,7 +175,7 @@ class _UnApprovedOrdersState extends State<UnApprovedOrders> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text('Approved Order list is empty'),
+                  const Text('UnApproved Order list is empty'),
                 ],
               ),
             );

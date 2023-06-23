@@ -190,7 +190,12 @@ class _UnDeliveredOrdersState extends State<UnDeliveredOrders> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text('Undelivered Order list is empty'),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Undelivered Order list is empty. Approve orders so they can appear here',
+                    ),
+                  ),
                 ],
               ),
             );
