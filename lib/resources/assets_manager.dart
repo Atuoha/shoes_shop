@@ -30,6 +30,8 @@ class AssetManager{
   static const String allImage = "$imagePath/all.jpg";
   static const String allNetworkImage = 'https://icon-library.com/images/show-all-icon/show-all-icon-6.jpg';
 
+  static const String avatarPlaceholderUrl = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png';
+
   static const String emptyImg = "$imagePath/empty-img.jpg";
   static const String placeholderImg = "$imagePath/placeholder-img.jpg";
 

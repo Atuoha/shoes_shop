@@ -41,3 +41,5 @@ var dashTeal = Colors.teal.withOpacity(0.6);
 
 var dashBrown = Colors.brown.withOpacity(0.6);
 var dashPink =  Colors.pinkAccent.withOpacity(0.6);
+
+var dashLime =  Colors.lime.withOpacity(0.6);

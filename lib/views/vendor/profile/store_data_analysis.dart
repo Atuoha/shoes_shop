@@ -22,8 +22,11 @@ class _StoreDataAnalysisState extends State<StoreDataAnalysis> {
   var products = 0;
   var undeliveredOrders = 0;
   var deliveredOrders = 0;
+  var unApprovedOrders = 0;
+  var approvedOrders = 0;
   var approvedProducts = 0;
   var unapprovedProducts = 0;
+
   var earnings = 0.0;
 
   Future<void> fetchData() async {
@@ -37,6 +40,8 @@ class _StoreDataAnalysisState extends State<StoreDataAnalysis> {
       approvedProducts = 0;
       unapprovedProducts = 0;
       earnings = 0.0;
+      unApprovedOrders = 0;
+      approvedOrders = 0;
     });
 
     // orders
@@ -73,6 +78,21 @@ class _StoreDataAnalysisState extends State<StoreDataAnalysis> {
                   {
                     setState(() {
                       undeliveredOrders += 1;
+                    })
+                  },
+                //
+
+                // handling unapproved and unApproved orders
+                if (doc['isApproved'])
+                  {
+                    setState(() {
+                      approvedOrders += 1;
+                    })
+                  }
+                else
+                  {
+                    setState(() {
+                      unApprovedOrders += 1;
                     })
                   }
                 //
@@ -126,6 +146,12 @@ class _StoreDataAnalysisState extends State<StoreDataAnalysis> {
         number: orders,
         color: dashBlue,
         icon: Icons.shopping_cart_checkout,
+      ),
+      AppData(
+        title: 'Unapproved \nOrders',
+        number: unApprovedOrders,
+        color: dashLime,
+        icon: Icons.shopping_bag_rounded,
       ),
       AppData(
         title: 'Undelivered \nOrders',

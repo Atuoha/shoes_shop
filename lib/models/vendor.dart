@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shoes_shop/resources/assets_manager.dart';
 
 class Vendor {
   final String storeId;
@@ -45,7 +46,7 @@ class Vendor {
         country: '',
         state: '',
         city: '',
-        storeImgUrl: '',
+        storeImgUrl: AssetManager.avatarPlaceholderUrl,
         address: '',
         authType: '',
       );
