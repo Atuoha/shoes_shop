@@ -124,6 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // cash out
   Future<void> cashOut() async {
     var id = const Uuid().v4();
+    double totalAmount = 0.0;
 
     await FirebaseCollections.checkoutCollection.doc(id).set({
       'id': id,
@@ -137,11 +138,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .where('isDelivered', isEqualTo: false)
         .get()
         .then((QuerySnapshot data) {
-      double totalAmount = 0.0;
-
       for (var doc in data.docs) {
         // update totalAmount
-        totalAmount += doc['prodPrice'];
+        totalAmount += doc['prodPrice'] * doc['prodQuantity'];
 
         FirebaseCollections.ordersCollection.doc(doc['orderId']).update({
           'isDelivered': true,
@@ -154,10 +153,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .get()
           .then((DocumentSnapshot data) {
         FirebaseCollections.vendorsCollection.doc(userId).update({
-          'balanceAmount': data['balanceAmount'] - totalAmount,
+          'balanceAvailable': data['balanceAvailable'] + totalAmount,
         });
       });
     });
+
+    Future.delayed(const Duration(seconds: 1));
+    fetchData();
+    Navigator.of(cxt).pop();
   }
 
   // cash out dialog
@@ -252,8 +255,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   Chip(
                     label: FittedBox(
-                        child: Text(
-                            'Available Funds: \$${availableFunds.toStringAsFixed(2)}')),
+                      child: Text(
+                          'Available Funds: \$${availableFunds.toStringAsFixed(2)}'),
+                    ),
                     avatar: const Icon(Icons.monetization_on),
                     backgroundColor: Colors.white,
                   ),

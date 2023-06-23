@@ -143,6 +143,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             'prodQuantity': item.quantity,
             'date': item.date,
             'isDelivered': false,
+            'isApproved':false,
           });
         }
       }

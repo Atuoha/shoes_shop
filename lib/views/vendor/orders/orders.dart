@@ -1,11 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shoes_shop/constants/firebase_refs/collections.dart';
-import 'package:shoes_shop/views/vendor/orders/orders_tab/delivered_orders.dart';
-
 import '../../../constants/color.dart';
 import '../../../resources/styles_manager.dart';
-import 'orders_tab/undelivered_orders.dart';
+import 'orders_tab/orders_tab_export.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({Key? key}) : super(key: key);
@@ -49,17 +45,20 @@ class _OrdersScreenState extends State<OrdersScreen>
           controller: _tabBarController,
           indicatorColor: accentColor,
           tabs: const [
-            Tab(child: Text('Undelivered Products')),
-            Tab(child: Text('Delivered Products')),
-
+            Tab(child: Text('Approved Orders')),
+            Tab(child: Text('Unapproved Orders')),
+            Tab(child: Text('Undelivered Orders')),
+            Tab(child: Text('Delivered Orders')),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabBarController,
         children: const [
-          UnDeliveredProducts(),
-          DeliveredProducts(),
+          ApprovedOrders(),
+          UnApprovedOrders(),
+          UnDeliveredOrders(),
+          DeliveredOrders(),
         ],
       ),
     );

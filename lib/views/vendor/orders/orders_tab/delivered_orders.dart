@@ -14,19 +14,19 @@ import '../../../widgets/are_you_sure_dialog.dart';
 import '../../../widgets/loading_widget.dart';
 import 'package:uuid/uuid.dart';
 
-class DeliveredProducts extends StatefulWidget {
-  const DeliveredProducts({super.key});
+class DeliveredOrders extends StatefulWidget {
+  const DeliveredOrders({super.key});
 
   @override
-  State<DeliveredProducts> createState() => _DeliveredProductsState();
+  State<DeliveredOrders> createState() => _DeliveredOrdersState();
 }
 
-class _DeliveredProductsState extends State<DeliveredProducts> {
+class _DeliveredOrdersState extends State<DeliveredOrders> {
   var userId = FirebaseAuth.instance.currentUser!.uid;
   Uuid uid = const Uuid();
 
   // toggle delivery dialog
-  void togglePublishProductDialog(CheckedOutItem checkedOutItem) {
+  void toggleDeliveryDialog(CheckedOutItem checkedOutItem) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -107,13 +107,14 @@ class _DeliveredProductsState extends State<DeliveredProducts> {
   Future<void> cancelAllDeliveries() async {
     await FirebaseCollections.ordersCollection
         .where('isDelivered', isEqualTo: true)
+        .where('isApproved', isEqualTo: true)
         .get()
         .then(
       (QuerySnapshot data) {
         double totalAmount = 0.0;
         for (var doc in data.docs) {
           // update totalAmount
-          totalAmount += doc['prodPrice'];
+          totalAmount += doc['prodPrice'] * doc['prodQuantity'];
 
           // cancel all deliveries
            FirebaseCollections.ordersCollection.doc(doc['orderId']).update({
@@ -127,7 +128,7 @@ class _DeliveredProductsState extends State<DeliveredProducts> {
             .get()
             .then((DocumentSnapshot data) {
           FirebaseCollections.vendorsCollection.doc(userId).update({
-            'balanceAmount': data['balanceAmount'] - totalAmount,
+            'balanceAvailable': data['balanceAvailable'] - totalAmount,
           });
         });
       },
@@ -141,6 +142,7 @@ class _DeliveredProductsState extends State<DeliveredProducts> {
     Stream<QuerySnapshot> ordersStream = FirebaseCollections.ordersCollection
         .where('vendorId', isEqualTo: userId)
         .where('isDelivered', isEqualTo: true)
+        .where('isApproved', isEqualTo: true)
         .snapshots();
 
     return Scaffold(
@@ -230,7 +232,7 @@ class _DeliveredProductsState extends State<DeliveredProducts> {
                     SlidableAction(
                       borderRadius: BorderRadius.circular(10),
                       onPressed: (context) =>
-                          togglePublishProductDialog(checkedOutItem),
+                          toggleDeliveryDialog(checkedOutItem),
                       backgroundColor: Colors.grey,
                       foregroundColor: Colors.white,
                       icon: checkedOutItem.isDelivered

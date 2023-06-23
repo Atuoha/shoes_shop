@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,31 +12,33 @@ import '../../../../resources/styles_manager.dart';
 import '../../../components/single_vendor_checkout_list_tile.dart';
 import '../../../widgets/are_you_sure_dialog.dart';
 import '../../../widgets/loading_widget.dart';
+import 'package:uuid/uuid.dart';
 
-class UnDeliveredOrders extends StatefulWidget {
-  const UnDeliveredOrders({super.key});
+class UnApprovedOrders extends StatefulWidget {
+  const UnApprovedOrders({super.key});
 
   @override
-  State<UnDeliveredOrders> createState() => _UnDeliveredOrdersState();
+  State<UnApprovedOrders> createState() => _UnApprovedOrdersState();
 }
 
-class _UnDeliveredOrdersState extends State<UnDeliveredOrders> {
+class _UnApprovedOrdersState extends State<UnApprovedOrders> {
   var userId = FirebaseAuth.instance.currentUser!.uid;
+  Uuid uid = const Uuid();
 
   // toggle delivery dialog
-  void toggleDeliveryDialog(CheckedOutItem checkedOutItem) {
+  void togglePublishProductDialog(CheckedOutItem checkedOutItem) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          checkedOutItem.isDelivered ? 'Cancel Delivery' : 'Deliver Product',
+          checkedOutItem.isApproved ? 'Cancel Approval' : 'Approve Order',
           style: getMediumStyle(
             color: Colors.black,
             fontSize: FontSize.s16,
           ),
         ),
         content: Text(
-          'Are you sure you want to ${checkedOutItem.isDelivered ? 'cancel delivery of' : 'deliver'} ${checkedOutItem.prodName}',
+          'Are you sure you want to ${checkedOutItem.isApproved ? 'cancel approval of' : 'approve'} ${checkedOutItem.prodName}',
         ),
         actions: [
           ElevatedButton(
@@ -67,11 +68,11 @@ class _UnDeliveredOrdersState extends State<UnDeliveredOrders> {
   }
 
   // toggleDelivery
-  Future<void> toggleDelivery(String orderId, bool isDelivered) async {
+  Future<void> toggleDelivery(String orderId, bool isApproved) async {
     await FirebaseCollections.ordersCollection.doc(orderId).update({
-      'isDelivered': !isDelivered,
+      'isApproved': !isApproved,
     }).whenComplete(
-      () => Navigator.of(context).pop(),
+          () => Navigator.of(context).pop(),
     );
   }
 
@@ -93,46 +94,31 @@ class _UnDeliveredOrdersState extends State<UnDeliveredOrders> {
   }
 
   // deliver all items dialog
-  void deliverAllProductsDialog() {
+  void approveAllProductsDialog() {
     areYouSureDialog(
-      title: 'Deliver all product',
-      content: 'Are you sure you want to deliver all items?',
+      title: 'Cancel all delivery of products',
+      content: 'Are you sure you want to approve of all orders?',
       context: context,
-      action: deliverAll,
+      action: approveAllApprovals,
     );
   }
 
-  // deliver all items
-  Future<void> deliverAll() async {
+  // cancel all deliveries
+  Future<void> approveAllApprovals() async {
     await FirebaseCollections.ordersCollection
-        .where('isDelivered', isEqualTo: false)
-        .where('isApproved', isEqualTo: true)
+        .where('isApproved', isEqualTo: false)
         .get()
         .then(
-      (QuerySnapshot data) {
-        double totalAmount = 0.0;
-
+          (QuerySnapshot data) {
         for (var doc in data.docs) {
-          // update totalAmount
-          totalAmount += doc['prodPrice'] * doc['prodQuantity'];
-
+          // cancel all deliveries
           FirebaseCollections.ordersCollection.doc(doc['orderId']).update({
-            'isDelivered': true,
+            'isApproved': true,
           });
         }
-
-        // updating vendor's balance
-        FirebaseCollections.vendorsCollection
-            .doc(userId)
-            .get()
-            .then((DocumentSnapshot data) {
-          FirebaseCollections.vendorsCollection.doc(userId).update({
-            'balanceAvailable': data['balanceAvailable'] + totalAmount,
-          });
-        });
       },
     ).whenComplete(
-      () => Navigator.of(context).pop(),
+          () => Navigator.of(context).pop(),
     );
   }
 
@@ -140,7 +126,6 @@ class _UnDeliveredOrdersState extends State<UnDeliveredOrders> {
   Widget build(BuildContext context) {
     Stream<QuerySnapshot> ordersStream = FirebaseCollections.ordersCollection
         .where('vendorId', isEqualTo: userId)
-        .where('isDelivered', isEqualTo: false)
         .where('isApproved', isEqualTo: true)
         .snapshots();
 
@@ -148,9 +133,9 @@ class _UnDeliveredOrdersState extends State<UnDeliveredOrders> {
       body: StreamBuilder<QuerySnapshot>(
         stream: ordersStream,
         builder: (
-          BuildContext context,
-          AsyncSnapshot<QuerySnapshot> snapshot,
-        ) {
+            BuildContext context,
+            AsyncSnapshot<QuerySnapshot> snapshot,
+            ) {
           if (snapshot.hasError) {
             return Center(
               child: Column(
@@ -190,7 +175,7 @@ class _UnDeliveredOrdersState extends State<UnDeliveredOrders> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text('Undelivered Order list is empty'),
+                  const Text('Approved Order list is empty'),
                 ],
               ),
             );
@@ -231,18 +216,21 @@ class _UnDeliveredOrdersState extends State<UnDeliveredOrders> {
                     SlidableAction(
                       borderRadius: BorderRadius.circular(10),
                       onPressed: (context) =>
-                          toggleDeliveryDialog(checkedOutItem),
+                          togglePublishProductDialog(checkedOutItem),
                       backgroundColor: Colors.grey,
                       foregroundColor: Colors.white,
-                      icon: checkedOutItem.isDelivered
+                      icon: checkedOutItem.isApproved
                           ? Icons.cancel
                           : Icons.check_circle,
-                      label: checkedOutItem.isDelivered ? 'Cancel' : 'Deliver',
+                      label: checkedOutItem.isApproved
+                          ? 'Cancel Approval'
+                          : 'Approved',
                     ),
                   ],
                 ),
-                child:
-                    SingleVendorCheckOutListTile(checkoutItem: checkedOutItem),
+                child: SingleVendorCheckOutListTile(
+                  checkoutItem: checkedOutItem,
+                ),
               );
             },
           );
@@ -351,7 +339,7 @@ class _UnDeliveredOrdersState extends State<UnDeliveredOrders> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () => deliverAllProductsDialog(),
+                        onTap: () => approveAllProductsDialog(),
                         child: Container(
                           height: 50,
                           width: 120,
@@ -364,7 +352,7 @@ class _UnDeliveredOrdersState extends State<UnDeliveredOrders> {
                           ),
                           child: Center(
                             child: Text(
-                              'Deliver All',
+                              'Approval All Orders',
                               style: getMediumStyle(
                                 color: Colors.white,
                               ),
