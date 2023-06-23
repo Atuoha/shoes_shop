@@ -71,7 +71,32 @@ class _UnDeliveredOrdersState extends State<UnDeliveredOrders> {
     await FirebaseCollections.ordersCollection.doc(orderId).update({
       'isDelivered': !isDelivered,
     }).whenComplete(
-      () => Navigator.of(context).pop(),
+      () {
+
+        // increment vendor balance
+        FirebaseCollections.ordersCollection
+            .doc(orderId)
+            .get()
+            .then((DocumentSnapshot doc) {
+          double totalAmount = 0.0;
+
+          // update totalAmount
+          totalAmount += doc['prodPrice'] * doc['prodQuantity'];
+
+          // updating vendor's balance
+          FirebaseCollections.vendorsCollection
+              .doc(userId)
+              .get()
+              .then((DocumentSnapshot data) {
+            FirebaseCollections.vendorsCollection.doc(userId).update({
+              'balanceAvailable': data['balanceAvailable'] + totalAmount,
+            });
+          });
+        });
+
+        // pop out
+        Navigator.of(context).pop();
+      },
     );
   }
 

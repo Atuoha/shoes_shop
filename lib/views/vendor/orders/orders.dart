@@ -46,8 +46,8 @@ class _OrdersScreenState extends State<OrdersScreen>
           indicatorColor: accentColor,
           tabs: const [
             Tab(child: Text('Approved')),
-            Tab(child: Text('Unapproved')),
-            Tab(child: Text('Undelivered')),
+            Tab(child: Text('Unapproved Orders')),
+            Tab(child: Text('Undelivered Orders')),
             Tab(child: Text('Delivered')),
           ],
         ),

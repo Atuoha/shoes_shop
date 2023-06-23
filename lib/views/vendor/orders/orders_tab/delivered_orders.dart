@@ -72,7 +72,31 @@ class _DeliveredOrdersState extends State<DeliveredOrders> {
     await FirebaseCollections.ordersCollection.doc(orderId).update({
       'isDelivered': !isDelivered,
     }).whenComplete(
-      () => Navigator.of(context).pop(),
+      () {
+        // decrement vendor balance
+        FirebaseCollections.ordersCollection
+            .doc(orderId)
+            .get()
+            .then((DocumentSnapshot doc) {
+          double totalAmount = 0.0;
+
+          // update totalAmount
+          totalAmount += doc['prodPrice'] * doc['prodQuantity'];
+
+          // updating vendor's balance
+          FirebaseCollections.vendorsCollection
+              .doc(userId)
+              .get()
+              .then((DocumentSnapshot data) {
+            FirebaseCollections.vendorsCollection.doc(userId).update({
+              'balanceAvailable': data['balanceAvailable'] - totalAmount,
+            });
+          });
+        });
+
+        // pop out
+        Navigator.of(context).pop();
+      },
     );
   }
 
@@ -117,7 +141,7 @@ class _DeliveredOrdersState extends State<DeliveredOrders> {
           totalAmount += doc['prodPrice'] * doc['prodQuantity'];
 
           // cancel all deliveries
-           FirebaseCollections.ordersCollection.doc(doc['orderId']).update({
+          FirebaseCollections.ordersCollection.doc(doc['orderId']).update({
             'isDelivered': false,
           });
         }

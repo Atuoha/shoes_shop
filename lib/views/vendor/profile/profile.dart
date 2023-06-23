@@ -38,6 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       orders = 0;
       availableFunds = 0.0;
       products = 0;
+      earnings = 0.0;
     });
 
     // orders
@@ -126,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var id = const Uuid().v4();
     double totalAmount = 0.0;
 
-    await FirebaseCollections.checkoutCollection.doc(id).set({
+    await FirebaseCollections.cashOutCollection.doc(id).set({
       'id': id,
       'vendorId': userId,
       'amount': vendor.balanceAvailable,
@@ -371,21 +372,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         topLeft: Radius.circular(5),
                       ),
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          const Icon(
-                            Icons.shopping_bag_outlined,
+                          Icon(
+                            Icons.wallet,
                             color: Colors.white,
                           ),
-                          const SizedBox(width: 15),
-                          Text(
-                            products.toString(),
-                            style: getRegularStyle(
-                              color: Colors.white,
-                            ),
-                          ),
+                          SizedBox(width: 15),
+
                         ],
                       ),
                     ),

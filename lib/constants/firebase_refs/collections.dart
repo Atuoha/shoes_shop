@@ -19,6 +19,6 @@ class FirebaseCollections {
   static final ordersCollection =
       FirebaseFirestore.instance.collection('orders');
 
-  static final checkoutCollection =
-      FirebaseFirestore.instance.collection('checkouts');
+  static final cashOutCollection =
+      FirebaseFirestore.instance.collection('cash_outs');
 }
