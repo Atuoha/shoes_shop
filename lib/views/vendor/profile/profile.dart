@@ -389,7 +389,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   ),
-                  GestureDetector(
+              GestureDetector(
                     onTap: () => cashOutDialog(),
                     child: Container(
                       height: 50,

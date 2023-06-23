@@ -32,8 +32,9 @@ class _BannerComponentState extends State<BannerComponent> {
 
   @override
   void initState() {
-    _fetchBanners();
     super.initState();
+    _fetchBanners();
+
   }
 
   @override

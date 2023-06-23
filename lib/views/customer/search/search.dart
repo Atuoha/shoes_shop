@@ -33,8 +33,6 @@ class _SearchScreenState extends State<SearchScreen> {
     Stream<QuerySnapshot> searchProductsStream = FirebaseFirestore.instance
         .collection('products')
         .where('isApproved', isEqualTo: true)
-        .where('productName', isGreaterThanOrEqualTo: searchText.text.trim())
-        .where('productName', isLessThan: '${searchText.text.trim()}z')
         .snapshots();
 
     Size size = MediaQuery.sizeOf(context);
@@ -102,6 +100,15 @@ class _SearchScreenState extends State<SearchScreen> {
                 : const SizedBox.shrink();
           }
 
+          final searchedData = snapshot.data!.docs.where((doc) {
+            final productName = doc['productName'].toString().toLowerCase();
+            final category = doc['category'].toString().toLowerCase();
+            final description = doc['description'].toString().toLowerCase();
+            return productName.contains(searchText.text.toLowerCase()) ||
+                category.contains(searchText.text.toLowerCase()) ||
+                description.contains(searchText.text.toLowerCase());
+          }).toList();
+
           return MasonryGridView.count(
             crossAxisCount: 2,
             mainAxisSpacing: 10,
@@ -111,9 +118,9 @@ class _SearchScreenState extends State<SearchScreen> {
               right: 18,
               left: 18,
             ),
-            itemCount: snapshot.data!.docs.length,
+            itemCount: searchedData.length,
             itemBuilder: (context, index) {
-              final item = snapshot.data!.docs[index];
+              final item = searchedData[index];
 
               Product product = Product.fromJson(item);
 
