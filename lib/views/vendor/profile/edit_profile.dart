@@ -267,6 +267,11 @@ class _VendorEditProfileState extends State<VendorEditProfile> {
           "storeName": _fullnameController.text.trim(),
           "phone": _phoneController.text.trim(),
           "address": _addressController.text.trim(),
+          "country":_countryController.text,
+          "state":_stateController.text,
+          "city":_cityController.text,
+          "storeNumber":_storeNumberController.text.trim(),
+          "taxNumber":_taxNumberController.text.trim(),
           "storeImgUrl": downloadUrl,
         });
         isLoadingFnc();
