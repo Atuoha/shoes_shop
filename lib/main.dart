@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shoes_shop/controllers/route_manager.dart';
 import 'package:shoes_shop/providers/cart.dart';
 import 'package:shoes_shop/providers/category.dart';
@@ -25,13 +24,10 @@ Future<void> main() async {
 
   await Config.fetchApiKeys(); // fetching api keys
 
-  bool isAppPreviouslyRun = await checkIfAppPreviouslyRun();  // checking if app is previously ran
-  bool isCustomer = await checkAccountType(); // checking if logged in user is a customer
-
-  const storage = FlutterSecureStorage();
-
-  String? apiPublicKey = await storage.read(key: 'flutterwave_public_key');  // flutterwave public key
-
+  bool isAppPreviouslyRun =
+      await checkIfAppPreviouslyRun(); // checking if app is previously ran
+  bool isCustomer =
+      await checkAccountType(); // checking if logged in user is a customer
 
   runApp(MyApp(
     isAppPreviouslyRun: isAppPreviouslyRun,
@@ -101,3 +97,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+
+
+// TODO: Refactor logic codes to controller later

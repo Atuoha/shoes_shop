@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shoes_shop/constants/firebase_refs/collections.dart';
 import 'package:shoes_shop/resources/styles_manager.dart';
 import 'package:shoes_shop/views/widgets/are_you_sure_dialog.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../constants/color.dart';
 import '../../../controllers/route_manager.dart';
@@ -27,14 +28,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var auth = FirebaseAuth.instance;
 
   var orders = 0;
-  var cashOuts = 0.0;
+  var availableFunds = 0.0;
   var products = 0;
+  var earnings = 0.0;
 
   Future<void> fetchData() async {
     // init because of refresh indicator
     setState(() {
       orders = 0;
-      cashOuts = 0.0;
+      availableFunds = 0.0;
       products = 0;
     });
 
@@ -51,9 +53,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // checkouts
             for (var doc in data.docs)
               {
-                setState(() {
-                  cashOuts += doc['prodPrice'] * doc['prodQuantity'];
-                })
+                if (!doc['isDelivered'])
+                  {
+                    setState(() {
+                      availableFunds += doc['prodPrice'] * doc['prodQuantity'];
+                    })
+                  }
               }
           },
         );
@@ -79,6 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .then((DocumentSnapshot doc) => {
               setState(() {
                 vendor = Vendor.fromDoc(doc);
+                earnings = Vendor.fromDoc(doc).balanceAvailable;
               })
             });
   }
@@ -93,6 +99,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // navigateToSettings
   void navigateToSettings() {
     // Todo implement this
+  }
+
+  // navigate to store analysis
+  void navigateToStoreAnalysis() {
+    Navigator.of(context).pushNamed(RouteManager.vendorDataAnalysis);
   }
 
   // edit profile
@@ -111,21 +122,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // cash out
-  void cashOut() {
-    // Todo implement this
-  }
+  Future<void> cashOut() async {
+    var id = const Uuid().v4();
 
+    await FirebaseCollections.checkoutCollection.doc(id).set({
+      'id': id,
+      'vendorId': userId,
+      'amount': vendor.balanceAvailable,
+      'status': false,
+      'date': DateTime.now(),
+    });
+
+    await FirebaseCollections.ordersCollection
+        .where('isDelivered', isEqualTo: false)
+        .get()
+        .then((QuerySnapshot data) {
+      double totalAmount = 0.0;
+
+      for (var doc in data.docs) {
+        // update totalAmount
+        totalAmount += doc['prodPrice'];
+
+        FirebaseCollections.ordersCollection.doc(doc['orderId']).update({
+          'isDelivered': true,
+        });
+      }
+
+      // updating vendor's balance
+      FirebaseCollections.vendorsCollection
+          .doc(userId)
+          .get()
+          .then((DocumentSnapshot data) {
+        FirebaseCollections.vendorsCollection.doc(userId).update({
+          'balanceAmount': data['balanceAmount'] - totalAmount,
+        });
+      });
+    });
+  }
 
   // cash out dialog
   void cashOutDialog() {
     areYouSureDialog(
       title: 'Cash out your money',
-      content: 'Are you sure you want to cash out your money',
+      content: 'Are you sure you want to cash out your money?',
       context: context,
       action: cashOut,
     );
   }
-
 
   // get context
   get cxt => context;
@@ -208,7 +251,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Chip(
-                    label: Text('Cash outs: \$$cashOuts'),
+                    label: FittedBox(
+                        child: Text(
+                            'Available Funds: \$${availableFunds.toStringAsFixed(2)}')),
                     avatar: const Icon(Icons.monetization_on),
                     backgroundColor: Colors.white,
                   ),
@@ -253,9 +298,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Divider(thickness: 1),
                         ),
                         KListTile(
-                          title: 'Cash out',
-                          icon: Icons.monetization_on,
-                          onTapHandler: cashOutDialog,
+                          title: 'Store Data Analysis',
+                          icon: Icons.insert_chart,
+                          onTapHandler: navigateToStoreAnalysis,
                           showSubtitle: false,
                         ),
                         const Padding(
@@ -272,6 +317,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
+              )
+            ],
+          ),
+        ),
+      ),
+      bottomSheet: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 18.0,
+            vertical: 10,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Total Earnings',
+                    style: getRegularStyle(
+                      color: greyFontColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: FontSize.s14,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    '\$${earnings.toStringAsFixed(2)}',
+                    style: getMediumStyle(
+                      color: accentColor,
+                      fontSize: FontSize.s25,
+                    ),
+                  )
+                ],
+              ),
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Container(
+                    height: 50,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      color: accentColor.withOpacity(0.3),
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(5),
+                        topLeft: Radius.circular(5),
+                      ),
+                    ),
+                    child: Center(
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.shopping_bag_outlined,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 15),
+                          Text(
+                            products.toString(),
+                            style: getRegularStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => cashOutDialog(),
+                    child: Container(
+                      height: 50,
+                      width: 120,
+                      decoration: const BoxDecoration(
+                        color: accentColor,
+                        borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(5),
+                          topRight: Radius.circular(5),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Cash out Now',
+                          style: getMediumStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               )
             ],
           ),

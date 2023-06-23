@@ -12,6 +12,7 @@ import '../../../../resources/styles_manager.dart';
 import '../../../components/single_vendor_checkout_list_tile.dart';
 import '../../../widgets/are_you_sure_dialog.dart';
 import '../../../widgets/loading_widget.dart';
+import 'package:uuid/uuid.dart';
 
 class DeliveredProducts extends StatefulWidget {
   const DeliveredProducts({super.key});
@@ -22,6 +23,7 @@ class DeliveredProducts extends StatefulWidget {
 
 class _DeliveredProductsState extends State<DeliveredProducts> {
   var userId = FirebaseAuth.instance.currentUser!.uid;
+  Uuid uid = const Uuid();
 
   // toggle delivery dialog
   void togglePublishProductDialog(CheckedOutItem checkedOutItem) {
@@ -108,11 +110,26 @@ class _DeliveredProductsState extends State<DeliveredProducts> {
         .get()
         .then(
       (QuerySnapshot data) {
+        double totalAmount = 0.0;
         for (var doc in data.docs) {
-          FirebaseCollections.ordersCollection.doc(doc['orderId']).update({
+          // update totalAmount
+          totalAmount += doc['prodPrice'];
+
+          // cancel all deliveries
+           FirebaseCollections.ordersCollection.doc(doc['orderId']).update({
             'isDelivered': false,
           });
         }
+
+        // updating vendor's balance
+        FirebaseCollections.vendorsCollection
+            .doc(userId)
+            .get()
+            .then((DocumentSnapshot data) {
+          FirebaseCollections.vendorsCollection.doc(userId).update({
+            'balanceAmount': data['balanceAmount'] - totalAmount,
+          });
+        });
       },
     ).whenComplete(
       () => Navigator.of(context).pop(),

@@ -109,11 +109,26 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
         .get()
         .then(
       (QuerySnapshot data) {
+        double totalAmount = 0.0;
+
         for (var doc in data.docs) {
+          // update totalAmount
+          totalAmount += doc['prodPrice'];
+
           FirebaseCollections.ordersCollection.doc(doc['orderId']).update({
             'isDelivered': true,
           });
         }
+
+        // updating vendor's balance
+        FirebaseCollections.vendorsCollection
+            .doc(userId)
+            .get()
+            .then((DocumentSnapshot data) {
+          FirebaseCollections.vendorsCollection.doc(userId).update({
+            'balanceAmount': data['balanceAmount'] + totalAmount,
+          });
+        });
       },
     ).whenComplete(
       () => Navigator.of(context).pop(),
@@ -268,7 +283,7 @@ class _UnDeliveredProductsState extends State<UnDeliveredProducts> {
 
           checkedOutList = snapshot.data!.docs.length;
           for (var doc in snapshot.data!.docs) {
-            totalAmount += doc['prodPrice'] *doc['prodQuantity'];
+            totalAmount += doc['prodPrice'] * doc['prodQuantity'];
           }
 
           return Container(

@@ -14,8 +14,11 @@ class FirebaseCollections {
       FirebaseFirestore.instance.collection('banners');
 
   static final categoriesCollection =
-  FirebaseFirestore.instance.collection('categories');
+      FirebaseFirestore.instance.collection('categories');
 
   static final ordersCollection =
-  FirebaseFirestore.instance.collection('orders');
+      FirebaseFirestore.instance.collection('orders');
+
+  static final checkoutCollection =
+      FirebaseFirestore.instance.collection('checkouts');
 }

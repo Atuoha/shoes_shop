@@ -13,6 +13,7 @@ class Vendor {
   final String storeImgUrl;
   final String? address;
   final String authType;
+  double balanceAvailable;
   bool isApproved;
   bool isStoreRegistered;
 
@@ -31,12 +32,8 @@ class Vendor {
     required this.authType,
     this.isApproved = false,
     this.isStoreRegistered = false,
+    this.balanceAvailable = 0.0,
   });
-
-
-
-
-
 
   factory Vendor.initial() => Vendor(
         storeId: '',
@@ -67,28 +64,29 @@ class Vendor {
           address: data['address'],
           authType: data['authType'],
           storeImgUrl: data['storeImgUrl'],
+          balanceAvailable: double.parse(data['balanceAvailable'].toString()),
           isApproved: data['isApproved'],
           isStoreRegistered: data['isStoreRegistered'],
         );
 
-
   Vendor.fromDoc(DocumentSnapshot data)
       : this(
-    storeId: data['storeId'],
-    storeName: data['storeName'],
-    email: data['email'],
-    phone: data['phone'],
-    taxNumber: data['taxNumber'],
-    storeNumber: data['storeNumber'],
-    country: data['country'],
-    state: data['state'],
-    city: data['city'],
-    address: data['address'],
-    authType: data['authType'],
-    storeImgUrl: data['storeImgUrl'],
-    isApproved: data['isApproved'],
-    isStoreRegistered: data['isStoreRegistered'],
-  );
+          storeId: data['storeId'],
+          storeName: data['storeName'],
+          email: data['email'],
+          phone: data['phone'],
+          taxNumber: data['taxNumber'],
+          storeNumber: data['storeNumber'],
+          country: data['country'],
+          state: data['state'],
+          city: data['city'],
+          address: data['address'],
+          authType: data['authType'],
+          storeImgUrl: data['storeImgUrl'],
+          balanceAvailable: double.parse(data['balanceAvailable'].toString()),
+          isApproved: data['isApproved'],
+          isStoreRegistered: data['isStoreRegistered'],
+        );
 
   Map<String, dynamic> toJson() => {
         'storeId': storeId,
@@ -105,5 +103,6 @@ class Vendor {
         'storeImgUrl': storeImgUrl,
         'isStoreRegistered': isStoreRegistered,
         'isApproved': isApproved,
+        'balanceAvailable': balanceAvailable,
       };
 }

@@ -21,19 +21,19 @@ class VendorDashboard extends StatefulWidget {
 class _VendorDashboardState extends State<VendorDashboard> {
   var vendorId = FirebaseAuth.instance.currentUser!.uid;
   var orders = 0;
-  var cashOuts = 0.0;
+  var availableFunds = 0.0;
   var products = 0;
 
   Future<void> fetchData() async {
     // init because of refresh indicator
     setState(() {
       orders = 0;
-      cashOuts = 0.0;
+      availableFunds = 0.0;
       products = 0;
     });
 
     // orders
-    FirebaseCollections.ordersCollection
+    await FirebaseCollections.ordersCollection
         .where('vendorId', isEqualTo: vendorId)
         .get()
         .then(
@@ -45,15 +45,18 @@ class _VendorDashboardState extends State<VendorDashboard> {
             // checkouts
             for (var doc in data.docs)
               {
-                setState(() {
-                  cashOuts += doc['prodPrice'] * doc['prodQuantity'];
-                })
+                if (!doc['isDelivered'])
+                  {
+                    setState(() {
+                      availableFunds += doc['prodPrice'] * doc['prodQuantity'];
+                    })
+                  }
               }
           },
         );
 
     // products
-    FirebaseCollections.productsCollection
+    await FirebaseCollections.productsCollection
         .where('vendorId', isEqualTo: vendorId)
         .get()
         .then(
@@ -74,9 +77,27 @@ class _VendorDashboardState extends State<VendorDashboard> {
   @override
   Widget build(BuildContext context) {
     List<AppData> data = [
-      AppData('Orders', orders),
-      AppData('Cash outs', cashOuts),
-      AppData('Products', products),
+      AppData(
+        title: 'All Orders',
+        number: orders,
+        color: dashBlue,
+        icon: Icons.shopping_cart_checkout,
+        index: 1,
+      ),
+      AppData(
+        title: 'Available Funds',
+        number: availableFunds,
+        color: dashGrey,
+        icon: Icons.monetization_on,
+        index: 3,
+      ),
+      AppData(
+        title: 'Products',
+        number: products,
+        color: dashRed,
+        icon: Icons.shopping_bag,
+        index: 2,
+      ),
     ];
 
     return Scaffold(
@@ -104,34 +125,25 @@ class _VendorDashboardState extends State<VendorDashboard> {
                 const SizedBox(height: AppSize.s10),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 6.5,
-                  child: ListView(
+                  child: ListView.builder(
+                    itemCount: data.length,
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     // crossAxisCount: 3,
                     scrollDirection: Axis.horizontal,
-                    children: [
-                      BuildDashboardContainer(
-                        title: 'Orders',
-                        value: '$orders',
-                        color: dashBlue,
-                        icon: Icons.shopping_cart_checkout,
-                        index: 1,
-                      ),
-                      BuildDashboardContainer(
-                        title: 'Cash Outs',
-                        value: '\$$cashOuts',
-                        color: dashGrey,
-                        icon: Icons.monetization_on,
-                        index: 3,
-                      ),
-                      BuildDashboardContainer(
-                        title: 'Products',
-                        value: '$products',
-                        color: dashRed,
-                        icon: Icons.shopping_bag,
-                        index: 2,
-                      ),
-                    ],
+                    itemBuilder: (context, index) {
+                      var item = data[index];
+
+                      return BuildDashboardContainer(
+                        title: item.title,
+                        value: item.index == 3
+                            ? '\$${item.number}'
+                            : item.number.toString(),
+                        color: item.color,
+                        icon: item.icon,
+                        index: item.index,
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 20),

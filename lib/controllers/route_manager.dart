@@ -1,6 +1,7 @@
 import 'package:shoes_shop/views/auth/vendor/forgot_password.dart';
 import 'package:shoes_shop/views/auth/vendor/vendor_auth.dart';
 import 'package:shoes_shop/views/customer/orders/orders.dart';
+import 'package:shoes_shop/views/vendor/profile/store_data_analysis.dart';
 
 import '../views/auth/account_type.dart';
 import '../views/auth/customer/customer_auth.dart';
@@ -11,6 +12,7 @@ import '../views/vendor/entry_screen.dart';
 import '../views/splash/splash.dart';
 import '../views/vendor/main_screen.dart';
 import '../views/vendor/products/create.dart';
+
 
 class RouteManager {
   static const String splashScreen = "/splash";
@@ -28,6 +30,7 @@ class RouteManager {
   static const String vendorMainScreen = '/vendorMainScreen';
   static const String vendorEntryScreen = '/vendorEntryScreen';
   static const String vendorCreatePost = '/vendorCreatePost';
+  static const String vendorDataAnalysis = '/vendorDataAnalysis';
 }
 
 final routes = {
@@ -44,4 +47,5 @@ final routes = {
   RouteManager.vendorEntryScreen: (context) => const VendorEntryScreen(),
   RouteManager.vendorForgotPass: (context) => const VendorForgotPassword(),
   RouteManager.vendorCreatePost: (context) => const VendorCreateProduct(),
+  RouteManager.vendorDataAnalysis: (context) => const StoreDataAnalysis(),
 };
