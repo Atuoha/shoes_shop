@@ -92,6 +92,9 @@ class _DeliveredOrdersState extends State<DeliveredOrders> {
               'balanceAvailable': data['balanceAvailable'] - totalAmount,
             });
           });
+
+          // remove from cash out
+          // Todo: cash out removal of fund after delivery removal
         });
 
         // pop out
@@ -155,6 +158,9 @@ class _DeliveredOrdersState extends State<DeliveredOrders> {
             'balanceAvailable': data['balanceAvailable'] - totalAmount,
           });
         });
+
+        // remove from cash out
+        // Todo: cash out removal of fund after delivery removal
       },
     ).whenComplete(
       () => Navigator.of(context).pop(),

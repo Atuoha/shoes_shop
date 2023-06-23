@@ -127,13 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var id = const Uuid().v4();
     double totalAmount = 0.0;
 
-    await FirebaseCollections.cashOutCollection.doc(id).set({
-      'id': id,
-      'vendorId': userId,
-      'amount': vendor.balanceAvailable,
-      'status': false,
-      'date': DateTime.now(),
-    });
+
 
     await FirebaseCollections.ordersCollection
         .where('isDelivered', isEqualTo: false)
@@ -157,6 +151,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           'balanceAvailable': data['balanceAvailable'] + totalAmount,
         });
       });
+
+       FirebaseCollections.cashOutCollection.doc(id).set({
+        'id': id,
+        'vendorId': userId,
+        'amount': totalAmount,
+        'status': false,
+        'date': DateTime.now(),
+      });
+
     });
 
     Future.delayed(const Duration(seconds: 1));

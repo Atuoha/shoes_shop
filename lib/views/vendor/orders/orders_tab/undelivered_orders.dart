@@ -219,6 +219,7 @@ class _UnDeliveredOrdersState extends State<UnDeliveredOrders> {
                     padding: EdgeInsets.all(8.0),
                     child: Text(
                       'Undelivered Order list is empty. Approve orders so they can appear here',
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ],
